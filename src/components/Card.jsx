@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./CSS/Card.css";
 import dummyPosts from "./dummyPosts.js";
-import { FaArrowRight, FaClock, FaPen, FaTimes, FaTrash } from "react-icons/fa";
+import { FaArrowRight, FaPen, FaTimes, FaTrash } from "react-icons/fa";
 import { getCurrentUser } from "../lib/socialStore";
 import { deletePostApi } from "../api/post";
 import { formatArticleDate } from "../utils/formatArticleDate";
 
 const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
   const navigate = useNavigate();
+
   const posts = Array.isArray(propPosts)
     ? propPosts
     : singlePost
-      ? [singlePost]
-      : dummyPosts;
+    ? [singlePost]
+    : [];
+
   const [activeMedia, setActiveMedia] = useState(null);
   const currentUser = getCurrentUser();
 
@@ -22,28 +24,22 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
       <div className="feed">
         {posts.length === 0 && emptyState && (
           <article className="feed-card empty-feed-card">
-            <span className="feed-kicker">{emptyState.kicker}</span>
             <h2 className="post-title-link static-title">{emptyState.title}</h2>
             <p className="feed-excerpt">{emptyState.description}</p>
           </article>
         )}
+
         {posts.map((post) => {
           const postId = post.id || post._id;
-          const estimatedReadTime =
-            post.readTime || `${Math.max(3, Math.ceil((post.content?.length || 0) / 180))} min read`;
-          const publishedAt = formatArticleDate(post.createdAt || post.updatedAt);
+          const publishedAt = formatArticleDate(
+            post.createdAt || post.updatedAt
+          );
           const isOwner = currentUser?.id === post.authorId;
 
           return (
             <article className="feed-card" key={postId}>
+              {/* HEADER */}
               <div className="feed-card-header">
-                <div className="feed-kicker-row">
-                  <span className="feed-kicker">Feature Story</span>
-                  <span className="feed-read-time">
-                    <FaClock /> {estimatedReadTime}
-                  </span>
-                </div>
-
                 <h2
                   className="post-title-link"
                   onClick={() => navigate(`/post/${postId}`)}
@@ -51,22 +47,34 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                   {post.title}
                 </h2>
 
-                <p className="feed-excerpt">{post.content}</p>
-                <div className="feed-publish-meta" aria-label={publishedAt.full}>
-                  <span>{publishedAt.day}</span>
-                  <span>{publishedAt.date}</span>
-                  {publishedAt.time && <span>{publishedAt.time}</span>}
+                {/* ✅ HTML content render */}
+                <div
+                  className="feed-excerpt"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+
+                {/* DATE */}
+                <div
+                  className="feed-publish-meta"
+                  aria-label={publishedAt.full}
+                >
+                  <span>
+                    {publishedAt.day} • {publishedAt.date}
+                    {publishedAt.time && ` • ${publishedAt.time}`}
+                  </span>
                 </div>
               </div>
 
+              {/* MEDIA */}
               {post.media && (
                 <div className="feed-media-shell">
                   {post.media.type === "image" ? (
                     <img
                       src={post.media.url}
-                      alt="post media"
+                      alt=""
                       className="feed-media"
                       onClick={() => setActiveMedia(post.media)}
+                      onError={(e) => (e.target.style.display = "none")}
                     />
                   ) : (
                     <video
@@ -79,9 +87,13 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                 </div>
               )}
 
+              {/* FOOTER */}
               <div className="feed-card-footer">
                 <div className="feed-footer-main">
-                  <Link to={`/profile/${post.username}`} className="post-author">
+                  <Link
+                    to={`/profile/${post.username}`}
+                    className="post-author"
+                  >
                     {post.avatar ? (
                       <img
                         src={post.avatar}
@@ -93,21 +105,16 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                         {post.fullName?.charAt(0)}
                       </div>
                     )}
+
                     <div>
-                      <strong className="userfullname">{post.fullName}</strong>
-                      <span className="username">@{post.username}</span>
+                      <strong className="userfullname">
+                        {post.fullName}
+                      </strong>
+                      <span className="username">
+                        @{post.username}
+                      </span>
                     </div>
                   </Link>
-
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="post-tags">
-                      {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                        <span key={tagIndex} className="tag">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 <div className="feed-footer-actions">
@@ -126,6 +133,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                       >
                         <FaPen /> Edit
                       </button>
+
                       <button
                         className="owner-action-btn danger"
                         onClick={async () => {
@@ -133,7 +141,9 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                             await deletePostApi(postId);
                             window.location.reload();
                           } catch {
-                            window.alert("Database delete failed. Check backend/MongoDB.");
+                            window.alert(
+                              "Database delete failed. Check backend/MongoDB."
+                            );
                           }
                         }}
                       >
@@ -148,12 +158,20 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
         })}
       </div>
 
+      {/* MODAL */}
       {activeMedia && (
-        <div className="media-modal" onClick={() => setActiveMedia(null)}>
+        <div
+          className="media-modal"
+          onClick={() => setActiveMedia(null)}
+        >
           <div className="media-content">
-            <button className="close-btn" onClick={() => setActiveMedia(null)}>
+            <button
+              className="close-btn"
+              onClick={() => setActiveMedia(null)}
+            >
               <FaTimes />
             </button>
+
             {activeMedia.type === "image" ? (
               <img src={activeMedia.url} alt="media" />
             ) : (
