@@ -12,12 +12,14 @@ const Auth0ProviderWithNavigate = ({ children }) => {
       domain={import.meta.env.VITE_AUTH0_DOMAIN}
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
-        redirect_uri:
-          import.meta.env.VITE_AUTH0_REDIRECT_URI || window.location.origin,
+        // ✅ BEST: auto works for local + production
+        redirect_uri: window.location.origin,
       }}
       onRedirectCallback={(appState) => {
         navigate(appState?.returnTo || "/home", { replace: true });
       }}
+      cacheLocation="localstorage"   // ✅ keeps user logged in
+      useRefreshTokens={true}        // ✅ prevents logout issues
     >
       {children}
     </Auth0Provider>

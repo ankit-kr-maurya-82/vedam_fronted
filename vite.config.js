@@ -6,21 +6,19 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+
   server: {
     proxy: {
-      '/api': 'https://vedam-backend.vercel.app/',
+      '/api': {
+        target: 'https://vedam-backend.vercel.app',
+        changeOrigin: true,
+        secure: true,
+      }
     }
   },
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
