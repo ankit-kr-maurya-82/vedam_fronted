@@ -16,7 +16,6 @@
     "axios": "^1.13.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-font-style": "^0.0.11",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.11.0",
     "tailwindcss": "^4.1.18"
