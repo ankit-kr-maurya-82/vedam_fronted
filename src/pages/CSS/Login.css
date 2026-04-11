@@ -1,0 +1,254 @@
+/* ================= PAGE ================= */
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================= FORM ================= */
+
+.login-form {
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+/* ================= INPUT ================= */
+
+.login-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+/* ================= BUTTON ================= */
+
+.login-btn {
+  margin-top: 6px;
+  padding: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background-color: #020617;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+}
+
+.auth-divider span {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.google-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.google-auth-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ================= ERROR ================= */
+
+.error-msg {
+  text-align: center;
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* ================= FOOTER ================= */
+
+.login-footer {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ================================================= */
+/* ================= DARK MODE ===================== */
+/* ================================================= */
+
+.dark .login-container {
+  background: #020617;
+}
+
+.dark .login-form {
+  background: #020617;
+  border: 1px solid #1e293b;
+}
+
+.dark .login-form h2 {
+  color: white;
+}
+
+.dark .login-form input {
+  background: #020617;
+  border: 1px solid #334155;
+  color: white;
+}
+
+.dark .login-form input::placeholder {
+  color: #94a3b8;
+}
+
+.dark .login-btn {
+  /* background: #2563eb; */
+  background: #0d0d0e;
+  color: white;
+}
+
+.dark .login-btn:hover {
+  /* background: #131313; */
+  background: #1d4ed8;
+}
+
+.dark .error-msg {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fecaca;
+}
+
+.dark .login-footer {
+  color: #94a3b8;
+}
+
+.dark .auth-divider::before,
+.dark .auth-divider::after {
+  background: #334155;
+}
+
+.dark .auth-divider span {
+  color: #94a3b8;
+}
+
+.dark .google-auth-btn {
+  background: #111827;
+  border: 1px solid #334155;
+  color: #f8fafc;
+}
+
+.dark .google-auth-btn:hover {
+  background: #1f2937;
+}
+
+.dark .google-auth-icon {
+  background: #ffffff;
+  color: #ea4335;
+}
+
+/* ================================================= */
+/* ================= LIGHT MODE ==================== */
+/* ================================================= */
+
+.light .login-container {
+  background: #f8fafc;
+}
+
+.light .login-form {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.light .login-form h2 {
+  color: #020617;
+}
+
+.light .login-form input {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #020617;
+}
+
+.light .login-form input::placeholder {
+  color: #64748b;
+}
+
+.light .login-btn {
+  background: #080808;
+  color: white;
+}
+
+.light .login-btn:hover {
+  background: #101010;
+  /* background: #1d4ed8; */
+}
+
+.light .error-msg {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.light .login-footer {
+  color: #475569;
+}
+
+.light .auth-divider::before,
+.light .auth-divider::after {
+  background: #cbd5e1;
+}
+
+.light .auth-divider span {
+  color: #64748b;
+}
+
+.light .google-auth-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+.light .google-auth-btn:hover {
+  background: #f8fafc;
+}
+
+.light .google-auth-icon {
+  background: #f1f5f9;
+  color: #ea4335;
+}

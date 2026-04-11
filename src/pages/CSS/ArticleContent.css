@@ -1,0 +1,51 @@
+.article-content-rendered {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #2d3748;
+  word-wrap: break-word;
+}
+
+.article-content-rendered p {
+  margin-bottom: 1.5rem;
+}
+
+.article-content-rendered b, 
+.article-content-rendered strong {
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.article-content-rendered i, 
+.article-content-rendered em {
+  font-style: italic;
+}
+
+.article-content-rendered u {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Handle alignment from editor */
+.article-content-rendered div {
+  margin-bottom: 0.5rem;
+}
+
+.article-content-rendered img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* Reset styles for content pasted from external sources like Medium */
+.article-content-rendered article, 
+.article-content-rendered section {
+  all: inherit;
+  display: block;
+}
+
+.article-content-rendered * {
+  max-width: 100%;
+  box-sizing: border-box;
+}

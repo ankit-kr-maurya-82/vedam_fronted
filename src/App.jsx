@@ -1,0 +1,40 @@
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import "./index.css";
+import Explore from "./pages/Explore";
+import CreatePost from "./pages/CreatePost";
+import Chat from "./pages/Chat";
+import PostPage from "./pages/PostPage";
+import About from "./pages/About";
+import Features from "./pages/Features";
+import VedHome from "./pages/VedHome";
+
+function App() {
+  return (
+    <div className="main">
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/home" element={<Home />} />
+          <Route index element={<VedHome />} />
+          <Route path="profile/:username" element={<Profile />} />
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          <Route path="explore" element={<Explore />} />
+          <Route path="create" element={<CreatePost />} />
+          <Route path="edit/:postId" element={<CreatePost />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="post/:postId" element={<PostPage />} />
+          <Route path="about" element={<About />} />
+          <Route path="features" element={<Features />} />
+        </Route>
+      </Routes>
+    </div>
+  );
+}
+
+export default App;

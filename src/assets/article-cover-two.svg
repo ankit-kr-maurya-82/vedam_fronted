@@ -1,0 +1,16 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1000" fill="#F8FAFC"/>
+  <rect x="116" y="100" width="1368" height="800" rx="44" fill="#FFF"/>
+  <rect x="188" y="170" width="1224" height="300" rx="32" fill="#0F172A"/>
+  <rect x="238" y="220" width="280" height="22" rx="11" fill="#FBBF24"/>
+  <rect x="238" y="268" width="612" height="38" rx="19" fill="#F8FAFC"/>
+  <rect x="238" y="326" width="520" height="38" rx="19" fill="#F8FAFC"/>
+  <rect x="188" y="522" width="380" height="300" rx="28" fill="#DBEAFE"/>
+  <rect x="608" y="522" width="804" height="300" rx="28" fill="#EFF6FF"/>
+  <rect x="656" y="574" width="238" height="22" rx="11" fill="#1E3A8A"/>
+  <rect x="656" y="618" width="622" height="24" rx="12" fill="#94A3B8"/>
+  <rect x="656" y="664" width="622" height="24" rx="12" fill="#94A3B8"/>
+  <rect x="656" y="710" width="562" height="24" rx="12" fill="#94A3B8"/>
+  <circle cx="378" cy="636" r="86" fill="#1D4ED8"/>
+  <path d="M300 792C320 716 357 680 408 680C459 680 496 716 516 792" fill="#F8FAFC"/>
+</svg>

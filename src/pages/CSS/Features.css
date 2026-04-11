@@ -1,0 +1,75 @@
+/* Section */
+.features {
+  padding: 60px 20px;
+  background: #f9fafb;
+  text-align: center;
+  margin-top: 28px;
+  height: 100vh;
+}
+
+/* Title */
+.features_title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: #111827;
+}
+
+/* Grid Layout */
+.features_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Card */
+.feature_card {
+  background: #ffffff;
+  padding: 30px 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+/* Hover Effect */
+.feature_card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Icon */
+.feature_icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Title inside card */
+.feature_card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+/* Description */
+.feature_card p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+  .features_title {
+    font-size: 1.8rem;
+  }
+
+  .feature_card {
+    padding: 25px 15px;
+  }
+}

@@ -1,0 +1,94 @@
+/* Card */
+.skeleton-card {
+  background-color: #e8e8ea;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+/* Header */
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #3b3b3c;
+}
+
+.skeleton-lines {
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 10px;
+  background-color: #3b3b3c;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.skeleton-line.short {
+  width: 40%;
+}
+
+.skeleton-line.medium {
+  width: 70%;
+}
+
+.skeleton-line.tiny {
+  width: 25%;
+  height: 8px;
+}
+
+/* Body */
+.skeleton-body {
+  margin-top: 12px;
+}
+
+/* Actions */
+.skeleton-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #3b3b3c;
+}
+
+.skeleton-btn {
+  width: 50px;
+  height: 10px;
+  background-color: #3b3b3c;
+  border-radius: 6px;
+}
+
+/* Shimmer animation */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  animation: shimmer 1.3s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 100%;
+  }
+}

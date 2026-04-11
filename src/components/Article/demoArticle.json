@@ -1,0 +1,202 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "username": "tech_innovator",
+      "author": "Sarah Chen",
+      "title": "The Future of Web Development: 2026 Trends",
+      "subtitle": "Exploring the cutting-edge technologies shaping tomorrow's web",
+      "content": "As we venture deeper into 2026, the web development landscape continues to evolve at an unprecedented pace. From AI-powered development tools to immersive WebXR experiences, developers are embracing new paradigms that promise to revolutionize how we build and interact with digital experiences.",
+      "excerpt": "Discover the transformative trends that are reshaping web development in 2026, from AI-assisted coding to immersive web experiences.",
+      "category": "Technology",
+      "tags": ["Web Development", "AI", "JavaScript", "Future Tech"],
+      "location": "San Francisco, CA",
+      "date": "2026-03-15",
+      "readTime": "8 min read",
+      "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "stats": {
+        "views": 12500,
+        "likes": 342,
+        "comments": 28,
+        "shares": 67
+      },
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": 2,
+      "username": "design_guru",
+      "author": "Marcus Rodriguez",
+      "title": "Designing for the Metaverse: A New Paradigm",
+      "subtitle": "How spatial computing is revolutionizing user interface design",
+      "content": "The metaverse represents a fundamental shift in how we think about digital spaces. No longer constrained by traditional 2D interfaces, designers must now consider three-dimensional environments where users can move freely and interact naturally with digital objects.",
+      "excerpt": "Learn how the metaverse is changing UI/UX design principles and what it means for the future of human-computer interaction.",
+      "category": "Design",
+      "tags": ["UX Design", "Metaverse", "3D Design", "Spatial Computing"],
+      "location": "Los Angeles, CA",
+      "date": "2026-03-12",
+      "readTime": "6 min read",
+      "image": "https://images.unsplash.com/photo-1592478411213-6153e4ebc696?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "stats": {
+        "views": 8900,
+        "likes": 256,
+        "comments": 19,
+        "shares": 43
+      },
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": 3,
+      "username": "startup_ceo",
+      "author": "Jennifer Park",
+      "title": "Scaling Your Startup in the AI Era",
+      "subtitle": "Strategic insights for entrepreneurs navigating technological disruption",
+      "content": "The integration of artificial intelligence into business operations is no longer optional—it's imperative for survival. Startups that successfully leverage AI technologies gain significant competitive advantages in efficiency, innovation, and customer experience.",
+      "excerpt": "Practical strategies for startup founders to harness AI technologies while maintaining agility and innovation in a rapidly changing landscape.",
+      "category": "Business",
+      "tags": ["Startups", "AI", "Entrepreneurship", "Scaling"],
+      "location": "Austin, TX",
+      "date": "2026-03-10",
+      "readTime": "12 min read",
+      "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+      "stats": {
+        "views": 15600,
+        "likes": 489,
+        "comments": 34,
+        "shares": 92
+      },
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": 4,
+      "username": "ai_researcher",
+      "author": "Dr. Michael Thompson",
+      "title": "Quantum Machine Learning: The Next Frontier",
+      "subtitle": "How quantum computing is revolutionizing artificial intelligence",
+      "content": "Quantum machine learning represents the convergence of two of the most promising technologies of our time. By harnessing the principles of quantum mechanics, we can solve complex optimization problems that are currently intractable for classical computers.",
+      "excerpt": "Explore how quantum computing is set to transform machine learning algorithms and unlock new possibilities in AI research.",
+      "category": "AI/ML",
+      "tags": ["Quantum Computing", "Machine Learning", "AI Research", "Quantum AI"],
+      "location": "Boston, MA",
+      "date": "2026-03-08",
+      "readTime": "10 min read",
+      "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "stats": {
+        "views": 11200,
+        "likes": 378,
+        "comments": 45,
+        "shares": 78
+      },
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": 5,
+      "username": "crypto_expert",
+      "author": "Alex Rivera",
+      "title": "Web3 Gaming: The Evolution of Interactive Entertainment",
+      "subtitle": "How blockchain technology is reshaping the gaming industry",
+      "content": "Web3 gaming represents a paradigm shift in how we think about digital ownership and player engagement. By leveraging blockchain technology, games can offer true digital asset ownership, decentralized economies, and player-driven content creation.",
+      "excerpt": "Discover how Web3 technologies are creating new opportunities for gamers, developers, and investors in the evolving gaming landscape.",
+      "category": "Gaming",
+      "tags": ["Web3", "Blockchain", "Gaming", "NFTs"],
+      "location": "Miami, FL",
+      "date": "2026-03-05",
+      "readTime": "9 min read",
+      "image": "https://images.unsplash.com/photo-1556438064-2d7646166914?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
+      "stats": {
+        "views": 9800,
+        "likes": 267,
+        "comments": 31,
+        "shares": 54
+      },
+      "featured": false,
+      "published": true
+    },
+    {
+      "id": 6,
+      "username": "sustainability_advocate",
+      "author": "Dr. Emma Green",
+      "title": "Green Tech: Building a Sustainable Digital Future",
+      "subtitle": "How technology can drive environmental sustainability",
+      "content": "The intersection of technology and environmental sustainability offers unprecedented opportunities to address climate change. From carbon-neutral data centers to AI-powered conservation efforts, green technology is becoming a critical component of our digital infrastructure.",
+      "excerpt": "Learn about innovative technologies and strategies that are helping create a more sustainable digital ecosystem.",
+      "category": "Sustainability",
+      "tags": ["Green Tech", "Sustainability", "Climate Tech", "Environment"],
+      "location": "Portland, OR",
+      "date": "2026-03-03",
+      "readTime": "7 min read",
+      "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150",
+      "stats": {
+        "views": 13400,
+        "likes": 423,
+        "comments": 52,
+        "shares": 89
+      },
+      "featured": false,
+      "published": true
+    },
+    {
+      "id": 7,
+      "username": "mobile_dev",
+      "author": "Carlos Mendoza",
+      "title": "Cross-Platform Mobile Development in 2026",
+      "subtitle": "Choosing the right framework for modern app development",
+      "content": "The mobile development landscape continues to evolve with new frameworks and tools that promise better developer experience and superior app performance. Understanding the trade-offs between different approaches is crucial for making informed technology decisions.",
+      "excerpt": "A comprehensive guide to choosing the right cross-platform framework for your mobile app development needs in 2026.",
+      "category": "Mobile",
+      "tags": ["Mobile Development", "Cross-Platform", "React Native", "Flutter"],
+      "location": "Seattle, WA",
+      "date": "2026-03-01",
+      "readTime": "11 min read",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150",
+      "stats": {
+        "views": 18700,
+        "likes": 567,
+        "comments": 73,
+        "shares": 124
+      },
+      "featured": false,
+      "published": true
+    },
+    {
+      "id": 8,
+      "username": "cybersecurity_expert",
+      "author": "Rachel Kim",
+      "title": "Zero Trust Architecture: Securing the Modern Enterprise",
+      "subtitle": "Implementing comprehensive security in an increasingly complex threat landscape",
+      "content": "Zero Trust Architecture represents a fundamental shift from traditional perimeter-based security models to a more granular, identity-centric approach. In an era of remote work and cloud computing, Zero Trust has become essential for protecting sensitive data and systems.",
+      "excerpt": "Understanding the principles and implementation strategies of Zero Trust Architecture for modern enterprise security.",
+      "category": "Security",
+      "tags": ["Cybersecurity", "Zero Trust", "Enterprise Security", "Cloud Security"],
+      "location": "Washington, DC",
+      "date": "2026-02-28",
+      "readTime": "13 min read",
+      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+      "authorAvatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
+      "stats": {
+        "views": 9200,
+        "likes": 298,
+        "comments": 26,
+        "shares": 41
+      },
+      "featured": false,
+      "published": true
+    }
+  ],
+  "metadata": {
+    "totalArticles": 8,
+    "categories": ["Technology", "Design", "Business", "AI/ML", "Gaming", "Sustainability", "Mobile", "Security"],
+    "lastUpdated": "2026-03-15",
+    "version": "1.0"
+  }
+}
