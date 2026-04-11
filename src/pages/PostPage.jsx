@@ -93,9 +93,9 @@ const PostPage = () => {
     return <div className="article-page">Post not found.</div>;
   }
 
-  const estimatedReadTime =
-    activePost.readTime ||
-    `${Math.max(3, Math.ceil((activePost.content?.length || 0) / 180))} min read`;
+  // const estimatedReadTime =
+  //   activePost.readTime ||
+  //   `${Math.max(3, Math.ceil((activePost.content?.length || 0) / 180))} min read`;
   const publishedAt = formatArticleDate(activePost.createdAt || activePost.updatedAt);
   const isOwner = user?.id === activePost.authorId;
   const canFollowAuthor = Boolean(user && !isOwner && authorProfile?.username);

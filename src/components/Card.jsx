@@ -47,7 +47,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                   {post.title}
                 </h2>
 
-                {/* ✅ HTML content render */}
+                {/*  HTML content render */}
                 <div
                   className="feed-excerpt"
                   dangerouslySetInnerHTML={{ __html: post.content }}
