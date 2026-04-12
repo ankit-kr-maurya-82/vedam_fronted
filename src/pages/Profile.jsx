@@ -20,6 +20,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [followLoading, setFollowLoading] = useState(false);
   const [relationshipView, setRelationshipView] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -38,7 +39,7 @@ const Profile = () => {
     return () => {
       cancelled = true;
     };
-  }, [username, user]);
+  }, [username, user, refreshKey]);
 
   const isOwnProfile = useMemo(
     () => user?.id && profileUser?.id && user.id === profileUser.id,
@@ -90,6 +91,8 @@ const Profile = () => {
 
   const handleProfileUpdated = (updatedUser) => {
     setProfileUser(syncUserToStore(updatedUser));
+    setUser(updatedUser);
+    setRefreshKey((key) => key + 1); // Force re-fetch
     if (updatedUser?.username && updatedUser.username !== username) {
       navigate(`/profile/${updatedUser.username}`, { replace: true });
     }
