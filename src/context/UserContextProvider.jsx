@@ -11,11 +11,13 @@ import {
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const {
     isAuthenticated,
     isLoading: auth0Loading,
     user: auth0User,
     logout: auth0Logout,
+    getAccessTokenSilently, // ✅ IMPORTANT
   } = useAuth0();
 
   const logout = () => {
@@ -32,10 +34,9 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  // 🔹 Manual login restore
   useEffect(() => {
-    if (auth0Loading || isAuthenticated) {
-      return;
-    }
+    if (auth0Loading || isAuthenticated) return;
 
     const storedUser = getCurrentUser();
     const accessToken = window.localStorage.getItem("accessToken");
@@ -49,10 +50,9 @@ const UserContextProvider = ({ children }) => {
     setLoading(false);
   }, [auth0Loading, isAuthenticated]);
 
+  // 🔥 Auth0 LOGIN SYNC (FIXED)
   useEffect(() => {
-    if (auth0Loading || !isAuthenticated || !auth0User?.email) {
-      return;
-    }
+    if (auth0Loading || !isAuthenticated || !auth0User?.email) return;
 
     let ignore = false;
 
@@ -60,8 +60,12 @@ const UserContextProvider = ({ children }) => {
       setLoading(true);
 
       try {
+        // 🔥 GET TOKEN
+        const token = await getAccessTokenSilently();
+
         const emailPrefix = auth0User.email.split("@")[0] || "user";
         const fallbackName = auth0User.name || emailPrefix;
+
         const derivedUsername =
           auth0User.nickname ||
           fallbackName
@@ -69,31 +73,41 @@ const UserContextProvider = ({ children }) => {
             .replace(/[^a-z0-9]+/g, "_")
             .replace(/^_+|_+$/g, "");
 
-        const response = await api.post("/users/social-login", {
-          email: auth0User.email,
-          fullName: fallbackName,
-          username: derivedUsername,
-          avatar: auth0User.picture || "",
-          authProvider: auth0User.sub?.startsWith("google-oauth2|")
-            ? "google"
-            : "auth0",
-          authProviderId: auth0User.sub || "",
-        });
+        // 🔥 SEND TOKEN TO BACKEND
+        const response = await api.post(
+          "/users/social-login",
+          {
+            email: auth0User.email,
+            fullName: fallbackName,
+            username: derivedUsername,
+            avatar: auth0User.picture || "",
+            authProvider: auth0User.sub?.startsWith("google-oauth2|")
+              ? "google"
+              : "auth0",
+            authProviderId: auth0User.sub || "",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // ✅ FIX
+            },
+          }
+        );
 
-        if (ignore) {
-          return;
-        }
+        if (ignore) return;
 
         const { user: nextUser, accessToken } = response.data.data;
         const syncedUser = syncUserToStore(nextUser);
 
+        // ✅ STORE USER + TOKEN
         window.localStorage.setItem("accessToken", accessToken);
         window.localStorage.setItem("user", JSON.stringify(syncedUser));
+
         setUser(syncedUser);
+
       } catch (error) {
         if (!ignore) {
           console.error(
-            "Auth0 user sync failed",
+            "❌ Auth0 user sync failed",
             error.response?.data?.message || error.message
           );
           logoutLocalUser();
@@ -111,7 +125,7 @@ const UserContextProvider = ({ children }) => {
     return () => {
       ignore = true;
     };
-  }, [auth0Loading, isAuthenticated, auth0User, auth0Logout]);
+  }, [auth0Loading, isAuthenticated, auth0User]);
 
   return (
     <UserContext.Provider value={{ user, setUser, logout, loading }}>
