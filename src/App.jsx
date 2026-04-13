@@ -14,6 +14,7 @@ import About from "./pages/About";
 import Features from "./pages/Features";
 import VedHome from "./pages/VedHome";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminRegister from "./pages/AdminRegister";
 
 function App() {
   return (
