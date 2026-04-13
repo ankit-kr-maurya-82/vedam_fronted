@@ -13,6 +13,7 @@ import PostPage from "./pages/PostPage";
 import About from "./pages/About";
 import Features from "./pages/Features";
 import VedHome from "./pages/VedHome";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
           <Route index element={<VedHome />} />
           <Route path="profile/:username" element={<Profile />} />
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+<Route path="register" element={<Register />} />
+<Route path="admin-register" element={<AdminRegister />} />
           <Route path="explore" element={<Explore />} />
           <Route path="create" element={<CreatePost />} />
           <Route path="edit/:postId" element={<CreatePost />} />
@@ -31,6 +33,7 @@ function App() {
           <Route path="post/:postId" element={<PostPage />} />
           <Route path="about" element={<About />} />
           <Route path="features" element={<Features />} />
+          <Route path="admin" element={<AdminDashboard />} />
         </Route>
       </Routes>
     </div>

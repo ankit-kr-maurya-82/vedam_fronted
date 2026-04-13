@@ -42,7 +42,9 @@ const UserContextProvider = ({ children }) => {
     const accessToken = window.localStorage.getItem("accessToken");
 
     if (storedUser && accessToken) {
-      setUser(syncUserToStore(storedUser));
+      const synced = syncUserToStore(storedUser);
+      synced.role = storedUser.role || 'user';
+      setUser(synced);
     } else if (storedUser && !accessToken) {
       logoutLocalUser();
     }
@@ -97,6 +99,7 @@ const UserContextProvider = ({ children }) => {
 
         const { user: nextUser, accessToken } = response.data.data;
         const syncedUser = syncUserToStore(nextUser);
+        syncedUser.role = nextUser.role || 'user'; // Ensure role is set
 
         // ✅ STORE USER + TOKEN
         window.localStorage.setItem("accessToken", accessToken);

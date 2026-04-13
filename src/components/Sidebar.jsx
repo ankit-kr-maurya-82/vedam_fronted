@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaPlus, FaHome, FaUser, FaCompass, FaSignOutAlt } from "react-icons/fa";
+import { Shield } from "lucide-react";
 import UserContext from "../context/UserContext";
 import "./CSS/Sidebar.css";
 
@@ -53,6 +54,12 @@ const Sidebar = () => {
           <NavLink to="/create" className="sidebarItem">
             <FaPlus />
             <span>Create</span>
+          </NavLink>
+        )}
+        {user?.role === 'admin' && (
+          <NavLink to="/admin" className="sidebarItem">
+            <Shield className="sidebar-icon" />
+            <span>Admin</span>
           </NavLink>
         )}
       </nav>
