@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../api/axios.js';
+import "./CSS/AdminRegister.css";
 
 const AdminRegister = () => {
   const [formData, setFormData] = useState({
@@ -8,9 +9,11 @@ const AdminRegister = () => {
     email: '',
     password: ''
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // ✅ handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -18,17 +21,20 @@ const AdminRegister = () => {
     });
   };
 
+  // ✅ submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const { data } = await api.post('/admin/signup', formData, {
+      await api.post('/admin/signup', formData, {
         headers: { 'Content-Type': 'application/json' }
       });
-      alert('Admin account created! Use login page.');
+
+      alert(`Admin registered!\nID: ${formData.username}\nPassword: ${formData.password}`);
       window.location.href = '/login';
+
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
@@ -37,50 +43,76 @@ const AdminRegister = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2>Admin Registration</h2>
-        {error && <p className="error">{error}</p>}
-        <form onSubmit={handleSubmit}>
+    <div className="admin-register-container">
+      <div className="admin-auth-card">
+
+        <div className="admin-badge">🔐 DEVELOPER PANEL</div>
+        <h2 className="admin-title">Admin Dashboard Access</h2>
+
+        {error && <p className="admin-error">{error}</p>}
+
+        <form className="admin-register-form" onSubmit={handleSubmit}>
+
+          {/* Full Name */}
           <input
+            className="admin-input"
             name="fullName"
             placeholder="Full Name"
             value={formData.fullName}
             onChange={handleChange}
             required
           />
+
+          {/* Username */}
           <input
+            className="admin-input"
             name="username"
-            placeholder="Username"
+            placeholder="Username (Developer ID)"
             value={formData.username}
             onChange={handleChange}
             required
           />
+
+          {/* ✅ FIXED EMAIL */}
           <input
-            name="email"
+            className="admin-input"
             type="email"
+            name="email"
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
             required
           />
+
+          {/* ✅ FIXED PASSWORD */}
           <input
-            name="password"
+            className="admin-input"
             type="password"
+            name="password"
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
             required
           />
-          <button type="submit" disabled={loading}>
-            {loading ? 'Creating...' : 'Create Admin'}
+
+          {/* Button */}
+          <button 
+            className="admin-btn"
+            type="submit" 
+            disabled={loading}
+          >
+            {loading ? '🚀 Creating Admin...' : '🔐 Create Developer Admin'}
           </button>
+
         </form>
-        <p>Existing user? <a href="/login">Login</a></p>
+
+        <p className="admin-footer">
+          © {new Date().getFullYear()} Developer Admin Panel
+        </p>
+
       </div>
     </div>
   );
 };
 
 export default AdminRegister;
-

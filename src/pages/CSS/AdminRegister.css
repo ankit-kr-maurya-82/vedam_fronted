@@ -1,0 +1,122 @@
+/* Background */
+.admin-register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1c1917, #292524, #1c1917);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Card */
+.admin-auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  color: #fef3c7;
+}
+
+/* Badge */
+.admin-badge {
+  font-size: 0.8rem;
+  background: #f59e0b;
+  color: #1c1917;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* Title */
+.admin-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Error */
+.admin-error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #f87171;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/* Form */
+.admin-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Inputs */
+.admin-input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fef3c7;
+  font-size: 0.95rem;
+  transition: 0.3s;
+}
+
+.admin-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Focus Glow */
+.admin-input:focus {
+  box-shadow: 0 0 0 2px #f59e0b;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Button */
+.admin-btn {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #1c1917;
+  transition: 0.3s;
+}
+
+/* Hover */
+.admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+
+/* Disabled */
+.admin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.admin-footer {
+  margin-top: 15px;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .admin-auth-card {
+    margin: 0 1rem;
+    padding: 1.5rem;
+  }
+}

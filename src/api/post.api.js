@@ -3,7 +3,7 @@ import api from "./axios"; // axios instance with baseURL + token
 // Get all posts
 export const fetchPosts = async () => {
   const res = await api.get("/posts");
-  return res.data?.posts || [];
+  return res.data?.posts?.filter(p => !p.isAdminOnly) || [];
 };
 
 // Like / Unlike post

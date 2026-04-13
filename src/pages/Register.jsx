@@ -33,13 +33,14 @@ const Register = () => {
     setErrorMsg("");
 
     try {
-      await api.post("/users/register", {
+      const response = await api.post("/users/register", {
         fullName,
         username,
         email,
         password,
       });
-
+      
+      alert(`User registered!\nID: ${response.data.data.username}\nPassword: ${password}`);
       navigate("/login");
     } catch (error) {
       setErrorMsg(

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Sidebar";
 import UserContextProvider from "./context/UserContextProvider";
 import { ThemeProvider } from "./context/theme";
@@ -10,9 +11,10 @@ const Layout = () => {
   const [themeMode, setThemeMode] = useState("light");
   const location = useLocation();
 
-  const hideHeader =
+const hideHeader =
     location.pathname.startsWith("/login") ||
-    location.pathname.startsWith("/register");
+    location.pathname.startsWith("/register") ||
+    location.pathname.startsWith("/admin-register");
 
   const toggleTheme = () => {
     setThemeMode((prev) => (prev === "dark" ? "light" : "dark"));
@@ -35,10 +37,13 @@ const Layout = () => {
         <div className={`app-shell ${hideHeader ? "auth-shell" : ""}`}>
           {!hideHeader && <Header />}
           {!hideHeader && <Sidebar />}
+          
 
           <main className={!hideHeader ? "app-main with-sidebar" : "app-main"}>
             <Outlet />
           </main>
+                    <Footer />
+
         </div>
       </UserContextProvider>
     </ThemeProvider>
