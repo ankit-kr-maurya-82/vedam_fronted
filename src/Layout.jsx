@@ -5,16 +5,22 @@ import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Sidebar";
 import UserContextProvider from "./context/UserContextProvider";
 import { ThemeProvider } from "./context/theme";
-import "./index.css"
+import "./index.css";
 
 const Layout = () => {
   const [themeMode, setThemeMode] = useState("light");
   const location = useLocation();
 
-const hideHeader =
-    location.pathname.startsWith("/login") ||
-    location.pathname.startsWith("/register") ||
-    location.pathname.startsWith("/admin-register");
+  // ✅ Pages jahan pura layout hide hoga
+  const authRoutes = ["/login", "/register", "/admin-register"];
+  const showLayout = !authRoutes.includes(location.pathname);
+
+  // ✅ Footer hide logic (static + dynamic)
+  const hideFooterRoutes = ["/login", "/home", "/explore"];
+
+  const hideFooter =
+    hideFooterRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/profile/");
 
   const toggleTheme = () => {
     setThemeMode((prev) => (prev === "dark" ? "light" : "dark"));
@@ -22,7 +28,12 @@ const hideHeader =
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    if (saved) setThemeMode(saved);
+    if (saved) {
+      setThemeMode(saved);
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setThemeMode(prefersDark ? "dark" : "light");
+    }
   }, []);
 
   useEffect(() => {
@@ -34,15 +45,19 @@ const hideHeader =
   return (
     <ThemeProvider value={{ themeMode, toggleTheme }}>
       <UserContextProvider>
-        <div className={`app-shell ${hideHeader ? "auth-shell" : ""}`}>
-          {!hideHeader && <Header />}
-          {!hideHeader && <Sidebar />}
-          
+        <div className={`app-shell ${showLayout ? "main-layout" : "auth-layout"}`}>
 
-          <main className={!hideHeader ? "app-main with-sidebar" : "app-main"}>
+          {/* Header + Sidebar */}
+          {showLayout && <Header />}
+          {showLayout && <Sidebar />}
+
+          {/* Main */}
+          <main className={showLayout ? "app-main with-sidebar" : "app-main"}>
             <Outlet />
           </main>
-                    <Footer />
+
+          {/* Footer */}
+          {!hideFooter && showLayout && <Footer />}
 
         </div>
       </UserContextProvider>

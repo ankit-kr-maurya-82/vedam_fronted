@@ -43,7 +43,7 @@ const Login = () => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(syncedUser));
       setUser(syncedUser);
-      navigate(`/profile/${syncedUser.username}`);
+      navigate("/home");
     } catch (error) {
       setErrorMsg(
         error.response?.data?.message ||
@@ -59,6 +59,7 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
+   
         {errorMsg && <p className="error-msg">{errorMsg}</p>}
 
         <input

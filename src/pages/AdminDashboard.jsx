@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import UserContext from '../context/UserContext.js';
-import { getAdminStats, getUsersList } from '../api/admin.js';
+import { getAdminStats, getUsersList, deleteUser } from '../api/admin.js';
 import "./CSS/AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -10,6 +10,25 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stats');
+  const [deletingId, setDeletingId] = useState(null);
+
+  /* =========================
+     DELETE USER FUNCTION
+  ========================= */
+  const handleDelete = async (id) => {
+    if (!window.confirm(`Delete user ${id.slice(-6)} permanently?`)) return;
+
+    try {
+      setDeletingId(id);
+      await deleteUser(id);
+      loadUsers(); // Reload list
+      alert('User deleted successfully');
+    } catch (error) {
+      alert(error.response?.data?.message || 'Delete failed');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   /* =========================
      LOAD STATS
@@ -70,16 +89,22 @@ const AdminDashboard = () => {
         >
           Users
         </button>
+        
       </div>
 
       {/* =========================
           STATS
       ========================= */}
-      {activeTab === "stats" && (
-        <div className="tab-content">
-          <h2>Stats</h2>
-          <p>Total Users: {stats.totalUsers}</p>
-          <p>Total Posts: {stats.totalPosts}</p>
+{activeTab === "stats" && (
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Total Users</h3>
+            <span className="stat-number">{stats.totalUsers || 0}</span>
+          </div>
+          <div className="stat-card">
+            <h3>Total Posts</h3>
+            <span className="stat-number">{stats.totalPosts || 0}</span>
+          </div>
         </div>
       )}
 
@@ -88,10 +113,25 @@ const AdminDashboard = () => {
       ========================= */}
       {activeTab === "users" && (
         <div className="tab-content">
-
-          <button className="reload-btn" onClick={loadUsers}>
-            🔄 Reload Users
-          </button>
+          <div className="table-header">
+            <button className="reload-btn" onClick={loadUsers}>
+              🔄 Reload Users
+            </button>
+            <input 
+              type="text" 
+              placeholder="Search users..." 
+              className="search-input"
+              onChange={(e) => {
+                // Simple client-side search for demo
+                const term = e.target.value.toLowerCase();
+                const filtered = originalUsers.filter(u => 
+                  u.username.toLowerCase().includes(term) ||
+                  u.email.toLowerCase().includes(term)
+                );
+                setUsers(filtered);
+              }}
+            />
+          </div>
 
           {users.length === 0 ? (
             <p>No users found</p>
@@ -104,6 +144,7 @@ const AdminDashboard = () => {
                   <th>Email</th>
                   <th>Role</th>
                   <th>Joined</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
@@ -119,6 +160,16 @@ const AdminDashboard = () => {
                       </span>
                     </td>
                     <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      {u.role !== 'admin' && (
+                        <button 
+                          className="delete-btn"
+                          onClick={() => handleDelete(u._id)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
