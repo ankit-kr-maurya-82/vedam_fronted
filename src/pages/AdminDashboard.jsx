@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import UserContext from '../context/UserContext.js';
-import { getAdminStats, getUsersList, deleteUser } from '../api/admin.js';
+import { getAdminStats, getUsersList, deleteUser, getPostsList, deletePost } from '../api/admin.js';
 import "./CSS/AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -11,6 +11,25 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('stats');
   const [deletingId, setDeletingId] = useState(null);
+  const [posts, setPosts] = useState([]);
+
+  /* =========================
+     DELETE POST FUNCTION
+  ========================= */
+  const handleDeletePost = async (id) => {
+    if (!window.confirm(`Delete post ${id.slice(-6)} permanently?`)) return;
+
+    try {
+      setDeletingId(id);
+      await deletePost(id);
+      loadPosts();
+      alert('Post deleted successfully');
+    } catch (error) {
+      alert(error.response?.data?.message || 'Delete failed');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   /* =========================
      DELETE USER FUNCTION
@@ -45,6 +64,18 @@ const AdminDashboard = () => {
   };
 
   /* =========================
+     LOAD POSTS
+  ========================= */
+  const loadPosts = async () => {
+    try {
+      const response = await getPostsList();
+      setPosts(response.data.posts || []);
+    } catch (error) {
+      console.error("Posts error:", error);
+    }
+  };
+
+  /* =========================
      LOAD USERS
   ========================= */
   const loadUsers = async () => {
@@ -73,6 +104,15 @@ const AdminDashboard = () => {
 
       {/* Tabs */}
       <div className="tab-buttons">
+        <button 
+          className={activeTab === "posts" ? "active" : ""}
+          onClick={() => {
+            setActiveTab("posts");
+            loadPosts();
+          }}
+        >
+          Posts
+        </button>
         <button 
           className={activeTab === "stats" ? "active" : ""}
           onClick={() => setActiveTab("stats")}
@@ -122,9 +162,8 @@ const AdminDashboard = () => {
               placeholder="Search users..." 
               className="search-input"
               onChange={(e) => {
-                // Simple client-side search for demo
                 const term = e.target.value.toLowerCase();
-                const filtered = originalUsers.filter(u => 
+                const filtered = users.filter(u => 
                   u.username.toLowerCase().includes(term) ||
                   u.email.toLowerCase().includes(term)
                 );
@@ -184,6 +223,60 @@ const AdminDashboard = () => {
             </table>
           )}
 
+        </div>
+      )}
+      {activeTab === "posts" && (
+        <div className="tab-content">
+          <div className="table-header">
+            <button className="reload-btn" onClick={loadPosts}>
+              🔄 Reload Posts
+            </button>
+            <input 
+              type="text" 
+              placeholder="Search posts..." 
+              className="search-input"
+              onChange={(e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = posts.filter(p => 
+                  p.title.toLowerCase().includes(term)
+                );
+                setPosts(filtered);
+              }}
+            />
+          </div>
+          {posts.length === 0 ? (
+            <p>No posts found</p>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((p) => (
+                  <tr key={p._id}>
+                    <td>{p._id.slice(-6)}</td>
+                    <td>{p.title}</td>
+                    <td>{p.owner?.username || 'Unknown'}</td>
+                    <td>{new Date(p.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      <button 
+                        className="delete-btn"
+                        onClick={() => handleDeletePost(p._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
     </div>
