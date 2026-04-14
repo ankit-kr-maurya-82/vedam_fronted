@@ -9,6 +9,7 @@ import { syncUserToStore } from "../lib/socialStore";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [adminAccessKey, setAdminAccessKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -36,6 +37,7 @@ const Login = () => {
       const res = await api.post("/users/login", {
         email,
         password,
+        adminAccessKey: adminAccessKey || undefined,
       });
 
       const { user, accessToken } = res.data.data;
@@ -77,6 +79,14 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        {adminAccessKey && (
+          <input
+            type="password"
+            placeholder="Admin Access Key"
+            value={adminAccessKey}
+            onChange={(e) => setAdminAccessKey(e.target.value)}
+          />
+        )}
 
         <button type="submit" disabled={loading} className="login-btn">
           {loading ? "Logging in..." : "Login"}

@@ -15,7 +15,9 @@ import Features from "./pages/Features";
 import VedHome from "./pages/VedHome";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegister from "./pages/AdminRegister";
+import AdminLogin from "./pages/AdminLogin";
 import AdminUserDetail from "./pages/AdminUserDetail";
+
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
           <Route path="profile/:username" element={<Profile />} />
           <Route path="login" element={<Login />} />
 <Route path="register" element={<Register />} />
+<Route path="admin-login" element={<AdminLogin />} />
 <Route path="admin-register" element={<AdminRegister />} />
           <Route path="explore" element={<Explore />} />
           <Route path="create" element={<CreatePost />} />

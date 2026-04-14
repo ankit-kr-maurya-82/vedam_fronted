@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import App from "./App.jsx";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Auth0ProviderWithNavigate = ({ children }) => {
   const navigate = useNavigate();
@@ -31,6 +33,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Auth0ProviderWithNavigate>
         <App />
+        <ToastContainer 
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </Auth0ProviderWithNavigate>
     </BrowserRouter>
   </React.StrictMode>

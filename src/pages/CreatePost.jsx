@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   FaImage,
   FaVideo,
@@ -13,6 +14,16 @@ import {
 import "./CSS/CreatePost.css";
 import { getCurrentUser } from "../lib/socialStore";
 import { createPostApi, fetchPostById, updatePostApi } from "../api/post";
+import { ToastContainer } from 'react-toastify';
+
+function App() {
+  return (
+    <>
+      <ToastContainer position="top-right" />
+      {/* your app */}
+    </>
+  );
+}
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -129,8 +140,9 @@ const CreatePost = () => {
       if (isEditMode) {
         await updatePostApi(postId, formData);
         navigate(`/post/${postId}`);
-      } else {
+    } else {
         await createPostApi(formData);
+        toast.success('Article posted successfully!');
         navigate("/home");
       }
     } catch (err) {

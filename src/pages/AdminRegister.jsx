@@ -28,7 +28,8 @@ const AdminRegister = () => {
     setError('');
 
     try {
-      await api.post('/admin/signup', formData, {
+      formData.adminAccessKey = 'ADMIN2024';
+      await api.post('/users/register', formData, {
         headers: { 'Content-Type': 'application/json' }
       });
 

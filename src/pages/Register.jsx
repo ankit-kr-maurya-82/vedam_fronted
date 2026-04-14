@@ -9,6 +9,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [adminAccessKey, setAdminAccessKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -38,6 +39,7 @@ const Register = () => {
         username,
         email,
         password,
+        adminAccessKey: adminAccessKey || undefined,
       });
       
       alert(`User registered!\nID: ${response.data.data.username}\nPassword: ${password}`);
@@ -91,6 +93,14 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {adminAccessKey && (
+            <input
+              type="password"
+              placeholder="Admin Access Key"
+              value={adminAccessKey}
+              onChange={(e) => setAdminAccessKey(e.target.value)}
+            />
+          )}
 
           <button type="submit" disabled={loading} className="register-btn">
             {loading ? "Creating Account..." : "Create Account"}
