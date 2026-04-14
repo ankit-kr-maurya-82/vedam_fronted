@@ -6,6 +6,7 @@
 /* Tabs */
 .tab-buttons {
   margin-bottom: 20px;
+  margin-top: 63px;
 }
 
 .tab-buttons button {
@@ -156,6 +157,21 @@
 
 .delete-btn:hover {
   background: #d9363e;
+}
+
+.view-btn {
+  padding: 4px 8px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.view-btn:hover {
+  background: #059669;
 }
 
 .delete-btn:disabled {

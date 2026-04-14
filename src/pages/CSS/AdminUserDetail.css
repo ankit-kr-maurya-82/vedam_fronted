@@ -1,0 +1,62 @@
+.user-detail-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+.user-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #ff4d4f;
+}
+
+.user-detail-header h1 {
+  margin: 0 0 4px 0;
+  font-size: 28px;
+}
+
+.user-detail-header p {
+  margin: 0 0 8px 0;
+  opacity: 0.8;
+}
+
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.user-bio-section {
+  background: #222;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.user-bio-section h3 {
+  margin-top: 0;
+  color: #ff4d4f;
+}
+
+.user-meta {
+  background: #111;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.user-meta p {
+  margin: 8px 0;
+}
+
+@media (max-width: 768px) {
+  .user-detail-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}

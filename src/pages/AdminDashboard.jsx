@@ -161,14 +161,22 @@ const AdminDashboard = () => {
                     </td>
                     <td>{new Date(u.createdAt).toLocaleDateString()}</td>
                     <td>
-                      {u.role !== 'admin' && (
+                      <>
                         <button 
-                          className="delete-btn"
-                          onClick={() => handleDelete(u._id)}
+                          className="view-btn"
+                          onClick={() => window.open(`/admin/user/${u._id}`, '_blank')}
                         >
-                          Delete
+                          View
                         </button>
-                      )}
+                        {u.role !== 'admin' && (
+                          <button 
+                            className="delete-btn"
+                            onClick={() => handleDelete(u._id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </>
                     </td>
                   </tr>
                 ))}

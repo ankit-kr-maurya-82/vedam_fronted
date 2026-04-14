@@ -16,7 +16,7 @@ const Layout = () => {
   const showLayout = !authRoutes.includes(location.pathname);
 
   // ✅ Footer hide logic (static + dynamic)
-  const hideFooterRoutes = ["/login", "/home", "/explore"];
+  const hideFooterRoutes = ["/login", "/home", "/explore", "/admin"];
 
   const hideFooter =
     hideFooterRoutes.includes(location.pathname) ||

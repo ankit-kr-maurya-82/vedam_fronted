@@ -15,6 +15,7 @@ import Features from "./pages/Features";
 import VedHome from "./pages/VedHome";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegister from "./pages/AdminRegister";
+import AdminUserDetail from "./pages/AdminUserDetail";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="features" element={<Features />} />
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/user/:id" element={<AdminUserDetail />} />
         </Route>
       </Routes>
     </div>
