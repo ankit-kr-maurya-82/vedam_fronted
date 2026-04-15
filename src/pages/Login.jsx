@@ -5,6 +5,8 @@ import UserContext from "../context/UserContext";
 import api from "../api/axios.js";
 import "./CSS/Login.css";
 import { syncUserToStore } from "../lib/socialStore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,9 +21,7 @@ const Login = () => {
 
   const handleGoogleLogin = () =>
     loginWithRedirect({
-      appState: {
-        returnTo: "/home",
-      },
+      appState: { returnTo: "/home" },
       authorizationParams: {
         connection:
           import.meta.env.VITE_AUTH0_GOOGLE_CONNECTION || "google-oauth2",
@@ -41,16 +41,23 @@ const Login = () => {
       });
 
       const { user, accessToken } = res.data.data;
+
       const syncedUser = syncUserToStore(user);
+
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("user", JSON.stringify(syncedUser));
+
       setUser(syncedUser);
+
+      toast.success("Login successful 🚀");
       navigate("/home");
     } catch (error) {
-      setErrorMsg(
+      const msg =
         error.response?.data?.message ||
-          "Backend login failed. Check if server and MongoDB are running."
-      );
+        "Backend login failed. Check if server and MongoDB are running.";
+
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -58,10 +65,12 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      {/* Toast */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-   
         {errorMsg && <p className="error-msg">{errorMsg}</p>}
 
         <input
@@ -79,14 +88,14 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {adminAccessKey && (
-          <input
-            type="password"
-            placeholder="Admin Access Key"
-            value={adminAccessKey}
-            onChange={(e) => setAdminAccessKey(e.target.value)}
-          />
-        )}
+
+        {/* Optional Admin Key */}
+        <input
+          type="password"
+          placeholder="Admin Access Key (optional)"
+          value={adminAccessKey}
+          onChange={(e) => setAdminAccessKey(e.target.value)}
+        />
 
         <button type="submit" disabled={loading} className="login-btn">
           {loading ? "Logging in..." : "Login"}
