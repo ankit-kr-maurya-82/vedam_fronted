@@ -166,7 +166,7 @@ const Header = () => {
                 )}
                 <span className="headerUserName">@{user.username}</span>
               </NavLink>
-              <button className="btn" onClick={logout}>Logout</button>
+              <NavLink to="/"><button className="btn" onClick={logout} >Logout</button></NavLink>
             </>
           ) : (
             <NavLink to="/login" className="btn">Login</NavLink>

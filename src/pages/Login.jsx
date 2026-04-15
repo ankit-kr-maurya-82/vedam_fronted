@@ -66,12 +66,12 @@ const Login = () => {
   return (
     <div className="login-container">
       {/* Toast */}
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-center" autoClose={3000} />
 
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Login</h2>
 
-        {errorMsg && <p className="error-msg">{errorMsg}</p>}
+        {errorMsg && <ToastContainer className="error-msg">{errorMsg}</ToastContainer>}
 
         <input
           type="email"
@@ -90,12 +90,12 @@ const Login = () => {
         />
 
         {/* Optional Admin Key */}
-        <input
+        {/* <input
           type="password"
           placeholder="Admin Access Key (optional)"
           value={adminAccessKey}
           onChange={(e) => setAdminAccessKey(e.target.value)}
-        />
+        /> */}
 
         <button type="submit" disabled={loading} className="login-btn">
           {loading ? "Logging in..." : "Login"}
