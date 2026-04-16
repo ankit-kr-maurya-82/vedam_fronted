@@ -144,6 +144,7 @@ body {
   height: 36px;
   object-fit: cover;
   display: block;
+  border-radius: 50%j;
 }
 
 .headerAvatarFallback {
