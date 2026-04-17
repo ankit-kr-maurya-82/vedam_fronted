@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
+import React, { useContext, useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import "./CSS/PostPage.css";
 import "./CSS/PostPage-part2.css";
@@ -11,7 +11,6 @@ import { deletePostApi, fetchPostById } from "../api/post.js";
 import { fetchProfileBundle, toggleFollowProfile } from "../api/profile";
 import { formatArticleDate } from "../utils/formatArticleDate.js";
 import { likePost } from "../api/post.api.js";
-import { useCallback } from "react";
 
 // Helper to convert &lt;p&gt; back to <p>
 const unescapeHTML = (html) => {
@@ -59,14 +58,26 @@ const PostPage = () => {
   }, [postId]);
 
   const handleLike = useCallback(async () => {
-    if (!activePost) return;
-    setPostLikes({ liked: !postLikes.liked, count: postLikes.count + (postLikes.liked ? -1 : 1) });
+    if (!activePost) {
+      return;
+    }
+
+    const previousLikes = postLikes;
+    const optimisticLikes = {
+      liked: !previousLikes.liked,
+      count: previousLikes.count + (previousLikes.liked ? -1 : 1),
+    };
+
+    setPostLikes(optimisticLikes);
+
     try {
       const res = await likePost(activePost.id || activePost._id);
-      setPostLikes({ count: res.data.data.likesCount, liked: res.data.data.liked });
+      setPostLikes({
+        count: res.likesCount ?? optimisticLikes.count,
+        liked: res.liked ?? optimisticLikes.liked,
+      });
     } catch (err) {
-      // Revert
-      setPostLikes({ liked: !optimisticLiked, count: optimisticCount === postLikes.count + 1 ? postLikes.count - 1 : postLikes.count + 1 });
+      setPostLikes(previousLikes);
       console.error(err);
     }
   }, [activePost, postLikes]);

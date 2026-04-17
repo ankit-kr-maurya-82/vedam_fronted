@@ -9,8 +9,8 @@ const PostCard = ({ post }) => {
   const handleLike = async () => {
     try {
       const res = await likePost(post._id);
-      setLikes(res.data.data.likesCount);
-      setLiked(res.data.data.liked);
+      setLikes(res.likesCount ?? likes);
+      setLiked(res.liked ?? liked);
     } catch (err) {
       console.error(err);
     }

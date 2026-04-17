@@ -9,7 +9,7 @@ export const fetchPosts = async () => {
 // Like / Unlike post
 export const likePost = async (postId) => {
   const res = await api.post(`/posts/${postId}/like`);
-  return res.data;
+  return res.data?.data || { likesCount: 0, liked: false };
 };
 
 // Create new post
