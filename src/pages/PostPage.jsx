@@ -3,13 +3,15 @@ import { Link, useParams } from "react-router-dom";
 import "./CSS/PostPage.css";
 import "./CSS/PostPage-part2.css";
 import "./CSS/ArticleContent.css";
-import { FaArrowLeft, FaClock, FaCommentDots, FaPen, FaPlus, FaTrash } from "react-icons/fa";
+import { FaArrowLeft, FaClock, FaCommentDots, FaPen, FaPlus, FaTrash, FaHeart } from "react-icons/fa";
 import Comments from "../components/Comments/Comments.jsx";
 import UserContext from "../context/UserContext";
 import FollowBtn from "../components/FollowBtn";
 import { deletePostApi, fetchPostById } from "../api/post.js";
 import { fetchProfileBundle, toggleFollowProfile } from "../api/profile";
 import { formatArticleDate } from "../utils/formatArticleDate.js";
+import { likePost } from "../api/post.api.js";
+import { useCallback } from "react";
 
 // Helper to convert &lt;p&gt; back to <p>
 const unescapeHTML = (html) => {
@@ -25,6 +27,7 @@ const PostPage = () => {
   const [commentCount, setCommentCount] = useState(0);
   const [authorProfile, setAuthorProfile] = useState(null);
   const [followLoading, setFollowLoading] = useState(false);
+  const [postLikes, setPostLikes] = useState({ count: 0, liked: false });
   const [commentsOpen, setCommentsOpen] = useState(true);
   const commentsPanelRef = useRef(null);
 
@@ -38,6 +41,7 @@ const PostPage = () => {
         if (!cancelled) {
           setActivePost(post);
           setCommentCount(post?.commentsCount || 0);
+          setPostLikes({ count: post?.likesCount ?? 0, liked: false });
           setLoading(false);
         }
       } catch {
@@ -53,6 +57,26 @@ const PostPage = () => {
       cancelled = true;
     };
   }, [postId]);
+
+  const handleLike = useCallback(async () => {
+    if (!activePost) return;
+    try {
+      const res = await likePost(activePost.id || activePost._id);
+      setPostLikes({ count: res.data.data.likesCount, liked: res.data.data.liked });
+    } catch (err) {
+      console.error(err);
+    }
+  }, [activePost]);
+
+  const handleShare = useCallback(() => {
+    if (!activePost) return;
+    const shareUrl = `${window.location.origin}/post/${activePost.id || activePost._id}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert('Post link copied to clipboard!');
+    }).catch(() => {
+      prompt('Copy this link:', shareUrl);
+    });
+  }, [activePost]);
 
   useEffect(() => {
     let cancelled = false;
@@ -200,6 +224,22 @@ const PostPage = () => {
           </div>
 
           <div className="article-engagement-strip">
+            <button
+              type="button"
+              className="article-engagement-pill"
+              onClick={handleLike}
+            >
+              <FaHeart className={postLikes.liked ? 'text-red-500 fill-red-500' : ''} />
+              <span>{postLikes.count}</span>
+            </button>
+            <button
+              type="button"
+              className="article-engagement-pill"
+              onClick={handleShare}
+            >
+              🔗
+              <span>Share</span>
+            </button>
             <button
               type="button"
               className="article-engagement-pill article-comment-trigger"

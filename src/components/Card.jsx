@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./CSS/Card.css";
 import dummyPosts from "./dummyPosts.js";
-import { FaArrowRight, FaPen, FaTimes, FaTrash } from "react-icons/fa";
+import { FaArrowRight, FaPen, FaTimes, FaTrash, FaHeart } from "react-icons/fa";
 import { getCurrentUser } from "../lib/socialStore";
-import { deletePostApi } from "../api/post";
+import { likePost } from "../api/post.api.js";
+import { deletePostApi } from "../api/post.js";
 import { formatArticleDate } from "../utils/formatArticleDate";
+import { useCallback } from "react";
 
 const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
     : [];
 
   const [activeMedia, setActiveMedia] = useState(null);
+  const [likesState, setLikesState] = useState({});
   const currentUser = getCurrentUser();
 
   return (
@@ -94,6 +97,49 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                     to={`/profile/${post.username}`}
                     className="post-author"
                   >
+                {/* POST ACTIONS */}
+                <div className="post-actions">
+                  {(() => {
+                    const postId = post.id || post._id;
+                    const postLikes = likesState[postId] || { count: post.likesCount || 0, liked: false };
+                    const handleLike = useCallback(async () => {
+                      try {
+                        const res = await likePost(postId);
+                        setLikesState(prev => ({ ...prev, [postId]: { count: res.data.data.likesCount, liked: res.data.data.liked } }));
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }, [postId]);
+
+                    const handleShare = useCallback(() => {
+                      const shareUrl = `${window.location.origin}/post/${postId}`;
+                      navigator.clipboard.writeText(shareUrl).then(() => {
+                        alert('Post link copied to clipboard!');
+                      }).catch(() => {
+                        prompt('Copy this link:', shareUrl);
+                      });
+                    }, [postId]);
+
+                    return (
+                      <>
+                        <button 
+                          onClick={handleLike} 
+                          className={`like-btn ${postLikes.liked ? 'liked' : ''}`}
+                          title="Like"
+                        >
+                          <FaHeart className={postLikes.liked ? 'text-red-500 fill-red-500' : ''} /> {postLikes.count}
+                        </button>
+                        <button 
+                          onClick={handleShare} 
+                          className="share-btn"
+                          title="Share"
+                        >
+                          🔗
+                        </button>
+                      </>
+                    );
+                  })()}
+                </div>
                     {post.avatar ? (
                       <img
                         src={post.avatar}
