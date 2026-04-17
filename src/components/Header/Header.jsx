@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import { FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import UserContext from "../../context/UserContext";
 import "./header.css";
 import { searchContent } from "../../api/search";
@@ -139,6 +139,38 @@ const Header = () => {
                 </>
               )}
             </div>
+          )}
+        </div>
+
+        <div className={`mobileHeaderProfile ${searchOpen ? "hidden" : ""}`}>
+          {user ? (
+            <NavLink
+              to={`/profile/${user.username}`}
+              className="mobileProfileLink"
+              aria-label="Open profile"
+              onClick={() => setMenuOpen(false)}
+            >
+              {user.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.username}
+                  className="mobileProfileAvatar"
+                />
+              ) : (
+                <div className="mobileProfileAvatar mobileProfileFallback">
+                  {(user.fullName || user.username)?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
+            </NavLink>
+          ) : (
+            <NavLink
+              to="/login"
+              className="mobileProfileLink mobileProfileIconOnly"
+              aria-label="Login"
+              onClick={() => setMenuOpen(false)}
+            >
+              <FaUser />
+            </NavLink>
           )}
         </div>
 
