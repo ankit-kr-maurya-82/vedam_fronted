@@ -1,91 +1,218 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa6";
+import {
+  FaArrowRight,
+  FaBolt,
+  FaComments,
+  FaCompass,
+  FaNewspaper,
+  FaPenNib,
+  FaUserCircle,
+} from "react-icons/fa";
 import "./CSS/VedHome.css";
-import "./CSS/Hero.css";
-import "./CSS/Article.css";
 import UserContext from "../context/UserContext";
 
-const editorNotes = [
+const pulseStats = [
+  { value: "Article-led", label: "Homepage direction" },
+  { value: "Profiles", label: "Visible creator identity" },
+  { value: "Live", label: "Social interactions" },
+];
+
+const channels = [
   {
-    label: "Issue 28",
-    value: "Editorial essays",
-    text: "Long-form stories on design, internet culture, and meaningful digital work.",
+    title: "Reading Lane",
+    text: "Feature articles, slower essays, and posts that reward attention instead of interruption.",
+    icon: <FaNewspaper />,
   },
   {
-    label: "This week",
-    value: "3 featured reads",
-    text: "Carefully selected articles with a slower pace and stronger point of view.",
+    title: "Creator Lane",
+    text: "Writers get profile pages, post creation flows, and a more public author presence.",
+    icon: <FaPenNib />,
   },
   {
-    label: "Morning brief",
-    value: "9:00 AM",
-    text: "A concise reading list for people who prefer signal over noise.",
+    title: "Community Lane",
+    text: "Likes, comments, and discoverability keep each piece connected to actual people.",
+    icon: <FaComments />,
+  },
+];
+
+const flowSteps = [
+  {
+    step: "01",
+    title: "Land on the issue board",
+    text: "The page leads with a curated point of view instead of a generic product banner.",
+  },
+  {
+    step: "02",
+    title: "Move into content",
+    text: "Readers jump into the feed, explore sections, or open post pages with clear entry points.",
+  },
+  {
+    step: "03",
+    title: "Become part of it",
+    text: "Profiles, follows, reactions, and publishing give the homepage a real next step.",
+  },
+];
+
+const pathwayCards = [
+  {
+    title: "Explore the feed",
+    text: "See the main content flow and browse what people are publishing.",
+    to: "/home",
+    icon: <FaCompass />,
+    authOnly: true,
+  },
+  {
+    title: "Discover features",
+    text: "Understand the full product surface and interaction set.",
+    to: "/features",
+    icon: <FaBolt />,
+  },
+  {
+    title: "Start your profile",
+    text: "Create an identity and begin publishing your own writing.",
+    to: "/register",
+    icon: <FaUserCircle />,
+    guestOnly: true,
+  },
+  {
+    title: "Write a new article",
+    text: "Jump directly into the editor and publish something with weight.",
+    to: "/create",
+    icon: <FaPenNib />,
+    authOnly: true,
   },
 ];
 
 const VedHome = () => {
   const { user } = useContext(UserContext);
 
+  const visiblePathways = pathwayCards.filter((card) => {
+    if (card.authOnly) {
+      return Boolean(user);
+    }
+
+    if (card.guestOnly) {
+      return !user;
+    }
+
+    return true;
+  });
+
   return (
-    <div className="ved_home_container">
-      <section className="hero hero-shell">
-        <div className="editorial-topline">
-          <span className="publication-mark">VEDA JOURNAL</span>
-          <span className="publication-date">Issue 28 | Essays, commentary, and modern web culture</span>
+    <div className="ved3-page">
+      <section className="ved3-shell ved3-hero">
+        <div className="ved3-ribbon">
+          <span className="ved3-ribbon-mark">VEDA</span>
+          <p>New homepage direction with a sharper editorial-product hybrid layout</p>
         </div>
 
-        <div className="hero-layout">
-          <div className="hero-copy">
-            <span className="hero-badge">Cover Feature</span>
-            <h1 className="hero-title">
-              An article-first home for readers who still enjoy depth.
-            </h1>
-
-            <p className="hero-subtitle">
-              Discover thoughtful writing on product design, creative practice,
-              digital aesthetics, and the quieter ideas that age well after the
-              scroll ends.
+        <div className="ved3-hero-grid">
+          <div className="ved3-headline-block">
+            <span className="ved3-kicker">Landing Page Concept</span>
+            <h1>A front page that feels like an issue launch, not just another app screen.</h1>
+            <p>
+              This direction frames VEDA as a social publishing product with a
+              stronger editorial identity. It leads with atmosphere, then turns
+              that attention into reading, profiles, and creation.
             </p>
 
-            <div className="hero-actions">
-              <Link to="/explore" className="btn primary">
-                Read The Latest
+            <div className="ved3-actions">
+              <Link
+                to={user ? "/home" : "/explore"}
+                className="ved3-btn ved3-btn-primary"
+              >
+                {user ? "Open the feed" : "Explore first"}
               </Link>
-              <Link to={user ? "/create" : "/register"} className="btn secondary">
-                Publish An Article <FaArrowRight />
+              <Link
+                to={user ? "/create" : "/register"}
+                className="ved3-btn ved3-btn-secondary"
+              >
+                {user ? "Publish now" : "Join VEDA"} <FaArrowRight />
               </Link>
             </div>
           </div>
 
-          <aside className="hero-sidebar">
-            <article className="lead-story-card">
-              <div className="story-frame">
-                <span className="story-kicker">From the editor</span>
-                <h2>The internet still makes room for writing with patience.</h2>
-                <p>
-                  The best reading experiences do not compete with noise. They
-                  create atmosphere, trust the reader, and leave enough silence
-                  around an idea for it to land properly.
-                </p>
-              </div>
-
-              <div className="story-meta">
-                <span>8 min read</span>
-                <span>Editorial</span>
-                <span>April issue</span>
-              </div>
+          <div className="ved3-billboard">
+            <article className="ved3-billboard-main">
+              <span className="ved3-note-label">Cover note</span>
+              <h2>The best social spaces do not hide writing behind noise.</h2>
+              <p>
+                VEDA gives articles, profiles, and community responses a more
+                deliberate stage so the experience feels memorable before it
+                feels busy.
+              </p>
             </article>
-          </aside>
+
+            <div className="ved3-billboard-side">
+              {pulseStats.map((item) => (
+                <article className="ved3-mini-card" key={item.label}>
+                  <strong>{item.value}</strong>
+                  <span>{item.label}</span>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="ved3-shell ved3-channel-section">
+        <div className="ved3-section-head">
+          <span className="ved3-kicker">Content System</span>
+          <h2>Three lanes that define how the product feels.</h2>
         </div>
 
-        <div className="hero-stats">
-          {editorNotes.map((item) => (
-            <article className="hero-stat-card" key={item.label}>
-              <p className="stat-label">{item.label}</p>
-              <strong>{item.value}</strong>
-              <span>{item.text}</span>
+        <div className="ved3-channel-grid">
+          {channels.map((item) => (
+            <article className="ved3-channel-card" key={item.title}>
+              <div className="ved3-channel-icon">{item.icon}</div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="ved3-shell ved3-issue-board">
+        <div className="ved3-board-copy">
+          <span className="ved3-kicker">Reader Journey</span>
+          <h2>A homepage structure that gives people a clear path from curiosity to contribution.</h2>
+          <p>
+            The page is meant to work like a launch board. It sets tone
+            quickly, shows the product lanes, and makes the next actions feel
+            obvious instead of buried.
+          </p>
+        </div>
+
+        <div className="ved3-flow-list">
+          {flowSteps.map((item) => (
+            <article className="ved3-flow-card" key={item.step}>
+              <span className="ved3-flow-step">{item.step}</span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="ved3-shell ved3-path-section">
+        <div className="ved3-section-head">
+          <span className="ved3-kicker">Entry Points</span>
+          <h2>Use the landing page to route people into the product with purpose.</h2>
+        </div>
+
+        <div className="ved3-path-grid">
+          {visiblePathways.map((item) => (
+            <Link to={item.to} className="ved3-path-card" key={item.title}>
+              <div className="ved3-path-icon">{item.icon}</div>
+              <div>
+                <strong>{item.title}</strong>
+                <p>{item.text}</p>
+              </div>
+              <FaArrowRight className="ved3-path-arrow" />
+            </Link>
           ))}
         </div>
       </section>
