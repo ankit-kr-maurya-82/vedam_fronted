@@ -103,13 +103,17 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                     const postId = post.id || post._id;
                     const postLikes = likesState[postId] || { count: post.likesCount || 0, liked: false };
                     const handleLike = useCallback(async () => {
+                      const currentLikes = likesState[postId] || { count: post.likesCount || 0, liked: false };
+                      setLikesState(prev => ({ ...prev, [postId]: { ...currentLikes, liked: !currentLikes.liked, count: currentLikes.count + (currentLikes.liked ? -1 : 1) } })); // optimistic toggle
+                      setLikesState(prev => ({ ...prev, [postId]: { ...currentLikes, liked: optimisticLiked, count: optimisticCount } }));
                       try {
                         const res = await likePost(postId);
                         setLikesState(prev => ({ ...prev, [postId]: { count: res.data.data.likesCount, liked: res.data.data.liked } }));
                       } catch (err) {
+                        setLikesState(prev => ({ ...prev, [postId]: currentLikes }));
                         console.error(err);
                       }
-                    }, [postId]);
+                    }, [postId, likesState, post.likesCount]);
 
                     const handleShare = useCallback(() => {
                       const shareUrl = `${window.location.origin}/post/${postId}`;

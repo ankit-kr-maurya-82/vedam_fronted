@@ -60,13 +60,16 @@ const PostPage = () => {
 
   const handleLike = useCallback(async () => {
     if (!activePost) return;
+    setPostLikes({ liked: !postLikes.liked, count: postLikes.count + (postLikes.liked ? -1 : 1) });
     try {
       const res = await likePost(activePost.id || activePost._id);
       setPostLikes({ count: res.data.data.likesCount, liked: res.data.data.liked });
     } catch (err) {
+      // Revert
+      setPostLikes({ liked: !optimisticLiked, count: optimisticCount === postLikes.count + 1 ? postLikes.count - 1 : postLikes.count + 1 });
       console.error(err);
     }
-  }, [activePost]);
+  }, [activePost, postLikes]);
 
   const handleShare = useCallback(() => {
     if (!activePost) return;
