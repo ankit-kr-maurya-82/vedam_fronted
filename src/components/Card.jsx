@@ -27,7 +27,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
     const postId = post.id || post._id;
     const currentLikes = likesState[postId] || {
       count: post.likesCount || 0,
-      liked: false,
+      liked: Boolean(post.liked),
     };
     const optimisticLikes = {
       count: currentLikes.count + (currentLikes.liked ? -1 : 1),
@@ -87,7 +87,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
           const isOwner = currentUser?.id === post.authorId;
           const postLikes = likesState[postId] || {
             count: post.likesCount || 0,
-            liked: false,
+            liked: Boolean(post.liked),
           };
 
           return (

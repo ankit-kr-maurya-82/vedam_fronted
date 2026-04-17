@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { likePost } from "../../api/post.api";
 
 const PostCard = ({ post }) => {
-  const [likes, setLikes] = useState(post.likes.length);
-  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(post.likesCount ?? post.likes?.length ?? 0);
+  const [liked, setLiked] = useState(Boolean(post.liked));
 
   const handleLike = async () => {
     try {

@@ -40,7 +40,10 @@ const PostPage = () => {
         if (!cancelled) {
           setActivePost(post);
           setCommentCount(post?.commentsCount || 0);
-          setPostLikes({ count: post?.likesCount ?? 0, liked: false });
+          setPostLikes({
+            count: post?.likesCount ?? 0,
+            liked: Boolean(post?.liked),
+          });
           setLoading(false);
         }
       } catch {
