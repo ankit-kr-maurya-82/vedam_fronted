@@ -1,26 +1,43 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Sidebar";
+import UserContext from "./context/UserContext";
 import UserContextProvider from "./context/UserContextProvider";
 import { ThemeProvider } from "./context/theme";
 import "./index.css";
+
+const LayoutContent = ({ showLayout }) => {
+  const location = useLocation();
+  const { user } = useContext(UserContext);
+
+  const hideFooterRoutes = ["/login", "/home", "/explore", "/admin"];
+  const hideFooter =
+    Boolean(user) ||
+    hideFooterRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/profile/");
+
+  return (
+    <div className={`app-shell ${showLayout ? "main-layout" : "auth-layout"}`}>
+      {showLayout && <Header />}
+      {showLayout && <Sidebar />}
+
+      <main className={showLayout ? "app-main with-sidebar" : "app-main"}>
+        <Outlet />
+      </main>
+
+      {!hideFooter && showLayout && <Footer />}
+    </div>
+  );
+};
 
 const Layout = () => {
   const [themeMode, setThemeMode] = useState("light");
   const location = useLocation();
 
-  // ✅ Pages jahan pura layout hide hoga
   const authRoutes = ["/login", "/register", "/admin-register"];
   const showLayout = !authRoutes.includes(location.pathname);
-
-  // ✅ Footer hide logic (static + dynamic)
-  const hideFooterRoutes = ["/login", "/home", "/explore", "/admin"];
-
-  const hideFooter =
-    hideFooterRoutes.includes(location.pathname) ||
-    location.pathname.startsWith("/profile/");
 
   const toggleTheme = () => {
     setThemeMode((prev) => (prev === "dark" ? "light" : "dark"));
@@ -45,21 +62,7 @@ const Layout = () => {
   return (
     <ThemeProvider value={{ themeMode, toggleTheme }}>
       <UserContextProvider>
-        <div className={`app-shell ${showLayout ? "main-layout" : "auth-layout"}`}>
-
-          {/* Header + Sidebar */}
-          {showLayout && <Header />}
-          {showLayout && <Sidebar />}
-
-          {/* Main */}
-          <main className={showLayout ? "app-main with-sidebar" : "app-main"}>
-            <Outlet />
-          </main>
-
-          {/* Footer */}
-          {!hideFooter && showLayout && <Footer />}
-
-        </div>
+        <LayoutContent showLayout={showLayout} />
       </UserContextProvider>
     </ThemeProvider>
   );
