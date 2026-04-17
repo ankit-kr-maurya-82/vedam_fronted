@@ -11,6 +11,7 @@ import "./index.css";
 const LayoutContent = ({ showLayout }) => {
   const location = useLocation();
   const { user } = useContext(UserContext);
+  const showSidebar = showLayout && Boolean(user);
 
   const hideFooterRoutes = ["/login", "/home", "/explore", "/admin"];
   const hideFooter =
@@ -21,9 +22,9 @@ const LayoutContent = ({ showLayout }) => {
   return (
     <div className={`app-shell ${showLayout ? "main-layout" : "auth-layout"}`}>
       {showLayout && <Header />}
-      {showLayout && <Sidebar />}
+      {showSidebar && <Sidebar />}
 
-      <main className={showLayout ? "app-main with-sidebar" : "app-main"}>
+      <main className={showSidebar ? "app-main with-sidebar" : "app-main"}>
         <Outlet />
       </main>
 

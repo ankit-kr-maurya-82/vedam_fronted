@@ -1,8 +1,7 @@
 .ved3-page {
   min-height: 100vh;
   padding: 104px 20px 56px;
-  background:
-    linear-gradient(180deg, #f7efe5 0%, #f8fafc 46%, #eef2ff 100%);
+  background: #ffffff;
 }
 
 .ved3-shell {
@@ -10,9 +9,7 @@
   margin: 0 auto 20px;
 }
 
-.ved3-hero,
 .ved3-channel-card,
-.ved3-issue-board,
 .ved3-path-card {
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
@@ -20,10 +17,14 @@
 
 .ved3-hero,
 .ved3-issue-board {
-  padding: 28px;
-  border-radius: 34px;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(10px);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 0;
+  padding: 32px max(20px, calc((100vw - 1180px) / 2 + 20px));
+  border-radius: 0;
+  background: linear-gradient(90deg, #001848, #190033);
+  border: 0;
+  box-shadow: none;
 }
 
 .ved3-ribbon {
@@ -32,11 +33,11 @@
   gap: 18px;
   align-items: center;
   padding-bottom: 18px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ved3-ribbon-mark {
-  color: #0f172a;
+  color: #f8fafc;
   font-size: 0.95rem;
   font-weight: 900;
   letter-spacing: 0.24em;
@@ -44,13 +45,13 @@
 
 .ved3-ribbon p {
   margin: 0;
-  color: #64748b;
+  color: rgba(226, 232, 240, 0.86);
   font-size: 0.95rem;
 }
 
 .ved3-hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.92fr);
+  display: flex;
+  flex-direction: column;
   gap: 22px;
   padding-top: 28px;
 }
@@ -61,8 +62,8 @@
   width: fit-content;
   padding: 8px 13px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.06);
-  color: #0f172a;
+  background: rgba(248, 250, 252, 0.08);
+  color: #f8fafc;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -73,7 +74,7 @@
 .ved3-section-head h2,
 .ved3-board-copy h2 {
   margin: 18px 0 0;
-  color: #0f172a;
+  color: #f8fafc;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2.5rem, 5vw, 5.4rem);
   line-height: 0.95;
@@ -92,7 +93,7 @@
 .ved3-board-copy p {
   margin: 18px 0 0;
   max-width: 60ch;
-  color: #475569;
+  color: rgba(226, 232, 240, 0.88);
   font-size: 1.04rem;
   line-height: 1.8;
 }
@@ -123,15 +124,15 @@
 }
 
 .ved3-btn-primary {
-  background: #0f172a;
-  color: #ffffff;
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
 }
 
 .ved3-btn-secondary {
-  background: rgba(255, 255, 255, 0.86);
-  color: #0f172a;
-  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .ved3-billboard {
@@ -143,8 +144,9 @@
 .ved3-billboard-main {
   padding: 22px;
   border-radius: 30px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 58%, #1d4ed8 100%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(37, 99, 235, 0.22) 100%);
   color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ved3-note-label {
@@ -178,19 +180,20 @@
 .ved3-mini-card {
   padding: 16px;
   border-radius: 22px;
-  background: rgba(15, 23, 42, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ved3-mini-card strong {
   display: block;
-  color: #0f172a;
+  color: #f8fafc;
   font-size: 1.05rem;
 }
 
 .ved3-mini-card span {
   display: block;
   margin-top: 6px;
-  color: #64748b;
+  color: rgba(226, 232, 240, 0.82);
   line-height: 1.45;
 }
 
@@ -208,7 +211,7 @@
 .ved3-channel-card,
 .ved3-flow-card,
 .ved3-path-card {
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .ved3-channel-card {
@@ -298,75 +301,50 @@
 }
 
 .dark .ved3-page {
-  background:
-    linear-gradient(180deg, #020617 0%, #0f172a 46%, #111827 100%);
+  background: #ffffff;
 }
 
 .dark .ved3-hero,
+.dark .ved3-issue-board {
+  background: linear-gradient(90deg, #001848, #190033);
+}
+
 .dark .ved3-channel-card,
-.dark .ved3-issue-board,
 .dark .ved3-path-card {
   background: rgba(15, 23, 42, 0.74);
   border-color: rgba(148, 163, 184, 0.14);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
 }
 
-.dark .ved3-ribbon {
-  border-bottom-color: rgba(148, 163, 184, 0.14);
-}
-
-.dark .ved3-ribbon-mark,
-.dark .ved3-kicker,
-.dark .ved3-headline-block h1,
-.dark .ved3-section-head h2,
-.dark .ved3-board-copy h2,
-.dark .ved3-mini-card strong,
 .dark .ved3-channel-card h3,
 .dark .ved3-flow-card h3,
 .dark .ved3-path-card strong,
-.dark .ved3-path-arrow,
 .dark .ved3-channel-icon,
 .dark .ved3-path-icon,
-.dark .ved3-flow-step {
+.dark .ved3-flow-step,
+.dark .ved3-path-arrow {
   color: #f8fafc;
 }
 
-.dark .ved3-ribbon p,
-.dark .ved3-headline-block p,
-.dark .ved3-section-head p,
-.dark .ved3-board-copy p,
-.dark .ved3-mini-card span,
 .dark .ved3-channel-card p,
 .dark .ved3-flow-card p,
 .dark .ved3-path-card p {
   color: #cbd5e1;
 }
 
-.dark .ved3-kicker,
-.dark .ved3-mini-card,
 .dark .ved3-channel-card,
 .dark .ved3-flow-card,
 .dark .ved3-path-card,
 .dark .ved3-channel-icon,
 .dark .ved3-path-icon,
-.dark .ved3-flow-step,
-.dark .ved3-btn-secondary {
+.dark .ved3-flow-step {
   background: rgba(248, 250, 252, 0.06);
 }
 
-.dark .ved3-btn-secondary {
-  border-color: rgba(148, 163, 184, 0.16);
-  color: #f8fafc;
-}
-
 @media (max-width: 980px) {
-  .ved3-hero-grid,
   .ved3-channel-grid,
   .ved3-issue-board,
-  .ved3-path-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .ved3-path-grid,
   .ved3-billboard {
     grid-template-columns: 1fr;
   }
@@ -379,8 +357,7 @@
 
   .ved3-hero,
   .ved3-issue-board {
-    padding: 20px;
-    border-radius: 28px;
+    padding: 24px 14px;
   }
 
   .ved3-ribbon {
