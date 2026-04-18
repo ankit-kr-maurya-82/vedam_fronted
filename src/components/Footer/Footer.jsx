@@ -29,8 +29,8 @@ const footerHighlights = [
 ];
 
 const socialLinks = [
-  { label: "GitHub", href: "https://github.com/your-username", icon: <FaGithub /> },
-  { label: "LinkedIn", href: "https://linkedin.com/in/your-profile", icon: <FaLinkedin /> },
+  { label: "GitHub", href: "https://github.com/ankit-kr-maurya-82", icon: <FaGithub /> },
+  { label: "LinkedIn", href: "https://linkedin.com/in/ankit-kumar-maurya-ba4390334", icon: <FaLinkedin /> },
 ];
 
 const Footer = () => {
