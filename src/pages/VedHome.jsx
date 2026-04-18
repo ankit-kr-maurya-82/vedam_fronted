@@ -84,6 +84,19 @@ const pathwayCards = [
   },
 ];
 
+const editorialPanels = [
+  {
+    label: "Layout shift",
+    title: "Same mood, different reading order.",
+    text: "The page now opens like a wider editorial spread, so product context and story arrive together.",
+  },
+  {
+    label: "Why it works",
+    title: "Content, identity, and action stay visible in one glance.",
+    text: "Readers understand the platform faster because the sections feel connected instead of stacked without rhythm.",
+  },
+];
+
 const VedHome = () => {
   const { user } = useContext(UserContext);
 
@@ -103,38 +116,50 @@ const VedHome = () => {
     <div className="ved3-page">
       <section className="ved3-shell ved3-hero">
         <div className="ved3-ribbon">
-          <span className="ved3-ribbon-mark">VEDA</span>
+          <span className="ved3-ribbon-mark">VEDAM</span>
           <p>New homepage direction with a sharper editorial-product hybrid layout</p>
         </div>
 
         <div className="ved3-hero-grid">
           <div className="ved3-headline-block">
-            <span className="ved3-kicker">Landing Page Concept</span>
-            <h1>A front page that feels like an issue launch, not just another app screen.</h1>
-            <p>
-              This direction frames VEDA as a social publishing product with a
-              stronger editorial identity. It leads with atmosphere, then turns
-              that attention into reading, profiles, and creation.
-            </p>
+            <div>
+              <h1>A front page that feels like an issue launch, not just another app screen.</h1>
+              <p>
+                This direction frames VEDA as a social publishing product with a
+                stronger editorial identity. It leads with atmosphere, then turns
+                that attention into reading, profiles, and creation.
+              </p>
+            </div>
 
-            <div className="ved3-actions">
-              <Link
-                to={user ? "/home" : "/explore"}
-                className="ved3-btn ved3-btn-primary"
-              >
-                {user ? "Open the feed" : "Explore first"}
-              </Link>
-              <Link
-                to={user ? "/create" : "/register"}
-                className="ved3-btn ved3-btn-secondary"
-              >
-                {user ? "Publish now" : "Join VEDA"} <FaArrowRight />
-              </Link>
+            <div className="ved3-headline-footer">
+              <div className="ved3-actions">
+                <Link
+                  to={user ? "/home" : "/explore"}
+                  className="ved3-btn ved3-btn-primary"
+                >
+                  {user ? "Open the feed" : "Explore first"}
+                </Link>
+                <Link
+                  to={user ? "/create" : "/register"}
+                  className="ved3-btn ved3-btn-secondary"
+                >
+                  {user ? "Publish now" : "Join VEDAM"} <FaArrowRight />
+                </Link>
+              </div>
+
+              <div className="ved3-inline-stats">
+                {pulseStats.map((item) => (
+                  <article className="ved3-mini-card" key={item.label}>
+                    <strong>{item.value}</strong>
+                    <span>{item.label}</span>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="ved3-billboard">
-            <article className="ved3-billboard-main">
+          <div className="ved3-hero-stage">
+            <article className="ved3-billboard-main ved3-billboard-cover">
               <span className="ved3-note-label">Cover note</span>
               <h2>The best social spaces do not hide writing behind noise.</h2>
               <p>
@@ -144,11 +169,12 @@ const VedHome = () => {
               </p>
             </article>
 
-            <div className="ved3-billboard-side">
-              {pulseStats.map((item) => (
-                <article className="ved3-mini-card" key={item.label}>
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
+            <div className="ved3-stage-side">
+              {editorialPanels.map((item) => (
+                <article className="ved3-stage-panel" key={item.label}>
+                  <span className="ved3-note-label">{item.label}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
                 </article>
               ))}
             </div>
@@ -156,51 +182,62 @@ const VedHome = () => {
         </div>
       </section>
 
-      <section className="ved3-shell ved3-channel-section">
-        <div className="ved3-section-head">
-          <span className="ved3-kicker">Content System</span>
-          <h2>Three lanes that define how the product feels.</h2>
-        </div>
+      <section className="ved3-shell ved3-story-layout">
+        <div className="ved3-story-main">
+          <div className="ved3-section-head">
+            <span className="ved3-kicker">Content System</span>
+            <h2>Three lanes that define how the product feels.</h2>
+            <p>
+              The visual tone stays the same, but the middle of the page now
+              reads like a composed spread instead of a simple block stack.
+            </p>
+          </div>
 
-        <div className="ved3-channel-grid">
-          {channels.map((item) => (
-            <article className="ved3-channel-card" key={item.title}>
-              <div className="ved3-channel-icon">{item.icon}</div>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="ved3-shell ved3-issue-board">
-        <div className="ved3-board-copy">
-          <span className="ved3-kicker">Reader Journey</span>
-          <h2>A homepage structure that gives people a clear path from curiosity to contribution.</h2>
-          <p>
-            The page is meant to work like a launch board. It sets tone
-            quickly, shows the product lanes, and makes the next actions feel
-            obvious instead of buried.
-          </p>
-        </div>
-
-        <div className="ved3-flow-list">
-          {flowSteps.map((item) => (
-            <article className="ved3-flow-card" key={item.step}>
-              <span className="ved3-flow-step">{item.step}</span>
-              <div>
+          <div className="ved3-channel-grid">
+            {channels.map((item) => (
+              <article className="ved3-channel-card" key={item.title}>
+                <div className="ved3-channel-icon">{item.icon}</div>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div className="ved3-story-journey">
+          <div className="ved3-board-copy">
+            <span className="ved3-kicker">Reader Journey</span>
+            <h2>A homepage structure that gives people a clear path from curiosity to contribution.</h2>
+            <p>
+              The page is meant to work like a launch board. It sets tone
+              quickly, shows the product lanes, and makes the next actions feel
+              obvious instead of buried.
+            </p>
+          </div>
+
+          <div className="ved3-flow-list">
+            {flowSteps.map((item) => (
+              <article className="ved3-flow-card" key={item.step}>
+                <span className="ved3-flow-step">{item.step}</span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="ved3-shell ved3-path-section">
-        <div className="ved3-section-head">
+      <section className="ved3-shell ved3-path-layout">
+        <div className="ved3-path-feature">
           <span className="ved3-kicker">Entry Points</span>
           <h2>Use the landing page to route people into the product with purpose.</h2>
+          <p>
+            {user
+              ? "Returning readers can move straight into the feed or jump into publishing without losing the editorial tone."
+              : "Guests can explore the platform, understand the product, and then step into their own profile with a clearer sense of what VEDAM is."}
+          </p>
         </div>
 
         <div className="ved3-path-grid">
