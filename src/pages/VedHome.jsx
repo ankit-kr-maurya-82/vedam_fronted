@@ -9,7 +9,8 @@ import {
   FaPenNib,
   FaUserCircle,
 } from "react-icons/fa";
-import "./CSS/VedHome.css";
+import "./CSS/VedHome.css"; 
+import "./CSS/VedHome2.css"; 
 import UserContext from "../context/UserContext";
 
 const pulseStats = [
@@ -123,13 +124,12 @@ const VedHome = () => {
         <div className="ved3-hero-grid">
           <div className="ved3-headline-block">
             <div>
-              <h1>A front page that feels like an issue launch, not just another app screen.</h1>
-              <p>
-                This direction frames VEDA as a social publishing product with a
-                stronger editorial identity. It leads with atmosphere, then turns
-                that attention into reading, profiles, and creation.
-              </p>
-            </div>
+  <h1>A better place to read and write.</h1>
+  <p>
+    Discover ideas, follow creators, and publish your own stories
+    on a platform designed for clarity and focus.
+  </p>
+</div>
 
             <div className="ved3-headline-footer">
               <div className="ved3-actions">
