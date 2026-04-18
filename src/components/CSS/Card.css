@@ -74,11 +74,15 @@
   color: #111827;
 }
 
-.feed-excerpt {
+.feed-excerpt, .line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   margin: 0;
   color: #4b5563;
   font-size: 1.02rem;
-  line-height: 1.85;
+  line-clamp: 2;
 }
 
 .feed-publish-meta {
