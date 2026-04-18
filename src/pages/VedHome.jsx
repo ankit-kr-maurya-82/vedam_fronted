@@ -9,8 +9,8 @@ import {
   FaPenNib,
   FaUserCircle,
 } from "react-icons/fa";
-import "./CSS/VedHome.css"; 
-import "./CSS/VedHome2.css"; 
+import "./CSS/VedHome.css";
+import "./CSS/VedHome2.css";
 import UserContext from "../context/UserContext";
 
 const pulseStats = [
@@ -118,18 +118,21 @@ const VedHome = () => {
       <section className="ved3-shell ved3-hero">
         <div className="ved3-ribbon">
           <span className="ved3-ribbon-mark">VEDAM</span>
-          <p>New homepage direction with a sharper editorial-product hybrid layout</p>
+          <p>
+            New homepage direction with a sharper editorial-product hybrid
+            layout
+          </p>
         </div>
 
         <div className="ved3-hero-grid">
           <div className="ved3-headline-block">
             <div>
-  <h1>A better place to read and write.</h1>
-  <p>
-    Discover ideas, follow creators, and publish your own stories
-    on a platform designed for clarity and focus.
-  </p>
-</div>
+              <h1>A better place to read and write.</h1>
+              <p>
+                Discover ideas, follow creators, and publish your own stories on
+                a platform designed for clarity and focus.
+              </p>
+            </div>
 
             <div className="ved3-headline-footer">
               <div className="ved3-actions">
@@ -207,7 +210,10 @@ const VedHome = () => {
         <div className="ved3-story-journey">
           <div className="ved3-board-copy">
             <span className="ved3-kicker">Reader Journey</span>
-            <h2>A homepage structure that gives people a clear path from curiosity to contribution.</h2>
+            <h2>
+              A homepage structure that gives people a clear path from curiosity
+              to contribution.
+            </h2>
             <p>
               The page is meant to work like a launch board. It sets tone
               quickly, shows the product lanes, and makes the next actions feel
@@ -232,7 +238,9 @@ const VedHome = () => {
       <section className="ved3-shell ved3-path-layout">
         <div className="ved3-path-feature">
           <span className="ved3-kicker">Entry Points</span>
-          <h2>Use the landing page to route people into the product with purpose.</h2>
+          <h2>
+            Use the landing page to route people into the product with purpose.
+          </h2>
           <p>
             {user
               ? "Returning readers can move straight into the feed or jump into publishing without losing the editorial tone."
