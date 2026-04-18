@@ -102,7 +102,7 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
 
                 <div
                   className="feed-excerpt"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
+                  dangerouslySetInnerHTML={{ __html: (post.content || '').length > 120 ? (post.content.slice(0, 120) + '...') : post.content }}
                 />
 
                 <div

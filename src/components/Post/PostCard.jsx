@@ -52,8 +52,8 @@ const PostCard = ({ post }) => {
       </h3>
 
       {/* OPTION 1: simple truncate */}
-      <p className="text-gray-400 text-sm mb-2">
-        {truncateText(post.content, 45)}
+<p className="text-gray-400 text-sm mb-2 post-content">
+        {post.content || "No content"}
       </p>
 
       {/* OPTION 2 (BEST): line clamp (uncomment if using CSS below) */}
