@@ -57,7 +57,7 @@ const Explore = () => {
           ) : (
             users.map((user) => (
               <Link
-                key={user.id}
+                key={user.id || user._id}
                 to={`/profile/${user.username}`}
                 className="user-result-card"
               >

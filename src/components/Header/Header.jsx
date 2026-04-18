@@ -129,7 +129,7 @@ const Header = () => {
                     >
                       <span className="searchType">Article</span>
                       <strong>{post.title}</strong>
-                      <span>@{post.username}</span>
+                      <span>@{post.username} • {post.formattedDate}</span>
                     </button>
                   ))}
 
