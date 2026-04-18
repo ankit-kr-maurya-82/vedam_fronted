@@ -71,6 +71,21 @@
   }
 }
 
+@media (min-width: 320px) {
+
+  .ved3-headline-block h1 {
+    max-width: 18ch;
+    font-size: 52px;
+    line-height: 1.3;
+    margin-top: 20px;
+    margin-left: 0;
+  }
+
+  .ved3-headline-block p {
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 320px) {
 
   .ved3-headline-block h1 {
