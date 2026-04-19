@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegister from "./pages/AdminRegister";
 import AdminLogin from "./pages/AdminLogin";
 import AdminUserDetail from "./pages/AdminUserDetail";
+import ContactUs from "./pages/ContactUs";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="features" element={<Features />} />
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/user/:id" element={<AdminUserDetail />} />
+          <Route path="contact" element={<ContactUs />} />
         </Route>
       </Routes>
     </div>
