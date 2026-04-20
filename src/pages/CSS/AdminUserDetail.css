@@ -4,9 +4,10 @@
   align-items: center;
   margin-bottom: 30px;
   padding: 20px;
-  background: #1a1a1a;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 12px;
-  margin-top: 96px;
+  margin-top: 0;
+  color: #111827;
 }
 
 .user-avatar-large {
@@ -34,7 +35,7 @@
 }
 
 .user-bio-section {
-  background: #222;
+  background: rgba(255, 255, 255, 0.92);
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 20px;
@@ -62,7 +63,7 @@
 
 .article-card {
   padding: 16px;
-  background: #222;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 8px;
   border-left: 4px solid #3b82f6;
 }
@@ -86,7 +87,7 @@
 }
 
 .user-meta {
-  background: #111;
+  background: rgba(255, 255, 255, 0.92);
   padding: 20px;
   border-radius: 8px;
 }
@@ -100,5 +101,13 @@
     flex-direction: column;
     text-align: center;
   }
+}
+
+.dark .user-detail-header,
+.dark .user-bio-section,
+.dark .article-card,
+.dark .user-meta {
+  background: rgba(15, 23, 42, 0.88);
+  color: #f8fafc;
 }
 

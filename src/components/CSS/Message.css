@@ -20,3 +20,16 @@
   opacity: 0.6;
   margin-bottom: 2px;
 }
+
+.dark .message {
+  background: rgba(30, 41, 59, 0.9);
+  color: #f8fafc;
+}
+
+.dark .message.own {
+  background: #2563eb;
+}
+
+.dark .sender {
+  color: #cbd5e1;
+}

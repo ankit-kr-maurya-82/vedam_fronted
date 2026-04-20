@@ -344,3 +344,56 @@
 .post-footer button{
   font-size: 24px;
 }
+
+.dark .create-post-banner {
+  background:
+    radial-gradient(circle at top left, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.96)),
+    linear-gradient(135deg, #020617, #1d4ed8);
+}
+
+.dark .create-post-kicker {
+  color: #93c5fd;
+}
+
+.dark .create-post-banner h1,
+.dark .home-rail-head h2,
+.dark .home-rail-link strong,
+.dark .home-person-link strong {
+  color: #f8fafc;
+}
+
+.dark .create-post-copy,
+.dark .home-rail-link span,
+.dark .home-person-link span,
+.dark .home-rail-empty {
+  color: #cbd5e1;
+}
+
+.dark .create-post-cta {
+  background: #eff6ff;
+  color: #0f172a;
+}
+
+.dark .home-rail-card {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(148, 163, 184, 0.14);
+  box-shadow: var(--shadow-soft);
+}
+
+.dark .home-rail-kicker {
+  color: #fde68a;
+}
+
+.dark .topic-pill {
+  background: rgba(248, 250, 252, 0.08);
+  color: #bfdbfe;
+}
+
+.dark .topic-pill:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.dark .home-rail-link {
+  border-bottom-color: rgba(148, 163, 184, 0.14);
+}

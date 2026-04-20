@@ -114,3 +114,33 @@
     grid-template-columns: 1fr;
   }
 }
+
+.dark .explore-search input,
+.dark .explore-users,
+.dark .explore-feed,
+.dark .user-result-card {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.dark .explore-search input {
+  color: #f8fafc;
+  box-shadow: var(--shadow-soft);
+}
+
+.dark .explore-search input::placeholder,
+.dark .user-result-card span,
+.dark .user-result-card p,
+.dark .empty-state {
+  color: #cbd5e1;
+}
+
+.dark .explore-section-head h2,
+.dark .user-result-card strong {
+  color: #f8fafc;
+}
+
+.dark .explore-section-head span {
+  background: #eff6ff;
+  color: #0f172a;
+}

@@ -122,3 +122,63 @@ textarea {
   color: #a0aec0;
   cursor: text;
 }
+
+.dark .create-wrapper {
+  background: #020617;
+}
+
+.dark .create-box {
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+.dark .create-header {
+  border-bottom-color: rgba(148, 163, 184, 0.14);
+  color: #f8fafc;
+}
+
+.dark .create-header button,
+.dark textarea,
+.dark .format-toolbar button,
+.dark .content-editable-editor {
+  color: #f8fafc;
+}
+
+.dark textarea {
+  background: transparent;
+}
+
+.dark textarea::placeholder,
+.dark .content-editable-editor:empty:before {
+  color: #94a3b8;
+}
+
+.dark .create-toolbar,
+.dark .rich-text-container,
+.dark .format-toolbar {
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.dark .rich-text-container {
+  background: rgba(2, 6, 23, 0.5);
+}
+
+.dark .format-toolbar {
+  background: rgba(30, 41, 59, 0.88);
+}
+
+.dark .format-toolbar button:hover {
+  background: rgba(59, 130, 246, 0.16);
+  color: #93c5fd;
+}
+
+.dark .toolbar-divider {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.dark .create-toolbar label,
+.dark .post-btn {
+  color: #93c5fd;
+}

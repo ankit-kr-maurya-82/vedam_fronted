@@ -7,16 +7,28 @@ html, body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+html {
+  color-scheme: light;
+}
+
 /* DARK MODE */
 .dark body {
   background: #020617;
   color: white;
 }
 
+.dark {
+  color-scheme: dark;
+}
+
 /* LIGHT MODE */
 .light body {
   background: #ffffff;
   color: #020617;
+}
+
+.light {
+  color-scheme: light;
 }
 
 
@@ -80,4 +92,3 @@ html, body {
     padding-left: 0;
   }
 }
-

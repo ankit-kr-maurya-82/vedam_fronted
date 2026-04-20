@@ -1,13 +1,28 @@
-import React from 'react'
+import React from "react";
+import { FaMoon, FaSun } from "react-icons/fa";
+import useTheme from "../context/theme";
+import "./CSS/ThemeBtn.css";
 
 const ThemeBtn = () => {
-  return (
-    <label htmlFor="" className='relative inline-flex items-center cursor-pointer'>
-        <input type="checkbox"
-        value=""
-        className='sr-only peer' />
-    </label>
-  )
-}
+  const { themeMode, toggleTheme } = useTheme();
+  const isDark = themeMode === "dark";
 
-export default ThemeBtn
+  return (
+    <button
+      type="button"
+      className="theme-fab"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
+    >
+      <span className="theme-fab__icon">
+        {isDark ? <FaSun /> : <FaMoon />}
+      </span>
+      <span className="theme-fab__text">
+        {isDark ? "Light mode" : "Dark mode"}
+      </span>
+    </button>
+  );
+};
+
+export default ThemeBtn;

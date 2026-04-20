@@ -14,16 +14,6 @@ import {
 import "./CSS/CreatePost.css";
 import { getCurrentUser } from "../lib/socialStore";
 import { createPostApi, fetchPostById, updatePostApi } from "../api/post";
-import { ToastContainer } from 'react-toastify';
-
-function App() {
-  return (
-    <>
-      <ToastContainer position="top-right" />
-      {/* your app */}
-    </>
-  );
-}
 
 const CreatePost = () => {
   const navigate = useNavigate();

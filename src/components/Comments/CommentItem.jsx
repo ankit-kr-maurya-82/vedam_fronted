@@ -6,20 +6,20 @@ const CommentItem = ({ comment, canDelete = false, onDelete, deleting = false })
   const name = comment.user?.name || comment.userName || "Anonymous";
 
   return (
-    <div className="border overflow-hidden p-3 rounded bg-white">
-      <div className="flex items-center justify-between gap-2 mb-1">
-        <div className="flex items-center gap-2">
+    <div className="comment-card">
+      <div className="comment-card-head">
+        <div className="comment-card-meta">
           {avatar ? (
-            <img src={avatar} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
+            <img src={avatar} alt="avatar" className="comment-avatar" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-semibold">
+            <div className="comment-avatar-fallback">
               {name.charAt(0).toUpperCase()}
             </div>
           )}
           <div>
-            <span className="font-semibold block">{name}</span>
+            <span className="comment-card-name">{name}</span>
             {comment.user?.username && (
-              <span className="text-xs text-slate-500">@{comment.user.username}</span>
+              <span className="comment-card-username">@{comment.user.username}</span>
             )}
           </div>
         </div>
@@ -28,14 +28,14 @@ const CommentItem = ({ comment, canDelete = false, onDelete, deleting = false })
           <button
             onClick={() => onDelete(comment.id)}
             disabled={deleting}
-            className="text-sm text-red-600 inline-flex items-center gap-1"
+            className="comment-delete-btn"
           >
             <FaTrash /> {deleting ? "Deleting..." : "Delete"}
           </button>
         )}
       </div>
 
-      <p className="text-sm text-slate-700">{comment.text}</p>
+      <p className="comment-card-text">{comment.text}</p>
     </div>
   );
 };

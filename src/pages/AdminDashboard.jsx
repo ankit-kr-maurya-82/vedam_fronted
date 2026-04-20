@@ -265,14 +265,15 @@ const AdminDashboard = () => {
                     <td>{p.owner?.username || 'Unknown'}</td>
                     <td>{new Date(p.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <button 
-                        className="delete-btn"
-                        onClick={() => handleDeletePost(p._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                        <button 
+                          className="delete-btn"
+                          disabled={deletingId === p._id}
+                          onClick={() => handleDeletePost(p._id)}
+                        >
+                          {deletingId === p._id ? "Deleting..." : "Delete"}
+                        </button>
+                      </td>
+                    </tr>
                 ))}
               </tbody>
             </table>

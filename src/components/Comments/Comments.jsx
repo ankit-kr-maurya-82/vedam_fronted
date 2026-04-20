@@ -145,16 +145,16 @@ const Comments = ({ postId, onCountChange }) => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="article-comments">
       <CommentInput onAdd={handleAddComment} disabled={!user} loading={posting} />
 
-      {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
-      {loading && <p className="text-sm text-slate-500 mb-3">Loading comments...</p>}
+      {error && <p className="comment-feedback error">{error}</p>}
+      {loading && <p className="comment-feedback muted">Loading comments...</p>}
       {!loading && comments.length === 0 && (
-        <p className="text-sm text-slate-500 mb-3">No comments yet.</p>
+        <p className="comment-feedback muted">No comments yet.</p>
       )}
 
-      <div className="space-y-2">
+      <div className="comment-list">
         {comments.map((comment) => (
           <CommentItem
             key={comment.id}

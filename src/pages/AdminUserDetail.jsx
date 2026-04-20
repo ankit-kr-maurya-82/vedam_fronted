@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAdminUserDetail } from '../api/admin.js';
-import UserContext from '../context/UserContext.js';
 import './CSS/AdminUserDetail.css';
 
 const AdminUserDetail = () => {
   const { id } = useParams();
-  const { user: currentUser } = useContext(UserContext);
   
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
