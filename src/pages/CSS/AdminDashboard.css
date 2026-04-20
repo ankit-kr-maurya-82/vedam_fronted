@@ -22,6 +22,8 @@
 
 .tab-buttons button.active {
   background: #ff4d4f;
+  color: #fff;
+  border-color: #ff4d4f;
 }
 
 .stats-grid {
@@ -180,6 +182,17 @@
   cursor: not-allowed;
 }
 
+.admin-loading,
+.admin-status {
+  margin: 16px 0;
+}
+
+.admin-cell-copy {
+  max-width: 320px;
+  white-space: normal;
+  word-break: break-word;
+}
+
 .dark .admin-dashboard {
   color: #f8fafc;
 }
@@ -207,4 +220,8 @@
 
 .dark .admin-table tr:hover {
   background: rgba(30, 41, 59, 0.68);
+}
+
+.dark .tab-buttons button.active {
+  color: #fff;
 }
