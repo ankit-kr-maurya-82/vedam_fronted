@@ -9,26 +9,40 @@ import {
   getComments as getLocalComments,
 } from "../../lib/socialStore";
 
-const normalizeComment = (comment) => ({
-  id: comment._id || comment.id,
-  text: comment.content || comment.text,
-  createdAt: comment.createdAt,
-  userId: comment.owner?._id || comment.userId || null,
-  userName:
-    comment.owner?.fullName ||
+const normalizeComment = (comment, fallbackUser = null) => {
+  if (!comment) return null;
+
+  const owner =
+    comment.owner && typeof comment.owner === "object" ? comment.owner : null;
+  const fallbackUserId = fallbackUser?.id || fallbackUser?._id || null;
+  const userId =
+    owner?._id ||
+    (typeof comment.owner === "string" ? comment.owner : null) ||
+    comment.userId ||
+    fallbackUserId;
+  const userName =
+    owner?.fullName ||
+    owner?.username ||
     comment.user?.name ||
     comment.userName ||
-    "Anonymous",
-  user: {
-    name:
-      comment.owner?.fullName ||
-      comment.user?.name ||
-      comment.userName ||
-      "Anonymous",
-    avatar: comment.owner?.avatar || comment.user?.avatar || "",
-    username: comment.owner?.username || comment.user?.username || "",
-  },
-});
+    fallbackUser?.fullName ||
+    fallbackUser?.username ||
+    "Anonymous";
+
+  return {
+    id: comment._id || comment.id,
+    text: comment.content || comment.text || "",
+    createdAt: comment.createdAt,
+    userId,
+    userName,
+    user: {
+      name: userName,
+      avatar: owner?.avatar || comment.user?.avatar || fallbackUser?.avatar || "",
+      username:
+        owner?.username || comment.user?.username || fallbackUser?.username || "",
+    },
+  };
+};
 
 const Comments = ({ postId, onCountChange }) => {
   const { user } = useContext(UserContext);
@@ -52,11 +66,13 @@ const Comments = ({ postId, onCountChange }) => {
       try {
         const response = await api.get(`/comments/post/${postId}`);
         if (!cancelled) {
-          setComments((response.data.comments || []).map(normalizeComment));
+          setComments(
+            (response.data?.data || []).map((comment) => normalizeComment(comment)).filter(Boolean)
+          );
         }
       } catch {
         if (!cancelled) {
-          setComments(getLocalComments(postId).map(normalizeComment));
+          setComments(getLocalComments(postId).map(normalizeComment).filter(Boolean));
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -77,7 +93,11 @@ const Comments = ({ postId, onCountChange }) => {
       const response = await api.post(`/comments/post/${postId}`, {
         content: text,
       });
-      setComments((prev) => [normalizeComment(response.data.comment), ...prev]);
+      const nextComment = normalizeComment(response.data?.data, user);
+      if (!nextComment) {
+        throw new Error("Invalid comment response");
+      }
+      setComments((prev) => [nextComment, ...prev]);
       return true;
     } catch (requestError) {
       if (requestError.response) {
@@ -88,7 +108,7 @@ const Comments = ({ postId, onCountChange }) => {
       }
 
       try {
-        setComments(addLocalComment(postId, text).map(normalizeComment));
+        setComments(addLocalComment(postId, text).map(normalizeComment).filter(Boolean));
         return true;
       } catch (localError) {
         setError(localError.message || "Unable to add comment.");
@@ -115,7 +135,7 @@ const Comments = ({ postId, onCountChange }) => {
       }
 
       try {
-        setComments(deleteLocalComment(postId, commentId).map(normalizeComment));
+        setComments(deleteLocalComment(postId, commentId).map(normalizeComment).filter(Boolean));
       } catch (localError) {
         setError(localError.message || "Unable to delete comment.");
       }
@@ -139,7 +159,7 @@ const Comments = ({ postId, onCountChange }) => {
           <CommentItem
             key={comment.id}
             comment={comment}
-            canDelete={user?.id === comment.userId}
+            canDelete={user?.id === comment.userId || user?._id === comment.userId}
             deleting={deletingId === comment.id}
             onDelete={handleDeleteComment}
           />
