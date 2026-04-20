@@ -11,6 +11,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
+const THEME_STORAGE_KEY = "theme";
+
+const getInitialTheme = () => {
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme === "dark" || savedTheme === "light") {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
 const LayoutContent = ({ showLayout, themeMode }) => {
   const location = useLocation();
   const { user } = useContext(UserContext);
@@ -50,7 +63,7 @@ const LayoutContent = ({ showLayout, themeMode }) => {
 };
 
 const Layout = () => {
-  const [themeMode, setThemeMode] = useState("light");
+  const [themeMode, setThemeMode] = useState(getInitialTheme);
   const location = useLocation();
 
   const authRoutes = ["/login", "/register", "/admin-register"];
@@ -61,20 +74,25 @@ const Layout = () => {
   };
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) {
-      setThemeMode(saved);
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setThemeMode(prefersDark ? "dark" : "light");
-    }
-  }, []);
-
-  useEffect(() => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(themeMode);
-    localStorage.setItem("theme", themeMode);
+    localStorage.setItem(THEME_STORAGE_KEY, themeMode);
   }, [themeMode]);
+
+  useEffect(() => {
+    const syncTheme = (event) => {
+      if (event.key !== THEME_STORAGE_KEY) {
+        return;
+      }
+
+      if (event.newValue === "dark" || event.newValue === "light") {
+        setThemeMode(event.newValue);
+      }
+    };
+
+    window.addEventListener("storage", syncTheme);
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   return (
     <ThemeProvider value={{ themeMode, toggleTheme }}>
