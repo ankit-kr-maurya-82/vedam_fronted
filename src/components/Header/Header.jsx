@@ -87,7 +87,7 @@ const Header = () => {
           <FaSearch className="searchIcon" />
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search users, articles, or date like 2026-04-20"
             className="searchInput"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

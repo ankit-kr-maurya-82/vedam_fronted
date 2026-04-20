@@ -39,7 +39,7 @@ const Explore = () => {
       <div className="explore-search">
         <input
           type="text"
-          placeholder="Search posts or users"
+          placeholder="Search posts, users, or date like 20/04/2026"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
