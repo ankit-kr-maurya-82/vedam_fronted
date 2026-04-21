@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   FaArrowRight,
@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import "./CSS/VedHome.css";
 import "./CSS/VedHome2.css";
+import "./CSS/VedHomeAnimation.css";
 import UserContext from "../context/UserContext";
 
 const pulseStats = [
@@ -100,6 +101,55 @@ const editorialPanels = [
 
 const VedHome = () => {
   const { user } = useContext(UserContext);
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    const page = pageRef.current;
+
+    if (!page) {
+      return undefined;
+    }
+
+    const revealItems = page.querySelectorAll("[data-reveal]");
+
+    page.classList.add("ved3-reveal-enabled");
+
+    const showAll = () => {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      showAll();
+
+      return () => {
+        page.classList.remove("ved3-reveal-enabled");
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px",
+      }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+
+    return () => {
+      observer.disconnect();
+      page.classList.remove("ved3-reveal-enabled");
+    };
+  }, []);
 
   const visiblePathways = pathwayCards.filter((card) => {
     if (card.authOnly) {
@@ -114,7 +164,7 @@ const VedHome = () => {
   });
 
   return (
-    <div className="ved3-page">
+    <div className="ved3-page" ref={pageRef}>
       <section className="ved3-shell ved3-hero">
         <div className="ved3-ribbon">
           <span className="ved3-ribbon-mark">VEDAM</span>
@@ -126,9 +176,11 @@ const VedHome = () => {
 
         <div className="ved3-hero-grid">
           <div className="ved3-headline-block">
-            <div>
-              <h1>A better place to read and write.</h1>
-              <p>
+            <div className="ved3-hero-copy">
+              <h1 className="ved3-hero-copy-title">
+                A better place to read and write.
+              </h1>
+              <p className="ved3-hero-copy-text">
                 Discover ideas, follow creators, and publish your own stories on
                 a platform designed for clarity and focus.
               </p>
@@ -187,7 +239,7 @@ const VedHome = () => {
 
       <section className="ved3-shell ved3-story-layout">
         <div className="ved3-story-main">
-          <div className="ved3-section-head">
+          <div className="ved3-section-head" data-reveal="up">
             <span className="ved3-kicker">Content System</span>
             <h2>Three lanes that define how the product feels.</h2>
             <p>
@@ -197,8 +249,13 @@ const VedHome = () => {
           </div>
 
           <div className="ved3-channel-grid">
-            {channels.map((item) => (
-              <article className="ved3-channel-card" key={item.title}>
+            {channels.map((item, index) => (
+              <article
+                className="ved3-channel-card"
+                key={item.title}
+                data-reveal="up"
+                style={{ "--ved3-reveal-delay": `${index * 120}ms` }}
+              >
                 <div className="ved3-channel-icon">{item.icon}</div>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
@@ -208,7 +265,7 @@ const VedHome = () => {
         </div>
 
         <div className="ved3-story-journey">
-          <div className="ved3-board-copy">
+          <div className="ved3-board-copy" data-reveal="up">
             <span className="ved3-kicker">Reader Journey</span>
             <h2>
               A homepage structure that gives people a clear path from curiosity
@@ -222,8 +279,13 @@ const VedHome = () => {
           </div>
 
           <div className="ved3-flow-list">
-            {flowSteps.map((item) => (
-              <article className="ved3-flow-card" key={item.step}>
+            {flowSteps.map((item, index) => (
+              <article
+                className="ved3-flow-card"
+                key={item.step}
+                data-reveal="up"
+                style={{ "--ved3-reveal-delay": `${index * 120}ms` }}
+              >
                 <span className="ved3-flow-step">{item.step}</span>
                 <div>
                   <h3>{item.title}</h3>
@@ -236,7 +298,11 @@ const VedHome = () => {
       </section>
 
       <section className="ved3-shell ved3-path-layout">
-        <div className="ved3-path-feature">
+        <div
+          className="ved3-path-feature"
+          data-reveal="left"
+          style={{ "--ved3-reveal-delay": "40ms" }}
+        >
           <span className="ved3-kicker">Entry Points</span>
           <h2>
             Use the landing page to route people into the product with purpose.
@@ -249,8 +315,14 @@ const VedHome = () => {
         </div>
 
         <div className="ved3-path-grid">
-          {visiblePathways.map((item) => (
-            <Link to={item.to} className="ved3-path-card" key={item.title}>
+          {visiblePathways.map((item, index) => (
+            <Link
+              to={item.to}
+              className="ved3-path-card"
+              key={item.title}
+              data-reveal="up"
+              style={{ "--ved3-reveal-delay": `${index * 130}ms` }}
+            >
               <div className="ved3-path-icon">{item.icon}</div>
               <div>
                 <strong>{item.title}</strong>

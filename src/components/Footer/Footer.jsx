@@ -39,7 +39,7 @@ const Footer = () => {
       <div className="site-footer__shell">
         <div className="site-footer__hero">
           <div className="site-footer__brand">
-            <span className="site-footer__kicker">VEDA JOURNAL</span>
+            <span className="site-footer__kicker">VEDAM JOURNAL</span>
             <h2>A social publishing space for writing, discovery, and meaningful interaction.</h2>
             <p>
               Built to give articles, creators, and reader conversations a more
@@ -75,7 +75,7 @@ const Footer = () => {
           <div className="site-footer__column">
             <h3>Project</h3>
             <p>
-              VEDA combines article publishing, profile identity, community
+              VEDAM combines article publishing, profile identity, community
               response, and route-based discovery into one connected platform.
             </p>
           </div>
