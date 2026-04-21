@@ -14,8 +14,8 @@
   --ved3-shadow: 0 28px 90px rgba(148, 163, 184, 0.2);
   position: relative;
   min-height: 100vh;
-  width: 99vw;
-  /* padding: 108px 24px 88px; */
+  width: 100%;
+  padding: 108px 24px 88px;
   overflow: hidden;
   background:
     radial-gradient(circle at 16% 14%, rgba(14, 165, 233, 0.14), transparent 24%),
@@ -147,6 +147,7 @@
   display: grid;
   gap: 30px;
   align-content: space-between;
+  justify-items: center;
 }
 
 .ved3-kicker {
@@ -188,12 +189,9 @@
 .ved3-headline-block h1 {
   width: 100%;
   max-width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-inline: auto;
   font-size: clamp(2.6rem, 4.8vw, 4.4rem);
-  line-height: 0.9;
+  line-height: 0.95;
   text-align: center;
 }
 
@@ -228,6 +226,24 @@
   font-size: 1.03rem;
 }
 
+.ved3-hero-copy,
+.ved3-headline-footer {
+  width: 100%;
+}
+
+.ved3-hero-copy {
+  display: grid;
+  justify-items: center;
+}
+
+.ved3-hero-copy-text {
+  text-align: center;
+}
+
+.ved3-headline-footer {
+  justify-items: center;
+}
+
 .ved3-headline-footer {
   display: grid;
   gap: 20px;
@@ -237,6 +253,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
+  justify-content: center;
 }
 
 .ved3-btn {
@@ -281,6 +298,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+  width: 100%;
 }
 
 .ved3-mini-card,
@@ -682,7 +700,7 @@
   }
 
   .ved3-headline-block h1 {
-    max-width: 12ch;
+    max-width: 100%;
   }
 
   .ved3-section-head h2,
