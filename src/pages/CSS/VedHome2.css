@@ -56,3 +56,26 @@
     height: 42px;
   }
 }
+
+
+.ved3-hero{
+  border-radius: 0px;
+}
+
+.ved3-hero-flex{
+  display: flex;
+  flex-direction: column;
+}
+
+
+.ved3-headline-block p{
+  margin-top: 105px;
+}
+
+
+.ved3-btn-primary, .ved3-btn-secondary,.ved3-mini-card:nth-child(1), 
+.ved3-mini-card:nth-child(2), .ved3-mini-card:nth-child(3),.ved3-billboard-main,
+.ved3-stage-panel:nth-child(1),.ved3-stage-panel:nth-child(2),.ved3-story-main,
+.ved3-story-journey, .ved3-channel-card,.ved3-reveal-enabled [data-reveal]{
+  border-radius: 0px;
+}

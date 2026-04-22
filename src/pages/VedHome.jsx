@@ -166,15 +166,9 @@ const VedHome = () => {
   return (
     <div className="ved3-page" ref={pageRef}>
       <section className="ved3-shell ved3-hero">
-        <div className="ved3-ribbon">
-          <span className="ved3-ribbon-mark">VEDAM</span>
-          <p>
-            New homepage direction with a sharper editorial-product hybrid
-            layout
-          </p>
-        </div>
+        
 
-        <div className="ved3-hero-grid">
+        <div className="ved3-hero-grid ved3-hero-flex">
           <div className="ved3-headline-block">
             <div className="ved3-hero-copy">
               <h1 className="ved3-hero-copy-title">
