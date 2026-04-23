@@ -6,7 +6,7 @@
   height: auto;
   /* background: #020617; */
   background: #fdfdff;
-  border-radius: 999px;
+  /* border-radius: 999px; */
   padding: 14px 10px;
   display: flex;
   flex-direction: column;
@@ -19,7 +19,7 @@
 /* Expanded */
 .sidebar.open {
   width: 200px;
-  border-radius: 28px;
+  /* border-radius: 28px; */
 }
 
 /* Collapsed */
