@@ -11,6 +11,24 @@ import {
 } from "../api/admin.js";
 import "./CSS/AdminDashboard.css";
 
+const ADMIN_LIST_LIMIT = "all";
+const getSerialNumber = (index) => index + 1;
+const getSerialSearch = (value) => {
+  const normalizedValue = String(value || "").trim();
+
+  if (!/^\d+$/.test(normalizedValue)) {
+    return null;
+  }
+
+  const serialNumber = Number(normalizedValue);
+  return serialNumber > 0 ? serialNumber : null;
+};
+const attachSerialNumbers = (items) =>
+  items.map((item, index) => ({
+    ...item,
+    serialNumber: getSerialNumber(index),
+  }));
+
 const AdminDashboard = () => {
   const { user } = useContext(UserContext);
   const [stats, setStats] = useState({});
@@ -44,8 +62,12 @@ const AdminDashboard = () => {
   const loadUsers = useCallback(async (search = "") => {
     setUsersLoading(true);
     try {
-      const { data } = await getUsersList(1, 20, search);
-      setUsers(data?.data?.users || []);
+      const serialSearch = getSerialSearch(search);
+      const { data } = await getUsersList(1, ADMIN_LIST_LIMIT, serialSearch ? "" : search);
+      const fetchedUsers = attachSerialNumbers(data?.data?.users || []);
+      setUsers(
+        serialSearch ? fetchedUsers.filter((entry) => entry.serialNumber === serialSearch) : fetchedUsers
+      );
     } catch (error) {
       console.error("Users error:", error);
     } finally {
@@ -56,8 +78,12 @@ const AdminDashboard = () => {
   const loadPosts = useCallback(async (search = "") => {
     setPostsLoading(true);
     try {
-      const { data } = await getPostsList(1, 20, search);
-      setPosts(data?.data?.posts || []);
+      const serialSearch = getSerialSearch(search);
+      const { data } = await getPostsList(1, ADMIN_LIST_LIMIT, serialSearch ? "" : search);
+      const fetchedPosts = attachSerialNumbers(data?.data?.posts || []);
+      setPosts(
+        serialSearch ? fetchedPosts.filter((entry) => entry.serialNumber === serialSearch) : fetchedPosts
+      );
     } catch (error) {
       console.error("Posts error:", error);
     } finally {
@@ -68,8 +94,18 @@ const AdminDashboard = () => {
   const loadComments = useCallback(async (search = "") => {
     setCommentsLoading(true);
     try {
-      const { data } = await getCommentsList(1, 20, search);
-      setComments(data?.data?.comments || []);
+      const serialSearch = getSerialSearch(search);
+      const { data } = await getCommentsList(
+        1,
+        ADMIN_LIST_LIMIT,
+        serialSearch ? "" : search
+      );
+      const fetchedComments = attachSerialNumbers(data?.data?.comments || []);
+      setComments(
+        serialSearch
+          ? fetchedComments.filter((entry) => entry.serialNumber === serialSearch)
+          : fetchedComments
+      );
     } catch (error) {
       console.error("Comments error:", error);
     } finally {
@@ -225,7 +261,7 @@ const AdminDashboard = () => {
             </button>
             <input
               type="text"
-              placeholder="Search username, email, or full name..."
+              placeholder="Search by Sr. No., username, email, or full name..."
               className="search-input"
               value={userSearch}
               onChange={(event) => setUserSearch(event.target.value)}
@@ -239,6 +275,7 @@ const AdminDashboard = () => {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th>Sr. No.</th>
                   <th>ID</th>
                   <th>Username</th>
                   <th>Email</th>
@@ -250,6 +287,7 @@ const AdminDashboard = () => {
               <tbody>
                 {users.map((entry) => (
                   <tr key={entry._id}>
+                    <td>{entry.serialNumber}</td>
                     <td>{entry._id.slice(-6)}</td>
                     <td>{entry.username}</td>
                     <td>{entry.email}</td>
@@ -294,7 +332,7 @@ const AdminDashboard = () => {
             </button>
             <input
               type="text"
-              placeholder="Search title, content, or author..."
+              placeholder="Search by Sr. No., title, content, or author..."
               className="search-input"
               value={postSearch}
               onChange={(event) => setPostSearch(event.target.value)}
@@ -308,6 +346,7 @@ const AdminDashboard = () => {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th>Sr. No.</th>
                   <th>ID</th>
                   <th>Title</th>
                   <th>Author</th>
@@ -320,6 +359,7 @@ const AdminDashboard = () => {
               <tbody>
                 {posts.map((entry) => (
                   <tr key={entry._id}>
+                    <td>{entry.serialNumber}</td>
                     <td>{entry._id.slice(-6)}</td>
                     <td className="admin-cell-copy">{entry.title}</td>
                     <td>{entry.owner?.username || "Unknown"}</td>
@@ -351,7 +391,7 @@ const AdminDashboard = () => {
             </button>
             <input
               type="text"
-              placeholder="Search comment, author, or post..."
+              placeholder="Search by Sr. No., comment, author, or post..."
               className="search-input"
               value={commentSearch}
               onChange={(event) => setCommentSearch(event.target.value)}
@@ -365,6 +405,7 @@ const AdminDashboard = () => {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th>Sr. No.</th>
                   <th>ID</th>
                   <th>Comment</th>
                   <th>Author</th>
@@ -376,6 +417,7 @@ const AdminDashboard = () => {
               <tbody>
                 {comments.map((entry) => (
                   <tr key={entry._id}>
+                    <td>{entry.serialNumber}</td>
                     <td>{entry._id.slice(-6)}</td>
                     <td className="admin-cell-copy">{entry.content}</td>
                     <td>{entry.owner?.username || entry.owner?.fullName || "Unknown"}</td>
