@@ -18,9 +18,9 @@ const ThemeBtn = () => {
       <span className="theme-fab__icon">
         {isDark ? <FaSun /> : <FaMoon />}
       </span>
-      <span className="theme-fab__text">
-        {isDark ? "Light mode" : "Dark mode"}
-      </span>
+      {/* <span className="theme-fab__text">
+        {isDark ? "" : ""}
+      </span> */}
     </button>
   );
 };
