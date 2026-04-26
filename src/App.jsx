@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegister from "./pages/AdminRegister";
 import AdminLogin from "./pages/AdminLogin";
 import AdminUserDetail from "./pages/AdminUserDetail";
+import Setting from "./components/Setting";
 
 
 
@@ -41,6 +42,8 @@ function App() {
           <Route path="features" element={<Features />} />
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/user/:id" element={<AdminUserDetail />} />
+          <Route path="setting" element={<Setting />} />
+          <Route path="settings" element={<Setting />} />
 
         </Route>
       </Routes>

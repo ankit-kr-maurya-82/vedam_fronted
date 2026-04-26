@@ -439,3 +439,7 @@ body {
 .dark .searchResultItem span {
   color: #cbd5e1;
 }
+
+.btn{
+  border-radius: 0px;
+}

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaPlus, FaHome, FaUser, FaCompass, FaSignOutAlt } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 import { Shield } from "lucide-react";
 import UserContext from "../context/UserContext";
 import "./CSS/Sidebar.css";
@@ -42,6 +43,14 @@ const Sidebar = () => {
           <FaCompass /> 
           <span>Features</span>
         </NavLink>
+
+        {user && (
+          <NavLink to="/settings" className="sidebarItem">
+          <IoMdSettings />
+          <span>Settings</span>
+
+        </NavLink>
+        )}
 
         {user && (
           <NavLink to={`/profile/${user.username}`} className="sidebarItem">

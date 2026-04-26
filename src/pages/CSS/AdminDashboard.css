@@ -121,9 +121,14 @@
 /* Badges */
 .admin-badge {
   background: #ff4d4f;
-  padding: 4px 8px;
   border-radius: 6px;
   font-size: 12px;
+   padding: 7px 18px;
+    color: white;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    font-size: 18px;
 }
 
 .user-badge {
