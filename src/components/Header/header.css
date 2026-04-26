@@ -383,7 +383,7 @@ body {
 }
 
 .dark .header {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
@@ -391,7 +391,7 @@ body {
 .dark .mobileProfileLink,
 .dark .headerUserChip {
   border-color: rgba(148, 163, 184, 0.16);
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
 }
 
 .dark .searchIcon,
@@ -412,7 +412,7 @@ body {
 
 .dark .btn {
   border-color: rgba(148, 163, 184, 0.18);
-  background: rgba(30, 41, 59, 0.9);
+  background: var(--dark-surface);
   color: #f8fafc;
 }
 
@@ -422,7 +422,7 @@ body {
 
 .dark .mobileMenu,
 .dark .searchDropdown {
-  background: rgba(15, 23, 42, 0.96);
+  background: var(--dark-surface);
   border: 1px solid rgba(148, 163, 184, 0.14);
 }
 

@@ -13,7 +13,7 @@ html {
 
 /* DARK MODE */
 .dark body {
-  background: #020617;
+  background: var(--dark-surface);
   color: white;
 }
 
@@ -34,6 +34,7 @@ html {
 
 @layer base {
   :root {
+    --dark-surface: rgb(20 20 20 / 88%);
     --sidebar: oklch(0.985 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -58,8 +59,8 @@ html {
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.439 0 0);
-    --surface-1: #0f172a;
-    --surface-2: #111827;
+    --surface-1: var(--dark-surface);
+    --surface-2: var(--dark-surface);
     --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
     --shadow-medium: 0 20px 44px rgba(0, 0, 0, 0.36);
     --shadow-strong: 0 28px 60px rgba(0, 0, 0, 0.42);
@@ -74,9 +75,7 @@ html {
   min-height: 100vh;
 }
 
-.app-main.with-sidebar {
-  padding-left: 112px;
-}
+
 
 .auth-shell footer {
   display: block !important;

@@ -65,7 +65,7 @@
 }
 
 .dark .messages-page {
-  background: #020617;
+  background: var(--dark-surface);
 }
 
 .dark .chat-list,
@@ -88,11 +88,11 @@
 }
 
 .dark .chat-messages {
-  background: rgba(15, 23, 42, 0.55);
+  background: var(--dark-surface);
 }
 
 .dark .chat-input input {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.16);
   color: #f8fafc;
 }

@@ -105,7 +105,7 @@
 }
 
 .dark .sidebar {
-  background: rgba(15, 23, 42, 0.92);
+  background: var(--dark-surface);
   border: 1px solid rgba(148, 163, 184, 0.14);
   box-shadow: var(--shadow-medium);
 }

@@ -107,7 +107,7 @@
 .dark .user-bio-section,
 .dark .article-card,
 .dark .user-meta {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   color: #f8fafc;
 }
 

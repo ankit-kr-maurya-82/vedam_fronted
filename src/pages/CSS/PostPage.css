@@ -391,7 +391,7 @@
 
 .dark .article-main,
 .dark .comments-panel {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
   box-shadow: var(--shadow-soft);
 }
@@ -443,7 +443,7 @@
 
 .dark .comment-input-field,
 .dark .comment-card {
-  background: rgba(30, 41, 59, 0.84);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
   color: #f8fafc;
 }

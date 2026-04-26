@@ -22,7 +22,7 @@
 }
 
 .dark .message {
-  background: rgba(30, 41, 59, 0.9);
+  background: var(--dark-surface);
   color: #f8fafc;
 }
 

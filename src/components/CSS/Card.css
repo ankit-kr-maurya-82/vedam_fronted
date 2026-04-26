@@ -278,7 +278,7 @@
 .media-modal {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.86);
+  background: var(--dark-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +335,7 @@
 }
 
 .dark .feed-card {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
   box-shadow: var(--shadow-soft);
 }
@@ -362,7 +362,7 @@
 }
 
 .dark .feed-media-shell {
-  background: rgba(30, 41, 59, 0.82);
+  background: var(--dark-surface);
 }
 
 .dark .feed-card-footer {
@@ -375,7 +375,7 @@
 }
 
 .dark .owner-action-btn {
-  background: rgba(30, 41, 59, 0.82);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.16);
 }
 

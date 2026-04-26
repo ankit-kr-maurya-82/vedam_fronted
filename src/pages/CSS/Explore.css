@@ -117,7 +117,7 @@
 .dark .explore-users,
 .dark .explore-feed,
 .dark .user-result-card {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
 }
 

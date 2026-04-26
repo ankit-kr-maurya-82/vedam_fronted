@@ -574,19 +574,19 @@
   background:
     radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 28%),
     radial-gradient(circle at 85% 12%, rgba(37, 99, 235, 0.14), transparent 22%),
-    linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.98));
+    linear-gradient(180deg, var(--dark-surface), var(--dark-surface));
 }
 
 .dark .features-copy,
 .dark .features-hero-panel,
 .dark .feature-card,
 .dark .features-section-card {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
 }
 
 .dark .features-stat-card {
-  background: rgba(15, 23, 42, 0.72);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
   box-shadow: var(--shadow-soft);
 }
@@ -620,7 +620,7 @@
 
 .dark .features-secondary-cta {
   color: #f8fafc;
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.16);
 }
 
@@ -634,7 +634,7 @@
 
 .dark .features-stage-card,
 .dark .features-stage-item {
-  background: rgba(30, 41, 59, 0.72);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.12);
 }
 

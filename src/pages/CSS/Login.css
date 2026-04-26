@@ -117,11 +117,11 @@
 /* ================================================= */
 
 .dark .login-container {
-  background: #020617;
+  background: var(--dark-surface);
 }
 
 .dark .login-form {
-  background: #020617;
+  background: var(--dark-surface);
   border: 1px solid #1e293b;
 }
 
@@ -130,7 +130,7 @@
 }
 
 .dark .login-form input {
-  background: #020617;
+  background: var(--dark-surface);
   border: 1px solid #334155;
   color: white;
 }
@@ -169,7 +169,7 @@
 }
 
 .dark .google-auth-btn {
-  background: #111827;
+  background: var(--dark-surface);
   border: 1px solid #334155;
   color: #f8fafc;
 }

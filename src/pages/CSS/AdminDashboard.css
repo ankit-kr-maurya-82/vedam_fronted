@@ -353,14 +353,14 @@
 .dark .tab-buttons button,
 .dark .search-input,
 .dark .admin-table {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
   color: #f8fafc;
 }
 
 .dark .admin-snapshot-card,
 .dark .admin-activity-card {
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--dark-surface);
   border-color: rgba(148, 163, 184, 0.14);
 }
 
@@ -389,7 +389,7 @@
 }
 
 .dark .admin-table th {
-  background: rgba(30, 41, 59, 0.88);
+  background: var(--dark-surface);
 }
 
 .dark .admin-table th,
@@ -398,7 +398,7 @@
 }
 
 .dark .admin-table tr:hover {
-  background: rgba(30, 41, 59, 0.68);
+  background: var(--dark-surface);
 }
 
 .dark .tab-buttons button.active {

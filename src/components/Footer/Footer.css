@@ -152,7 +152,7 @@
 .dark .site-footer__shell {
   background:
     radial-gradient(circle at top left, rgba(251, 191, 36, 0.06), transparent 26%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+    linear-gradient(180deg, var(--dark-surface) 0%, var(--dark-surface) 100%);
   border-color: rgba(148, 163, 184, 0.14);
 }
 
