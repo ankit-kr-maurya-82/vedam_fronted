@@ -28,6 +28,7 @@ const attachSerialNumbers = (items) =>
     ...item,
     serialNumber: getSerialNumber(index),
   }));
+const formatNumber = (value) => Number(value || 0).toLocaleString();
 
 const AdminDashboard = () => {
   const { user } = useContext(UserContext);
@@ -46,6 +47,40 @@ const AdminDashboard = () => {
   const [commentSearch, setCommentSearch] = useState("");
 
   const formatDate = (value) => new Date(value).toLocaleDateString();
+  const statsCards = [
+    { label: "Total Users", value: stats.totalUsers, tone: "blue" },
+    { label: "Admin Users", value: stats.adminUsers, tone: "red" },
+    { label: "Community Users", value: stats.standardUsers, tone: "cyan" },
+    { label: "Total Posts", value: stats.totalPosts, tone: "indigo" },
+    { label: "Total Comments", value: stats.totalComments, tone: "amber" },
+    { label: "Total Likes", value: stats.totalLikes, tone: "pink" },
+    { label: "Total Views", value: stats.totalViews, tone: "emerald" },
+    {
+      label: "Posts With Comments",
+      value: stats.postsWithComments,
+      tone: "slate",
+    },
+  ];
+  const snapshotStats = [
+    {
+      label: "Avg likes per post",
+      value: stats.avgLikesPerPost ?? 0,
+    },
+    {
+      label: "Avg comments per post",
+      value: stats.avgCommentsPerPost ?? 0,
+    },
+    {
+      label: "Latest user joined",
+      value: stats.recentUsers?.[0]?.username
+        ? `@${stats.recentUsers[0].username}`
+        : "No users yet",
+    },
+    {
+      label: "Latest post published",
+      value: stats.recentPosts?.[0]?.title || "No posts yet",
+    },
+  ];
 
   const loadStats = useCallback(async () => {
     setStatsLoading(true);
@@ -120,6 +155,7 @@ const AdminDashboard = () => {
       setDeletingId(id);
       await deleteUser(id);
       await loadUsers(userSearch);
+      await loadStats();
       alert("User deleted successfully");
     } catch (error) {
       alert(error.response?.data?.message || "Delete failed");
@@ -233,22 +269,103 @@ const AdminDashboard = () => {
       </div>
 
       {activeTab === "stats" && (
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>Total Users</h3>
-            <span className="stat-number">{stats.totalUsers || 0}</span>
+        <div className="stats-tab-shell">
+          <div className="stats-grid">
+            {statsCards.map((card) => (
+              <div key={card.label} className={`stat-card tone-${card.tone}`}>
+                <h3>{card.label}</h3>
+                <span className="stat-number">{formatNumber(card.value)}</span>
+              </div>
+            ))}
           </div>
-          <div className="stat-card">
-            <h3>Total Posts</h3>
-            <span className="stat-number">{stats.totalPosts || 0}</span>
+
+          <div className="admin-snapshot-grid">
+            {snapshotStats.map((item) => (
+              <article key={item.label} className="admin-snapshot-card">
+                <span className="admin-snapshot-label">{item.label}</span>
+                <strong className="admin-snapshot-value">{item.value}</strong>
+              </article>
+            ))}
           </div>
-          <div className="stat-card">
-            <h3>Total Comments</h3>
-            <span className="stat-number">{stats.totalComments || 0}</span>
-          </div>
-          <div className="stat-card">
-            <h3>Total Likes</h3>
-            <span className="stat-number">{stats.totalLikes || 0}</span>
+
+          <div className="admin-activity-grid">
+            <section className="admin-activity-card">
+              <div className="admin-activity-head">
+                <h3>Recent Users</h3>
+                <span>{stats.recentUsers?.length || 0} entries</span>
+              </div>
+              <div className="admin-activity-list">
+                {stats.recentUsers?.length ? (
+                  stats.recentUsers.map((entry) => (
+                    <article key={entry._id} className="admin-activity-item">
+                      <div>
+                        <strong>{entry.fullName || entry.username}</strong>
+                        <span>
+                          @{entry.username} · {entry.email}
+                        </span>
+                      </div>
+                      <time>{formatDate(entry.createdAt)}</time>
+                    </article>
+                  ))
+                ) : (
+                  <p className="admin-empty-note">No recent users available.</p>
+                )}
+              </div>
+            </section>
+
+            <section className="admin-activity-card">
+              <div className="admin-activity-head">
+                <h3>Recent Posts</h3>
+                <span>{stats.recentPosts?.length || 0} entries</span>
+              </div>
+              <div className="admin-activity-list">
+                {stats.recentPosts?.length ? (
+                  stats.recentPosts.map((entry) => (
+                    <article key={entry._id} className="admin-activity-item">
+                      <div>
+                        <strong>{entry.title || "Untitled Post"}</strong>
+                        <span>
+                          by @{entry.owner?.username || "unknown"} · {entry.views || 0} views
+                        </span>
+                      </div>
+                      <time>{formatDate(entry.createdAt)}</time>
+                    </article>
+                  ))
+                ) : (
+                  <p className="admin-empty-note">No recent posts available.</p>
+                )}
+              </div>
+            </section>
+
+            <section className="admin-activity-card">
+              <div className="admin-activity-head">
+                <h3>Recent Comments</h3>
+                <span>{stats.recentComments?.length || 0} entries</span>
+              </div>
+              <div className="admin-activity-list">
+                {stats.recentComments?.length ? (
+                  stats.recentComments.map((entry) => (
+                    <article key={entry._id} className="admin-activity-item">
+                      <div>
+                        <strong>
+                          {entry.owner?.username
+                            ? `@${entry.owner.username}`
+                            : entry.owner?.fullName || "Unknown"}
+                        </strong>
+                        <span>
+                          {entry.post?.title || "Unknown post"} ·{" "}
+                          {(entry.content || "").slice(0, 72)}
+                          {(entry.content || "").length > 72 ? "..." : ""}
+                        </span>
+                      </div>
+                      <time>{formatDate(entry.createdAt)}</time>
+                    </article>
+                  ))
+                ) : (
+                  <p className="admin-empty-note">No recent comments available.</p>
+                )}
+              </div>
+            </section>
           </div>
         </div>
       )}
