@@ -5,6 +5,11 @@ export const fetchPostById = async (postId) => {
   return response.data?.post || null;
 };
 
+export const incrementPostView = async (postId) => {
+  const response = await api.post(`/posts/${postId}/view`);
+  return response.data?.post || null;
+};
+
 export const createPostApi = async (formData) => {
   const response = await api.post("/posts", formData, {
     headers: {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./CSS/Card.css";
-import { FaArrowRight, FaPen, FaTimes, FaTrash, FaHeart } from "react-icons/fa";
+import { FaArrowRight, FaEye, FaPen, FaTimes, FaTrash, FaHeart } from "react-icons/fa";
 import { getCurrentUser } from "../lib/socialStore";
 import { likePost } from "../api/post.api.js";
 import { deletePostApi } from "../api/post.js";
@@ -163,6 +163,9 @@ const Card = ({ posts: propPosts, post: singlePost, emptyState }) => {
                     >
                       Share
                     </button>
+                    <span className="share-btn" title="Views">
+                      <FaEye /> {post.views ?? 0}
+                    </span>
                   </div>
 
                   <Link

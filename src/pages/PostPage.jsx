@@ -3,11 +3,11 @@ import { Link, useParams } from "react-router-dom";
 import "./CSS/PostPage.css";
 import "./CSS/PostPage-part2.css";
 import "./CSS/ArticleContent.css";
-import { FaArrowLeft, FaClock, FaCommentDots, FaPen, FaPlus, FaTrash, FaHeart } from "react-icons/fa";
+import { FaArrowLeft, FaClock, FaCommentDots, FaEye, FaPen, FaPlus, FaTrash, FaHeart } from "react-icons/fa";
 import Comments from "../components/Comments/Comments.jsx";
 import UserContext from "../context/UserContext";
 import FollowBtn from "../components/FollowBtn";
-import { deletePostApi, fetchPostById } from "../api/post.js";
+import { deletePostApi, fetchPostById, incrementPostView } from "../api/post.js";
 import { fetchProfileBundle, toggleFollowProfile } from "../api/profile";
 import { formatArticleDate } from "../utils/formatArticleDate.js";
 import { likePost } from "../api/post.api.js";
@@ -17,6 +17,8 @@ const unescapeHTML = (html) => {
   const doc = new DOMParser().parseFromString(html, "text/html");
   return doc.documentElement.textContent;
 };
+
+const VIEW_SESSION_PREFIX = "counted_post_view_";
 
 const PostPage = () => {
   const { postId } = useParams();
@@ -58,6 +60,32 @@ const PostPage = () => {
     return () => {
       cancelled = true;
     };
+  }, [postId]);
+
+  useEffect(() => {
+    if (!postId || typeof window === "undefined") {
+      return;
+    }
+
+    const sessionKey = `${VIEW_SESSION_PREFIX}${postId}`;
+
+    if (window.sessionStorage.getItem(sessionKey)) {
+      return;
+    }
+
+    window.sessionStorage.setItem(sessionKey, "true");
+
+    incrementPostView(postId)
+      .then((post) => {
+        setActivePost((current) =>
+          current && (current.id === post?.id || current._id === post?._id)
+            ? { ...current, views: post?.views ?? current.views }
+            : current
+        );
+      })
+      .catch(() => {
+        window.sessionStorage.removeItem(sessionKey);
+      });
   }, [postId]);
 
   const handleLike = useCallback(async () => {
@@ -267,6 +295,10 @@ const PostPage = () => {
                 {commentCount} comment{commentCount === 1 ? "" : "s"}
               </span>
             </button>
+            <span className="article-engagement-pill">
+              <FaEye />
+              <span>{activePost.views ?? 0} views</span>
+            </span>
           </div>
 
           {activePost.media && (
