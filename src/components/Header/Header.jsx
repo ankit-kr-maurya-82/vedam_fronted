@@ -4,6 +4,7 @@ import { FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { Shield } from "lucide-react";
 import UserContext from "../../context/UserContext";
 import "./header.css";
+import "./header2.css";
 import { searchContent } from "../../api/search";
 
 const Header = () => {
@@ -227,7 +228,7 @@ const Header = () => {
           </NavLink>
         )}
         {user?.role === 'admin' && (
-          <NavLink to="/admin" className="sidebarItem">
+          <NavLink to="/admin" className="sidebarItem admin-link">
             <Shield className="sidebar-icon" />
             <span>Admin</span>
           </NavLink>

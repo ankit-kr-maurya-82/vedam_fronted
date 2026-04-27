@@ -1,0 +1,12 @@
+.admin-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.admin-link span {
+    display: block;
+    text-align: center;
+}
