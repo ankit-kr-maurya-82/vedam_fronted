@@ -220,6 +220,11 @@ const Header = () => {
             Profile
           </NavLink>
         )}
+        {user && (
+          <NavLink to={`/settings`} onClick={() => setMenuOpen(false)}>
+            Settings
+          </NavLink>
+        )}
 
         {user ? (
           <button onClick={() => { logout(); setMenuOpen(false); }}>
