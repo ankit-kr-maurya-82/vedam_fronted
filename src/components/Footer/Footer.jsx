@@ -100,7 +100,7 @@ const Footer = () => {
         </div>
 
         <div className="site-footer__bottom">
-          <span>© {new Date().getFullYear()} VEDA. Built by Ankit Maurya.</span>
+          <span>© {new Date().getFullYear()} VEDA. Built by Ankit Kumar Maurya.</span>
           <span>Designed for readers, writers, and communities with a longer attention span.</span>
         </div>
       </div>
