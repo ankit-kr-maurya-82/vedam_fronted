@@ -1,6 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { Shield } from "lucide-react";
 import UserContext from "../../context/UserContext";
 import "./header.css";
 import { searchContent } from "../../api/search";
@@ -223,6 +224,12 @@ const Header = () => {
         {user && (
           <NavLink to={`/settings`} onClick={() => setMenuOpen(false)}>
             Settings
+          </NavLink>
+        )}
+        {user?.role === 'admin' && (
+          <NavLink to="/admin" className="sidebarItem">
+            <Shield className="sidebar-icon" />
+            <span>Admin</span>
           </NavLink>
         )}
 
