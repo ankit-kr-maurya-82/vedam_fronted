@@ -167,6 +167,7 @@ const PostPage = () => {
     `${Math.max(3, Math.ceil((activePost.content?.length || 0) / 180))} min read`;
   const publishedAt = formatArticleDate(activePost.createdAt || activePost.updatedAt);
   const isOwner = user?.id === activePost.authorId;
+  const postViewers = Array.isArray(activePost.viewers) ? activePost.viewers : [];
   const canFollowAuthor = Boolean(user && !isOwner && authorProfile?.username);
 
   const handleFollowToggle = async () => {
@@ -348,32 +349,89 @@ const PostPage = () => {
           )}
         </article>
 
-        <div
-          ref={commentsPanelRef}
-          className="comments-panel"
-        >
-          <div className="comments-header">
-            <span className="comments-kicker">Discussion</span>
-            <h2>Reader notes</h2>
-            <span className="comments-count-pill">
-              {commentCount} comment{commentCount === 1 ? "" : "s"}
-            </span>
-            <p>Responses, reactions, and follow-up thoughts on this article.</p>
-            <button
-              type="button"
-              className="comments-toggle-btn"
-              onClick={() => setCommentsOpen((current) => !current)}
-            >
-              {commentsOpen ? "Hide comments" : "Open comments"}
-            </button>
-          </div>
-          <div className={`comments-body ${commentsOpen ? "open" : "closed"}`}>
-            {commentsOpen && (
-              <Comments
-                postId={activePost.id || activePost._id}
-                onCountChange={setCommentCount}
-              />
-            )}
+        <div className="article-side-rail">
+          {isOwner && (
+            <section className="article-viewers-card">
+              <div className="article-viewers-header">
+                <span className="comments-kicker">Viewers</span>
+                <h2>Who viewed this post</h2>
+                <span className="comments-count-pill">
+                  {postViewers.length} viewer{postViewers.length === 1 ? "" : "s"}
+                </span>
+                <p>Only you can see the logged-in readers who opened this post.</p>
+              </div>
+
+              {postViewers.length === 0 ? (
+                <p className="article-viewers-empty">
+                  Logged-in viewers will appear here after they open this post.
+                </p>
+              ) : (
+                <div className="article-viewers-list">
+                  {postViewers.map((viewer) => {
+                    const viewedAt = formatArticleDate(viewer.viewedAt);
+
+                    return (
+                      <Link
+                        key={`${viewer.userId}-${viewer.viewedAt || "viewer"}`}
+                        to={`/profile/${viewer.username}`}
+                        className="article-viewer-item"
+                      >
+                        {viewer.avatar ? (
+                          <img
+                            src={viewer.avatar}
+                            alt={viewer.username}
+                            className="article-viewer-avatar"
+                          />
+                        ) : (
+                          <div className="article-viewer-avatar article-viewer-fallback">
+                            {(viewer.fullName || viewer.username)?.charAt(0)?.toUpperCase()}
+                          </div>
+                        )}
+
+                        <div className="article-viewer-copy">
+                          <strong>{viewer.fullName || viewer.username}</strong>
+                          <span>@{viewer.username}</span>
+                        </div>
+
+                        <span className="article-viewer-time">
+                          {viewedAt.date}
+                          {viewedAt.time ? ` | ${viewedAt.time}` : ""}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
+
+          <div
+            ref={commentsPanelRef}
+            className="comments-panel"
+          >
+            <div className="comments-header">
+              <span className="comments-kicker">Discussion</span>
+              <h2>Reader notes</h2>
+              <span className="comments-count-pill">
+                {commentCount} comment{commentCount === 1 ? "" : "s"}
+              </span>
+              <p>Responses, reactions, and follow-up thoughts on this article.</p>
+              <button
+                type="button"
+                className="comments-toggle-btn"
+                onClick={() => setCommentsOpen((current) => !current)}
+              >
+                {commentsOpen ? "Hide comments" : "Open comments"}
+              </button>
+            </div>
+            <div className={`comments-body ${commentsOpen ? "open" : "closed"}`}>
+              {commentsOpen && (
+                <Comments
+                  postId={activePost.id || activePost._id}
+                  onCountChange={setCommentCount}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
