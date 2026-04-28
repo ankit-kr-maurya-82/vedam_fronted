@@ -346,3 +346,20 @@
     width: 100%;
   }
 }
+
+
+.about-hero{
+  margin-top: 67px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* justify-content: center; */
+}
+
+.about-primary-cta,.about-secondary-cta,.dark .about-fact-card,.about-fact-card {
+  border-radius: 0;
+}
+
+.about-pill-list span{
+  border-radius: 8px;
+}

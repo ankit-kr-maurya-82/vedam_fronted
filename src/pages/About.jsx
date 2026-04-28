@@ -88,7 +88,8 @@ const About = () => {
               <span>Comments</span>
               <span>Likes</span>
               <span>Explore</span>
-              <span>Chat</span>
+              <span>Views</span>
+              {/* <span>Chat</span> */}
             </div>
             <div className="about-panel-note">
               <FaLayerGroup />
