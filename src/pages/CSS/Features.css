@@ -658,3 +658,9 @@
 .features-stat-card{
   border-radius: 0;
 }
+
+
+.features-hero{
+  display: flex;
+  flex-direction: column;
+}
