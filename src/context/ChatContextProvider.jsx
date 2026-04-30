@@ -21,14 +21,19 @@ const canUseBrowserNotifications = () =>
   typeof window !== "undefined" && "Notification" in window;
 
 const getRealtimeEventKey = (payload) => {
-  const messageId = payload?.message?.id || payload?.message?._id;
+  const messageId =
+    payload?.message?.id ||
+    payload?.message?._id ||
+    payload?.deletedMessageId ||
+    payload?.messageId;
   const contactId = payload?.contact?.id || payload?.contact?._id;
+  const eventType = payload?.type || "chat:message";
 
   if (!messageId || !contactId) {
     return null;
   }
 
-  return `${contactId}:${messageId}`;
+  return `${eventType}:${contactId}:${messageId}`;
 };
 
 const getConversationSnapshotKey = (conversation) =>

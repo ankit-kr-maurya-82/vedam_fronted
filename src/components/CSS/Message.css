@@ -10,6 +10,7 @@
   flex-direction: column;
   gap: 4px;
   word-break: break-word;
+  position: relative;
 }
 
 .message.own {
@@ -34,6 +35,31 @@
   font-size: 11px;
   opacity: 0.7;
   align-self: flex-end;
+}
+
+.message-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.message-action-btn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  opacity: 0.78;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+}
+
+.message-action-btn.delete {
+  color: #fecaca;
+}
+
+.message-action-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .dark .message {

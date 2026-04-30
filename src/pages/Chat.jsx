@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Message from "../components/Message";
 import ChatContext from "../context/ChatContext";
 import UserContext from "../context/UserContext";
 import {
+  deleteChatMessage,
   fetchChatMessages,
   sendChatMessage,
+  updateChatMessage,
 } from "../api/chat";
 import "./CSS/Chat.css";
 
@@ -122,6 +125,49 @@ const mergeConversationState = (
     ),
   });
 
+const replaceConversationMessage = (conversation, nextMessage) =>
+  normalizeConversation({
+    ...(conversation || {}),
+    messages: (conversation?.messages || []).map((message) =>
+      message.id === nextMessage.id ? { ...message, ...nextMessage } : message
+    ),
+  });
+
+const removeConversationMessage = (conversation, messageId) =>
+  normalizeConversation({
+    ...(conversation || {}),
+    messages: (conversation?.messages || []).filter(
+      (message) => message.id !== messageId
+    ),
+  });
+
+const syncThreadPreviewFromConversation = (
+  threads = [],
+  username,
+  conversation,
+  contact
+) => {
+  const normalizedUsername = String(username || "").toLowerCase();
+  const nextMessages = conversation?.messages || [];
+  const nextLastMessage = nextMessages[nextMessages.length - 1] || null;
+
+  return threads.map((thread) =>
+    thread.contact.username.toLowerCase() === normalizedUsername
+      ? {
+          ...thread,
+          contact: {
+            ...thread.contact,
+            ...(contact || conversation?.contact || {}),
+          },
+          lastMessage: nextLastMessage,
+          updatedAt:
+            nextLastMessage?.createdAt || nextLastMessage?.updatedAt || null,
+          unreadCount: 0,
+        }
+      : thread
+  );
+};
+
 const upsertThreadFromMessage = (
   threads = [],
   eventPayload,
@@ -202,6 +248,8 @@ const Chat = () => {
   const [threadLoading, setThreadLoading] = useState(true);
   const [conversationLoading, setConversationLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [messageActionId, setMessageActionId] = useState(null);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -369,6 +417,38 @@ const Chat = () => {
       activeThread?.contact?.username?.toLowerCase() ===
       lastEvent.contact.username.toLowerCase();
 
+    if (lastEvent.type === "chat:message-updated") {
+      refreshChatState()
+        .then((refreshedThreads) => setThreads(refreshedThreads))
+        .catch(() => {});
+
+      if (isViewingActiveThread) {
+        fetchChatMessages(user, lastEvent.contact.username)
+          .then((nextConversation) =>
+            setActiveConversation(normalizeConversation(nextConversation))
+          )
+          .catch(() => {});
+      }
+
+      return;
+    }
+
+    if (lastEvent.type === "chat:message-deleted") {
+      refreshChatState()
+        .then((refreshedThreads) => setThreads(refreshedThreads))
+        .catch(() => {});
+
+      if (isViewingActiveThread) {
+        fetchChatMessages(user, lastEvent.contact.username)
+          .then((nextConversation) =>
+            setActiveConversation(normalizeConversation(nextConversation))
+          )
+          .catch(() => {});
+      }
+
+      return;
+    }
+
     setThreads((previousThreads) =>
       upsertThreadFromMessage(previousThreads, lastEvent, user.id, {
         resetUnread: isViewingActiveThread,
@@ -389,7 +469,18 @@ const Chat = () => {
         );
       });
     }
-  }, [activeThread?.contact?.username, applyUnreadCountDelta, lastEvent, user]);
+  }, [
+    activeThread?.contact?.username,
+    applyUnreadCountDelta,
+    lastEvent,
+    refreshChatState,
+    user,
+  ]);
+
+  useEffect(() => {
+    setEditingMessageId(null);
+    setDraft("");
+  }, [activeThread?.contact?.username]);
 
   const handleSelectThread = (username) => {
     setSearchParams({ user: username });
@@ -397,6 +488,63 @@ const Chat = () => {
 
   const handleBackToList = () => {
     setSearchParams({}, { replace: true });
+  };
+
+  const handleStartEditMessage = (message) => {
+    setEditingMessageId(message.id);
+    setDraft(message.text || "");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setDraft("");
+  };
+
+  const handleDeleteMessage = async (message) => {
+    if (!activeThread?.contact?.username || !message?.id || messageActionId) {
+      return;
+    }
+
+    const confirmed = window.confirm("Delete this message?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    setMessageActionId(message.id);
+
+    try {
+      await deleteChatMessage({
+        username: activeThread.contact.username,
+        messageId: message.id,
+      });
+
+      const nextConversation = removeConversationMessage(
+        activeConversation,
+        message.id
+      );
+      setActiveConversation(nextConversation);
+      setThreads((previousThreads) =>
+        syncThreadPreviewFromConversation(
+          previousThreads,
+          activeThread.contact.username,
+          nextConversation,
+          activeThread.contact
+        )
+      );
+
+      if (editingMessageId === message.id) {
+        handleCancelEdit();
+      }
+
+      scheduleChatStateRefresh(400);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Unable to delete the message."
+      );
+    } finally {
+      setMessageActionId(null);
+    }
   };
 
   const handleSendMessage = async () => {
@@ -407,29 +555,61 @@ const Chat = () => {
     setSending(true);
 
     const nextDraft = draft.trim();
-    const optimisticMessage = createOptimisticMessage(user, nextDraft);
-    setDraft("");
-    setThreads((previousThreads) =>
-      upsertThreadFromMessage(
-        previousThreads,
-        {
-          contact: activeThread.contact,
-          message: optimisticMessage,
-        },
-        user.id,
-        { resetUnread: true }
-      )
-    );
-    setActiveConversation((previousConversation) =>
-      mergeConversationState(
-        previousConversation,
-        activeThread.contact,
-        optimisticMessage,
-        user.id
-      )
-    );
 
     try {
+      if (editingMessageId) {
+        setMessageActionId(editingMessageId);
+
+        const result = await updateChatMessage({
+          username: activeThread.contact.username,
+          messageId: editingMessageId,
+          content: nextDraft,
+        });
+
+        if (result?.message) {
+          const nextConversation = replaceConversationMessage(
+            activeConversation,
+            result.message
+          );
+          setActiveConversation(nextConversation);
+          setThreads((previousThreads) =>
+            syncThreadPreviewFromConversation(
+              previousThreads,
+              activeThread.contact.username,
+              nextConversation,
+              result.contact || activeThread.contact
+            )
+          );
+        }
+
+        setEditingMessageId(null);
+        setDraft("");
+        scheduleChatStateRefresh(400);
+        return;
+      }
+
+      const optimisticMessage = createOptimisticMessage(user, nextDraft);
+      setDraft("");
+      setThreads((previousThreads) =>
+        upsertThreadFromMessage(
+          previousThreads,
+          {
+            contact: activeThread.contact,
+            message: optimisticMessage,
+          },
+          user.id,
+          { resetUnread: true }
+        )
+      );
+      setActiveConversation((previousConversation) =>
+        mergeConversationState(
+          previousConversation,
+          activeThread.contact,
+          optimisticMessage,
+          user.id
+        )
+      );
+
       const result = await sendChatMessage({
         currentUser: user,
         username: activeThread.contact.username,
@@ -459,8 +639,27 @@ const Chat = () => {
       }
 
       scheduleChatStateRefresh(800);
+    } catch (error) {
+      if (!editingMessageId) {
+        refreshChatState()
+          .then((refreshedThreads) => setThreads(refreshedThreads))
+          .catch(() => {});
+
+        if (activeThread?.contact?.username) {
+          fetchChatMessages(user, activeThread.contact.username)
+            .then((nextConversation) =>
+              setActiveConversation(normalizeConversation(nextConversation))
+            )
+            .catch(() => {});
+        }
+      }
+
+      toast.error(
+        error.response?.data?.message || "Unable to save the message."
+      );
     } finally {
       setSending(false);
+      setMessageActionId(null);
     }
   };
 
@@ -642,6 +841,21 @@ const Chat = () => {
                       sender={activeThread.contact.fullName || activeThread.contact.username}
                       isOwn={message.senderId === user.id || message.isOwn}
                       timeLabel={formatMessageTime(message.createdAt)}
+                      isEdited={message.isEdited}
+                      pending={message.pending}
+                      onEdit={
+                        message.senderId === user.id && !message.pending
+                          ? () => handleStartEditMessage(message)
+                          : undefined
+                      }
+                      onDelete={
+                        message.senderId === user.id && !message.pending
+                          ? () => handleDeleteMessage(message)
+                          : undefined
+                      }
+                      disableActions={
+                        sending || messageActionId === message.id
+                      }
                     />
                   ))
                 ) : (
@@ -655,9 +869,25 @@ const Chat = () => {
             </div>
 
             <div className="chat-input">
+              {editingMessageId ? (
+                <div className="chat-edit-banner">
+                  <span>Editing your message</span>
+                  <button
+                    type="button"
+                    className="chat-edit-cancel"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : null}
               <textarea
                 rows="1"
-                placeholder={`Message @${activeThread.contact.username}`}
+                placeholder={
+                  editingMessageId
+                    ? "Edit your message"
+                    : `Message @${activeThread.contact.username}`
+                }
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
@@ -668,7 +898,13 @@ const Chat = () => {
                 }}
               />
               <button onClick={handleSendMessage} disabled={!draft.trim() || sending}>
-                {sending ? "Sending..." : "Send"}
+                {sending
+                  ? editingMessageId
+                    ? "Saving..."
+                    : "Sending..."
+                  : editingMessageId
+                    ? "Save"
+                    : "Send"}
               </button>
             </div>
           </>

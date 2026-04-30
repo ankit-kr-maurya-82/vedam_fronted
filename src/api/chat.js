@@ -82,6 +82,23 @@ export const sendChatMessage = async ({
   }
 };
 
+export const updateChatMessage = async ({ username, messageId, content }) => {
+  const response = await api.patch(
+    `/chats/${encodeURIComponent(username)}/messages/${encodeURIComponent(messageId)}`,
+    { content }
+  );
+
+  return response.data?.data;
+};
+
+export const deleteChatMessage = async ({ username, messageId }) => {
+  const response = await api.delete(
+    `/chats/${encodeURIComponent(username)}/messages/${encodeURIComponent(messageId)}`
+  );
+
+  return response.data?.data;
+};
+
 export const buildChatStreamUrl = () => {
   const token =
     typeof window !== "undefined"
