@@ -10,12 +10,40 @@ const getUnreadCount = (conversations = []) =>
     0
   );
 
+const canUseBrowserNotifications = () =>
+  typeof window !== "undefined" && "Notification" in window;
+
 const ChatContextProvider = ({ children }) => {
   const { user } = useContext(UserContext);
   const [unreadCount, setUnreadCount] = useState(0);
   const [lastEvent, setLastEvent] = useState(null);
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
   const sourceRef = useRef(null);
+
+  const showBrowserNotification = useCallback((payload) => {
+    if (!canUseBrowserNotifications()) {
+      return;
+    }
+
+    if (window.Notification.permission !== "granted") {
+      return;
+    }
+
+    const notification = new window.Notification(
+      payload?.contact?.fullName || payload?.contact?.username || "New message",
+      {
+        body: payload?.message?.text || "You received a new message",
+        icon: payload?.contact?.avatar || undefined,
+        tag: `chat:${payload?.contact?.username || "message"}`,
+      }
+    );
+
+    notification.onclick = () => {
+      window.focus();
+      window.location.href = `/chat?user=${payload?.contact?.username || ""}`;
+      notification.close();
+    };
+  }, []);
 
   const refreshChatState = useCallback(async () => {
     if (!user?.id) {
@@ -40,6 +68,16 @@ const ChatContextProvider = ({ children }) => {
 
     refreshChatState();
   }, [refreshChatState, user]);
+
+  useEffect(() => {
+    if (!user?.id || !canUseBrowserNotifications()) {
+      return;
+    }
+
+    if (window.Notification.permission === "default") {
+      window.Notification.requestPermission().catch(() => {});
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -67,6 +105,10 @@ const ChatContextProvider = ({ children }) => {
 
       if (payload?.message?.senderId !== user.id && payload?.contact?.username) {
         toast.info(`New message from @${payload.contact.username}`);
+
+        if (document.visibilityState !== "visible") {
+          showBrowserNotification(payload);
+        }
       }
     });
 
@@ -80,7 +122,7 @@ const ChatContextProvider = ({ children }) => {
         sourceRef.current = null;
       }
     };
-  }, [refreshChatState, user]);
+  }, [refreshChatState, showBrowserNotification, user]);
 
   const value = useMemo(
     () => ({
