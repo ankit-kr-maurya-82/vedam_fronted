@@ -42,6 +42,18 @@ const getInitial = (thread) =>
     .charAt(0)
     .toUpperCase();
 
+const sortMessagesByTime = (messages = []) =>
+  [...messages].sort((left, right) => {
+    const leftTime = new Date(left?.createdAt || 0).getTime();
+    const rightTime = new Date(right?.createdAt || 0).getTime();
+    return leftTime - rightTime;
+  });
+
+const normalizeConversation = (conversation) => ({
+  ...conversation,
+  messages: sortMessagesByTime(conversation?.messages || []),
+});
+
 const Chat = () => {
   const { user, loading } = useContext(UserContext);
   const { lastEvent, isRealtimeConnected, refreshChatState } =
@@ -191,7 +203,7 @@ const Chat = () => {
       );
 
       if (!cancelled) {
-        setActiveConversation(nextConversation);
+        setActiveConversation(normalizeConversation(nextConversation));
         setConversationLoading(false);
       }
     };
@@ -231,7 +243,7 @@ const Chat = () => {
         );
 
         if (!cancelled) {
-          setActiveConversation(refreshedConversation);
+          setActiveConversation(normalizeConversation(refreshedConversation));
         }
       }
     };
@@ -273,16 +285,16 @@ const Chat = () => {
       setThreads(refreshedThreads);
 
       if (result?.thread?.messages) {
-        setActiveConversation({
+        setActiveConversation(normalizeConversation({
           contact: result.contact || activeThread.contact,
           messages: result.thread.messages,
-        });
+        }));
       } else {
         const refreshedConversation = await fetchChatMessages(
           user,
           activeThread.contact.username
         );
-        setActiveConversation(refreshedConversation);
+        setActiveConversation(normalizeConversation(refreshedConversation));
       }
     } finally {
       setSending(false);
