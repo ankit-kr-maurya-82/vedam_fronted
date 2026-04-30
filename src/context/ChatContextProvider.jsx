@@ -109,8 +109,6 @@ const ChatContextProvider = ({ children }) => {
         receivedAt: Date.now(),
       });
 
-      await refreshChatState();
-
       if (payload?.message?.senderId !== user.id && payload?.contact?.username) {
         toast.info(`New message from @${payload.contact.username}`);
 
@@ -118,6 +116,8 @@ const ChatContextProvider = ({ children }) => {
           showBrowserNotification(payload);
         }
       }
+
+      refreshChatState().catch(() => {});
     });
 
     socket.on("disconnect", () => {

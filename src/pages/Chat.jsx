@@ -56,6 +56,38 @@ const normalizeConversation = (conversation) => ({
   messages: sortMessagesByTime(conversation?.messages || []),
 });
 
+const mergeRealtimeThread = (threads = [], eventPayload, currentUserId) => {
+  if (!eventPayload?.contact?.username || !eventPayload?.message) {
+    return threads;
+  }
+
+  const nextThreads = [...threads];
+  const targetIndex = nextThreads.findIndex(
+    (thread) =>
+      thread.contact.username.toLowerCase() ===
+      eventPayload.contact.username.toLowerCase()
+  );
+
+  const nextThread = {
+    id:
+      nextThreads[targetIndex]?.id ||
+      `direct:${currentUserId}:${eventPayload.contact.id || eventPayload.contact._id}`,
+    contact: eventPayload.contact,
+    lastMessage: eventPayload.message,
+    updatedAt: eventPayload.message.createdAt || eventPayload.message.updatedAt,
+    unreadCount:
+      eventPayload.message.senderId === currentUserId
+        ? 0
+        : (nextThreads[targetIndex]?.unreadCount || 0) + 1,
+  };
+
+  if (targetIndex >= 0) {
+    nextThreads.splice(targetIndex, 1);
+  }
+
+  return [nextThread, ...nextThreads];
+};
+
 const Chat = () => {
   const { user, loading } = useContext(UserContext);
   const { lastEvent, isRealtimeConnected, refreshChatState } =
@@ -226,36 +258,31 @@ const Chat = () => {
       return;
     }
 
-    let cancelled = false;
+    setThreads((previousThreads) =>
+      mergeRealtimeThread(previousThreads, lastEvent, user.id)
+    );
 
-    const syncRealtimeState = async () => {
-      const refreshedThreads = await refreshChatState();
-
-      if (!cancelled) {
-        setThreads(refreshedThreads);
-      }
-
-      if (
-        activeThread?.contact?.username?.toLowerCase() ===
-        lastEvent.contact.username.toLowerCase()
-      ) {
-        const refreshedConversation = await fetchChatMessages(
-          user,
-          lastEvent.contact.username
+    if (
+      activeThread?.contact?.username?.toLowerCase() ===
+      lastEvent.contact.username.toLowerCase()
+    ) {
+      setActiveConversation((previousConversation) => {
+        const previousMessages = previousConversation?.messages || [];
+        const alreadyExists = previousMessages.some(
+          (message) => message.id === lastEvent.message.id
         );
 
-        if (!cancelled) {
-          setActiveConversation(normalizeConversation(refreshedConversation));
+        if (alreadyExists) {
+          return previousConversation;
         }
-      }
-    };
 
-    syncRealtimeState();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [activeThread?.contact?.username, lastEvent, refreshChatState, user]);
+        return normalizeConversation({
+          contact: previousConversation?.contact || lastEvent.contact,
+          messages: [...previousMessages, lastEvent.message],
+        });
+      });
+    }
+  }, [activeThread?.contact?.username, lastEvent, user]);
 
   const handleSelectThread = (username) => {
     setSearchParams({ user: username });
