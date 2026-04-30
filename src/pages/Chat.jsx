@@ -16,6 +16,8 @@ const formatMessageTime = (value) => {
   return new Intl.DateTimeFormat("en-IN", {
     hour: "numeric",
     minute: "2-digit",
+    second: "2-digit",
+    fractionalSecondDigits: 3,
   }).format(new Date(value));
 };
 
