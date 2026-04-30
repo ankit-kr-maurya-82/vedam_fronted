@@ -1,9 +1,12 @@
 import axios from "axios";
 
+export const apiBaseUrl =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8000/api/v1"
+    : "https://vedam-backend.vercel.app/api/v1";
+
 const api = axios.create({
-  baseURL: window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000/api/v1'
-    : 'https://vedam-backend.vercel.app/api/v1',
+  baseURL: apiBaseUrl,
   withCredentials: true,
 });
 

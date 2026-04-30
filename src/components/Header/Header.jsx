@@ -2,13 +2,16 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaSearch, FaBars, FaTimes, FaUser } from "react-icons/fa";
 import { Shield } from "lucide-react";
+import ChatContext from "../../context/ChatContext";
 import UserContext from "../../context/UserContext";
+import ThemeBtn from "../ThemeBtn";
 import "./header.css";
 import "./header2.css";
 import { searchContent } from "../../api/search";
 
 const Header = () => {
   const { user, logout } = useContext(UserContext);
+  const { unreadCount } = useContext(ChatContext);
   const navigate = useNavigate();
 
   const [searchOpen, setSearchOpen] = useState(false);
@@ -145,6 +148,7 @@ const Header = () => {
         </div>
 
         <div className={`mobileHeaderProfile ${searchOpen ? "hidden" : ""}`}>
+          <ThemeBtn />
           {user ? (
             <NavLink
               to={`/profile/${user.username}`}
@@ -180,6 +184,14 @@ const Header = () => {
         <nav className="navLinks hideOnSearch">
           <NavLink to={user ? "/home" : "/"}>Home</NavLink>
           <NavLink to="/explore">Explore</NavLink>
+          {user && (
+            <NavLink to="/chat" className="chat-nav-link">
+              Chat
+              {unreadCount > 0 ? (
+                <span className="header-chat-badge">{unreadCount}</span>
+              ) : null}
+            </NavLink>
+          )}
           {user && <NavLink to="/create">Create</NavLink>}
           <NavLink to="/about">About</NavLink>
           <NavLink to="/features">Features</NavLink>
@@ -188,6 +200,7 @@ const Header = () => {
 
         {/* Right Side */}
         <div className="headerActions hideOnSearch">
+          <ThemeBtn />
           {user ? (
             <>
               <NavLink to={`/profile/${user.username}`} className="headerUserChip">
@@ -212,6 +225,14 @@ const Header = () => {
       <div className={`mobileMenu ${menuOpen ? "open" : ""}`}>
         <NavLink to={user ? "/home" : "/"} onClick={() => setMenuOpen(false)}>Home</NavLink>
         <NavLink to="/explore" onClick={() => setMenuOpen(false)}>Explore</NavLink>
+        {user && (
+          <NavLink to="/chat" onClick={() => setMenuOpen(false)}>
+            Chat
+            {unreadCount > 0 ? (
+              <span className="header-chat-badge mobile">{unreadCount}</span>
+            ) : null}
+          </NavLink>
+        )}
         {user && (
           <NavLink to="/create" onClick={() => setMenuOpen(false)}>
             Create

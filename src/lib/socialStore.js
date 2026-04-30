@@ -40,6 +40,8 @@ const getUsers = () => {
   return safeRead(STORAGE_KEYS.users, seedUsers);
 };
 
+export const getAllUsers = () => getUsers();
+
 const saveUsers = (users) => safeWrite(STORAGE_KEYS.users, users);
 
 const getPosts = () => {

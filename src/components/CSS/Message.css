@@ -1,11 +1,15 @@
 .message {
   max-width: 70%;
-  padding: 8px 12px;
-  border-radius: 12px;
+  padding: 10px 12px;
+  border-radius: 16px;
   background: #f1f1f1;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 14px;
   width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  word-break: break-word;
 }
 
 .message.own {
@@ -19,6 +23,17 @@
   font-size: 11px;
   opacity: 0.6;
   margin-bottom: 2px;
+}
+
+.message-txt {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.7;
+  align-self: flex-end;
 }
 
 .dark .message {
