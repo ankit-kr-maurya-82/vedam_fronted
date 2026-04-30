@@ -48,3 +48,10 @@
 .dark .sender {
   color: #cbd5e1;
 }
+
+@media (max-width: 640px) {
+  .message {
+    max-width: 86%;
+    font-size: 13px;
+  }
+}

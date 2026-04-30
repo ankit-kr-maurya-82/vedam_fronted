@@ -47,6 +47,11 @@ const Chat = () => {
   const { lastEvent, isRealtimeConnected, refreshChatState } =
     useContext(ChatContext);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isMobileView, setIsMobileView] = useState(
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 768px)").matches
+      : false
+  );
   const [threads, setThreads] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [draft, setDraft] = useState("");
@@ -106,6 +111,27 @@ const Chat = () => {
 
   const selectedUsername = searchParams.get("user")?.trim().toLowerCase() || "";
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const syncViewport = (event) => {
+      setIsMobileView(event.matches);
+    };
+
+    setIsMobileView(mediaQuery.matches);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncViewport);
+      return () => mediaQuery.removeEventListener("change", syncViewport);
+    }
+
+    mediaQuery.addListener(syncViewport);
+    return () => mediaQuery.removeListener(syncViewport);
+  }, []);
+
   const filteredThreads = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
@@ -130,7 +156,7 @@ const Chat = () => {
   }, [search, threads]);
 
   const activeThread = useMemo(() => {
-    if (!threads.length) {
+    if (!threads.length || (isMobileView && !selectedUsername)) {
       return null;
     }
 
@@ -139,15 +165,15 @@ const Chat = () => {
         (thread) => thread.contact.username.toLowerCase() === selectedUsername
       ) || threads[0]
     );
-  }, [selectedUsername, threads]);
+  }, [isMobileView, selectedUsername, threads]);
 
   useEffect(() => {
-    if (!threads.length || selectedUsername) {
+    if (!threads.length || selectedUsername || isMobileView) {
       return;
     }
 
     setSearchParams({ user: threads[0].contact.username }, { replace: true });
-  }, [selectedUsername, setSearchParams, threads]);
+  }, [isMobileView, selectedUsername, setSearchParams, threads]);
 
   useEffect(() => {
     if (!user?.id || !activeThread?.contact?.username) {
@@ -221,6 +247,10 @@ const Chat = () => {
     setSearchParams({ user: username });
   };
 
+  const handleBackToList = () => {
+    setSearchParams({}, { replace: true });
+  };
+
   const handleSendMessage = async () => {
     if (!user?.id || !activeThread || !draft.trim() || sending) {
       return;
@@ -278,7 +308,15 @@ const Chat = () => {
   }
 
   return (
-    <div className="messages-page">
+    <div
+      className={`messages-page ${
+        isMobileView
+          ? selectedUsername
+            ? "mobile-show-thread"
+            : "mobile-show-list"
+          : ""
+      }`}
+    >
       <aside className="chat-list">
         <div className="chat-list-top">
           <div>
@@ -375,6 +413,16 @@ const Chat = () => {
           <>
             <div className="chat-header">
               <div className="chat-header-profile">
+                {isMobileView ? (
+                  <button
+                    type="button"
+                    className="chat-mobile-back"
+                    onClick={handleBackToList}
+                  >
+                    Back
+                  </button>
+                ) : null}
+
                 <div className="chat-avatar large">
                   {activeThread.contact.avatar ? (
                     <img
@@ -388,6 +436,9 @@ const Chat = () => {
                 </div>
 
                 <div>
+                  {isMobileView ? (
+                    <span className="chat-mobile-label">Conversation</span>
+                  ) : null}
                   <h2>{activeThread.contact.fullName || activeThread.contact.username}</h2>
                   <p>@{activeThread.contact.username}</p>
                 </div>
