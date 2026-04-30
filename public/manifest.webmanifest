@@ -1,0 +1,17 @@
+{
+  "name": "Vedam",
+  "short_name": "Vedam",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5efe6",
+  "theme_color": "#1f5c4c",
+  "description": "Vedam social reading and messaging app",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

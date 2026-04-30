@@ -14,8 +14,20 @@ import {
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { toast } from "react-toastify";
+import {
+  fetchPushPublicKey,
+  removePushSubscription,
+  savePushSubscription,
+} from "../api/pushNotifications";
 import UserContext from "../context/UserContext";
 import useTheme from "../context/theme";
+import {
+  getExistingPushSubscription,
+  getPushPermissionState,
+  isPushSupported,
+  subscribeToPushNotifications,
+  unsubscribeFromPushNotifications,
+} from "../lib/pushNotifications";
 import { updateProfile } from "../api/profile";
 import { updateLocalUserProfile } from "../lib/socialStore";
 import "./CSS/Setting.css";
@@ -61,6 +73,11 @@ const Setting = () => {
   const [preferences, setPreferences] = useState(readStoredPreferences);
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPreferences, setSavingPreferences] = useState(false);
+  const [checkingDevicePush, setCheckingDevicePush] = useState(true);
+  const [savingDevicePush, setSavingDevicePush] = useState(false);
+  const [devicePushEnabled, setDevicePushEnabled] = useState(false);
+  const [pushPermission, setPushPermission] = useState(getPushPermissionState);
+  const supportsDevicePush = useMemo(() => isPushSupported(), []);
 
   useEffect(() => {
     setProfileForm({
@@ -69,6 +86,53 @@ const Setting = () => {
       bio: user?.bio || "",
     });
   }, [user]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncDevicePushState = async () => {
+      setPushPermission(getPushPermissionState());
+
+      if (!user || !supportsDevicePush) {
+        if (!cancelled) {
+          setDevicePushEnabled(false);
+          setCheckingDevicePush(false);
+        }
+        return;
+      }
+
+      setCheckingDevicePush(true);
+
+      try {
+        const subscription = await getExistingPushSubscription();
+
+        if (subscription) {
+          await savePushSubscription(
+            subscription.toJSON ? subscription.toJSON() : subscription
+          );
+        }
+
+        if (!cancelled) {
+          setDevicePushEnabled(Boolean(subscription));
+          setPushPermission(getPushPermissionState());
+        }
+      } catch {
+        if (!cancelled) {
+          setDevicePushEnabled(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setCheckingDevicePush(false);
+        }
+      }
+    };
+
+    syncDevicePushState();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [supportsDevicePush, user]);
 
   const profileCompletion = useMemo(() => {
     if (!user) return 0;
@@ -184,6 +248,69 @@ const Setting = () => {
       JSON.stringify(defaultPreferences)
     );
     toast.success("Preferences reset to default.");
+  };
+
+  const handleEnableDevicePush = async () => {
+    if (!supportsDevicePush) {
+      toast.error("This browser does not support device push notifications.");
+      return;
+    }
+
+    setSavingDevicePush(true);
+
+    try {
+      const publicKey = await fetchPushPublicKey();
+      if (!publicKey) {
+        throw new Error("Push public key is missing on the server.");
+      }
+
+      const subscription = await subscribeToPushNotifications(publicKey);
+      await savePushSubscription(
+        subscription.toJSON ? subscription.toJSON() : subscription
+      );
+
+      setDevicePushEnabled(true);
+      setPushPermission(getPushPermissionState());
+      toast.success("Device notifications enabled on this browser.");
+    } catch (error) {
+      setPushPermission(getPushPermissionState());
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to enable device notifications."
+      );
+    } finally {
+      setSavingDevicePush(false);
+      setCheckingDevicePush(false);
+    }
+  };
+
+  const handleDisableDevicePush = async () => {
+    setSavingDevicePush(true);
+
+    try {
+      const existingSubscription = await getExistingPushSubscription();
+      const endpoint = existingSubscription?.endpoint || "";
+
+      await unsubscribeFromPushNotifications();
+
+      if (endpoint) {
+        await removePushSubscription(endpoint);
+      }
+
+      setDevicePushEnabled(false);
+      setPushPermission(getPushPermissionState());
+      toast.success("Device notifications disabled for this browser.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to disable device notifications."
+      );
+    } finally {
+      setSavingDevicePush(false);
+      setCheckingDevicePush(false);
+    }
   };
 
   const handleLogout = () => {
@@ -341,6 +468,85 @@ const Setting = () => {
           </form>
 
           <div className="settings-column">
+            <section className="settings-card">
+              <div className="settings-card-head">
+                <div>
+                  <span className="settings-card-kicker">
+                    <FaBell /> Device notifications
+                  </span>
+                  <h2>Push alerts on laptop and mobile</h2>
+                </div>
+                <p>
+                  Get message alerts even when this tab is closed, as long as
+                  your browser supports web push.
+                </p>
+              </div>
+
+              <div className="settings-push-panel">
+                <div className="settings-push-status-row">
+                  <div>
+                    <strong>
+                      {!supportsDevicePush
+                        ? "Not supported"
+                        : checkingDevicePush
+                          ? "Checking device status"
+                          : devicePushEnabled
+                            ? "Enabled on this device"
+                            : "Disabled on this device"}
+                    </strong>
+                    <span>
+                      Permission:{" "}
+                      {pushPermission === "granted"
+                        ? "granted"
+                        : pushPermission === "denied"
+                          ? "blocked"
+                          : pushPermission}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`settings-push-badge ${
+                      devicePushEnabled ? "enabled" : ""
+                    }`}
+                  >
+                    {devicePushEnabled ? "On" : "Off"}
+                  </span>
+                </div>
+
+                <p className="settings-push-note">
+                  On iPhone or iPad, push notifications usually work after you
+                  add this app to the home screen and allow notifications in
+                  Safari.
+                </p>
+
+                <div className="settings-action-row">
+                  <button
+                    type="button"
+                    className="settings-primary-btn"
+                    onClick={handleEnableDevicePush}
+                    disabled={
+                      savingDevicePush || checkingDevicePush || !supportsDevicePush
+                    }
+                  >
+                    <FaBell />
+                    {savingDevicePush && !devicePushEnabled
+                      ? "Enabling..."
+                      : "Enable device notifications"}
+                  </button>
+                  <button
+                    type="button"
+                    className="settings-secondary-btn"
+                    onClick={handleDisableDevicePush}
+                    disabled={savingDevicePush || checkingDevicePush || !devicePushEnabled}
+                  >
+                    {savingDevicePush && devicePushEnabled
+                      ? "Disabling..."
+                      : "Disable on this device"}
+                  </button>
+                </div>
+              </div>
+            </section>
+
             <section className="settings-card">
               <div className="settings-card-head">
                 <div>
