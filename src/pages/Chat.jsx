@@ -467,28 +467,30 @@ const Chat = () => {
             </div>
 
             <div className="chat-messages">
-              {conversationLoading ? (
-                <div className="chat-empty-thread">
-                  <h3>Loading messages...</h3>
-                  <p>Fetching your conversation history.</p>
-                </div>
-              ) : activeConversation?.messages?.length ? (
-                activeConversation.messages.map((message) => (
-                  <Message
-                    key={message.id}
-                    text={message.text}
-                    sender={activeThread.contact.fullName || activeThread.contact.username}
-                    isOwn={message.senderId === user.id || message.isOwn}
-                    timeLabel={formatMessageTime(message.createdAt)}
-                  />
-                ))
-              ) : (
-                <div className="chat-empty-thread">
-                  <h3>Say hello to @{activeThread.contact.username}</h3>
-                  <p>This thread is ready whenever you want to start the conversation.</p>
-                </div>
-              )}
-              <div ref={bottomRef} />
+              <div className="chat-message-stack">
+                {conversationLoading ? (
+                  <div className="chat-empty-thread">
+                    <h3>Loading messages...</h3>
+                    <p>Fetching your conversation history.</p>
+                  </div>
+                ) : activeConversation?.messages?.length ? (
+                  activeConversation.messages.map((message) => (
+                    <Message
+                      key={message.id}
+                      text={message.text}
+                      sender={activeThread.contact.fullName || activeThread.contact.username}
+                      isOwn={message.senderId === user.id || message.isOwn}
+                      timeLabel={formatMessageTime(message.createdAt)}
+                    />
+                  ))
+                ) : (
+                  <div className="chat-empty-thread">
+                    <h3>Say hello to @{activeThread.contact.username}</h3>
+                    <p>This thread is ready whenever you want to start the conversation.</p>
+                  </div>
+                )}
+                <div ref={bottomRef} />
+              </div>
             </div>
 
             <div className="chat-input">
