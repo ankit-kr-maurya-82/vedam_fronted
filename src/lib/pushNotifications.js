@@ -40,6 +40,12 @@ export const getExistingPushSubscription = async () => {
   return registration.pushManager.getSubscription();
 };
 
+const subscribeWithPublicKey = (registration, publicKey) =>
+  registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(publicKey),
+  });
+
 export const subscribeToPushNotifications = async (publicKey) => {
   if (!isPushSupported()) {
     throw new Error("This browser does not support push notifications.");
@@ -57,16 +63,37 @@ export const subscribeToPushNotifications = async (publicKey) => {
   }
 
   const registration = await navigator.serviceWorker.ready;
+  await registration.update().catch(() => {});
   const existingSubscription = await registration.pushManager.getSubscription();
 
   if (existingSubscription) {
     return existingSubscription;
   }
 
-  return registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(publicKey),
-  });
+  try {
+    return await subscribeWithPublicKey(registration, publicKey);
+  } catch (error) {
+    const staleSubscription = await registration.pushManager
+      .getSubscription()
+      .catch(() => null);
+
+    if (staleSubscription) {
+      await staleSubscription.unsubscribe().catch(() => {});
+    }
+
+    const freshRegistration = await navigator.serviceWorker.ready;
+
+    try {
+      return await subscribeWithPublicKey(freshRegistration, publicKey);
+    } catch (retryError) {
+      const message =
+        retryError?.message ||
+        error?.message ||
+        "Push service registration failed.";
+
+      throw new Error(message);
+    }
+  }
 };
 
 export const unsubscribeFromPushNotifications = async () => {

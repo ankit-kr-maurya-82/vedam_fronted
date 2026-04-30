@@ -288,6 +288,7 @@ const Setting = () => {
       toast.success("Device notifications enabled on this browser.");
     } catch (error) {
       setPushPermission(getPushPermissionState());
+      console.error("Device push enable failed:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
@@ -316,6 +317,7 @@ const Setting = () => {
       setPushPermission(getPushPermissionState());
       toast.success("Device notifications disabled for this browser.");
     } catch (error) {
+      console.error("Device push disable failed:", error);
       toast.error(
         error.response?.data?.message ||
           error.message ||
