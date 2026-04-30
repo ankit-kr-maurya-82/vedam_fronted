@@ -27,7 +27,8 @@ const getInitialTheme = () => {
 const LayoutContent = ({ showLayout, themeMode }) => {
   const location = useLocation();
   const { user } = useContext(UserContext);
-  const showSidebar = showLayout && Boolean(user);
+  const isChatRoute = location.pathname === "/chat";
+  const showSidebar = showLayout && Boolean(user) && !isChatRoute;
 
   const hideFooterRoutes = ["/login", "/home", "/explore", "/admin"];
   const hideFooter =
