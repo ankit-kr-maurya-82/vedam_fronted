@@ -181,7 +181,13 @@ const createOptimisticMessage = (currentUser, text) => {
 
 const Chat = () => {
   const { user, loading } = useContext(UserContext);
-  const { lastEvent, isRealtimeConnected, refreshChatState } =
+  const {
+    lastEvent,
+    isRealtimeConnected,
+    refreshChatState,
+    applyUnreadCountDelta,
+    scheduleChatStateRefresh,
+  } =
     useContext(ChatContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isMobileView, setIsMobileView] = useState(
@@ -319,6 +325,7 @@ const Chat = () => {
     }
 
     let cancelled = false;
+    const unreadToClear = Number(activeThread.unreadCount || 0);
 
     const loadConversation = async () => {
       setConversationLoading(true);
@@ -329,6 +336,7 @@ const Chat = () => {
 
       if (!cancelled) {
         setActiveConversation(normalizeConversation(nextConversation));
+        applyUnreadCountDelta(-unreadToClear);
         setThreads((previousThreads) =>
           previousThreads.map((thread) =>
             thread.contact.username.toLowerCase() ===
@@ -346,7 +354,7 @@ const Chat = () => {
     return () => {
       cancelled = true;
     };
-  }, [activeThread?.contact?.username, user]);
+  }, [activeThread?.contact?.username, activeThread?.unreadCount, applyUnreadCountDelta, user]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -368,6 +376,10 @@ const Chat = () => {
     );
 
     if (isViewingActiveThread) {
+      if (lastEvent.message.senderId !== user.id) {
+        applyUnreadCountDelta(-1);
+      }
+
       setActiveConversation((previousConversation) => {
         return mergeConversationState(
           previousConversation,
@@ -377,7 +389,7 @@ const Chat = () => {
         );
       });
     }
-  }, [activeThread?.contact?.username, lastEvent, user]);
+  }, [activeThread?.contact?.username, applyUnreadCountDelta, lastEvent, user]);
 
   const handleSelectThread = (username) => {
     setSearchParams({ user: username });
@@ -446,9 +458,7 @@ const Chat = () => {
         );
       }
 
-      refreshChatState()
-        .then((refreshedThreads) => setThreads(refreshedThreads))
-        .catch(() => {});
+      scheduleChatStateRefresh(800);
     } finally {
       setSending(false);
     }

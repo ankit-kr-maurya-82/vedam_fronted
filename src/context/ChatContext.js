@@ -5,6 +5,8 @@ const ChatContext = createContext({
   isRealtimeConnected: false,
   lastEvent: null,
   refreshChatState: async () => {},
+  applyUnreadCountDelta: () => {},
+  scheduleChatStateRefresh: () => {},
 });
 
 export default ChatContext;

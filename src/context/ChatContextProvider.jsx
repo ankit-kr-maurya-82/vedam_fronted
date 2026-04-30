@@ -36,6 +36,7 @@ const ChatContextProvider = ({ children }) => {
   const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
   const socketRef = useRef(null);
   const streamRef = useRef(null);
+  const refreshTimerRef = useRef(null);
   const seenEventsRef = useRef(new Set());
   const socketConnectedRef = useRef(false);
   const streamConnectedRef = useRef(false);
@@ -82,6 +83,30 @@ const ChatContextProvider = ({ children }) => {
     return conversations;
   }, [user]);
 
+  const applyUnreadCountDelta = useCallback((delta) => {
+    const nextDelta = Number(delta || 0);
+
+    if (!nextDelta) {
+      return;
+    }
+
+    setUnreadCount((previousCount) => Math.max(0, previousCount + nextDelta));
+  }, []);
+
+  const scheduleChatStateRefresh = useCallback(
+    (delay = 1200) => {
+      if (refreshTimerRef.current) {
+        window.clearTimeout(refreshTimerRef.current);
+      }
+
+      refreshTimerRef.current = window.setTimeout(() => {
+        refreshTimerRef.current = null;
+        refreshChatState().catch(() => {});
+      }, Math.max(0, delay));
+    },
+    [refreshChatState]
+  );
+
   const handleIncomingRealtimeEvent = useCallback(
     (payload) => {
       const nextKey = getRealtimeEventKey(payload);
@@ -105,6 +130,7 @@ const ChatContextProvider = ({ children }) => {
       });
 
       if (payload?.message?.senderId !== user.id && payload?.contact?.username) {
+        applyUnreadCountDelta(1);
         toast.info(`New message from @${payload.contact.username}`);
 
         if (document.visibilityState !== "visible") {
@@ -112,9 +138,9 @@ const ChatContextProvider = ({ children }) => {
         }
       }
 
-      refreshChatState().catch(() => {});
+      scheduleChatStateRefresh();
     },
-    [refreshChatState, showBrowserNotification, user]
+    [applyUnreadCountDelta, scheduleChatStateRefresh, showBrowserNotification, user]
   );
 
   useEffect(() => {
@@ -126,6 +152,10 @@ const ChatContextProvider = ({ children }) => {
       streamConnectedRef.current = false;
       socketRef.current?.disconnect?.();
       streamRef.current?.close?.();
+      if (refreshTimerRef.current) {
+        window.clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
       socketRef.current = null;
       streamRef.current = null;
       seenEventsRef.current = new Set();
@@ -144,6 +174,15 @@ const ChatContextProvider = ({ children }) => {
       window.Notification.requestPermission().catch(() => {});
     }
   }, [user]);
+
+  useEffect(() => {
+    return () => {
+      if (refreshTimerRef.current) {
+        window.clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!user?.id) {
@@ -229,8 +268,17 @@ const ChatContextProvider = ({ children }) => {
       isRealtimeConnected,
       lastEvent,
       refreshChatState,
+      applyUnreadCountDelta,
+      scheduleChatStateRefresh,
     }),
-    [isRealtimeConnected, lastEvent, refreshChatState, unreadCount]
+    [
+      applyUnreadCountDelta,
+      isRealtimeConnected,
+      lastEvent,
+      refreshChatState,
+      scheduleChatStateRefresh,
+      unreadCount,
+    ]
   );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
