@@ -9,6 +9,8 @@ import {
 import ChatContext from "./ChatContext";
 import UserContext from "./UserContext";
 
+const CHAT_POLL_INTERVAL_MS = 1000;
+
 const getUnreadCount = (conversations = []) =>
   conversations.reduce(
     (total, conversation) => total + Number(conversation?.unreadCount || 0),
@@ -29,6 +31,14 @@ const getRealtimeEventKey = (payload) => {
   return `${contactId}:${messageId}`;
 };
 
+const getConversationSnapshotKey = (conversation) =>
+  String(
+    conversation?.contact?.id ||
+      conversation?.contact?._id ||
+      conversation?.contact?.username ||
+      ""
+  ).toLowerCase();
+
 const ChatContextProvider = ({ children }) => {
   const { user } = useContext(UserContext);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -37,6 +47,7 @@ const ChatContextProvider = ({ children }) => {
   const socketRef = useRef(null);
   const streamRef = useRef(null);
   const refreshTimerRef = useRef(null);
+  const conversationSnapshotRef = useRef(new Map());
   const seenEventsRef = useRef(new Set());
   const socketConnectedRef = useRef(false);
   const streamConnectedRef = useRef(false);
@@ -72,17 +83,6 @@ const ChatContextProvider = ({ children }) => {
     };
   }, []);
 
-  const refreshChatState = useCallback(async () => {
-    if (!user?.id) {
-      setUnreadCount(0);
-      return [];
-    }
-
-    const conversations = await fetchChatConversations(user);
-    setUnreadCount(getUnreadCount(conversations));
-    return conversations;
-  }, [user]);
-
   const applyUnreadCountDelta = useCallback((delta) => {
     const nextDelta = Number(delta || 0);
 
@@ -92,6 +92,46 @@ const ChatContextProvider = ({ children }) => {
 
     setUnreadCount((previousCount) => Math.max(0, previousCount + nextDelta));
   }, []);
+
+  const syncConversationSnapshot = useCallback((conversations = []) => {
+    const nextSnapshot = new Map();
+
+    conversations.forEach((conversation) => {
+      const snapshotKey = getConversationSnapshotKey(conversation);
+
+      if (!snapshotKey) {
+        return;
+      }
+
+      nextSnapshot.set(snapshotKey, {
+        lastMessageId:
+          conversation?.lastMessage?.id || conversation?.lastMessage?._id || "",
+        unreadCount: Number(conversation?.unreadCount || 0),
+      });
+    });
+
+    conversationSnapshotRef.current = nextSnapshot;
+  }, []);
+
+  const refreshChatState = useCallback(
+    async (options = {}) => {
+      if (!user?.id) {
+        setUnreadCount(0);
+        conversationSnapshotRef.current = new Map();
+        return [];
+      }
+
+      const conversations = await fetchChatConversations(user);
+      setUnreadCount(getUnreadCount(conversations));
+
+      if (options.syncSnapshot !== false) {
+        syncConversationSnapshot(conversations);
+      }
+
+      return conversations;
+    },
+    [syncConversationSnapshot, user]
+  );
 
   const scheduleChatStateRefresh = useCallback(
     (delay = 1200) => {
@@ -108,7 +148,12 @@ const ChatContextProvider = ({ children }) => {
   );
 
   const handleIncomingRealtimeEvent = useCallback(
-    (payload) => {
+    (payload, options = {}) => {
+      const {
+        adjustUnread = true,
+        scheduleRefreshState = true,
+        refreshDelay = 1200,
+      } = options;
       const nextKey = getRealtimeEventKey(payload);
 
       if (nextKey && seenEventsRef.current.has(nextKey)) {
@@ -129,8 +174,15 @@ const ChatContextProvider = ({ children }) => {
         receivedAt: Date.now(),
       });
 
-      if (payload?.message?.senderId !== user.id && payload?.contact?.username) {
+      if (
+        adjustUnread &&
+        payload?.message?.senderId !== user.id &&
+        payload?.contact?.username
+      ) {
         applyUnreadCountDelta(1);
+      }
+
+      if (payload?.message?.senderId !== user.id && payload?.contact?.username) {
         toast.info(`New message from @${payload.contact.username}`);
 
         if (document.visibilityState !== "visible") {
@@ -138,7 +190,9 @@ const ChatContextProvider = ({ children }) => {
         }
       }
 
-      scheduleChatStateRefresh();
+      if (scheduleRefreshState) {
+        scheduleChatStateRefresh(refreshDelay);
+      }
     },
     [applyUnreadCountDelta, scheduleChatStateRefresh, showBrowserNotification, user]
   );
@@ -158,6 +212,7 @@ const ChatContextProvider = ({ children }) => {
       }
       socketRef.current = null;
       streamRef.current = null;
+      conversationSnapshotRef.current = new Map();
       seenEventsRef.current = new Set();
       return;
     }
@@ -181,8 +236,72 @@ const ChatContextProvider = ({ children }) => {
         window.clearTimeout(refreshTimerRef.current);
         refreshTimerRef.current = null;
       }
+      conversationSnapshotRef.current = new Map();
     };
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) {
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    const pollChats = async () => {
+      try {
+        const conversations = await fetchChatConversations(user);
+
+        if (cancelled) {
+          return;
+        }
+
+        setUnreadCount(getUnreadCount(conversations));
+
+        const previousSnapshot = conversationSnapshotRef.current;
+        const hasExistingSnapshot = previousSnapshot.size > 0;
+
+        conversations.forEach((conversation) => {
+          const snapshotKey = getConversationSnapshotKey(conversation);
+          const nextMessageId =
+            conversation?.lastMessage?.id || conversation?.lastMessage?._id || "";
+
+          if (!snapshotKey || !nextMessageId || !hasExistingSnapshot) {
+            return;
+          }
+
+          const previousConversation = previousSnapshot.get(snapshotKey);
+
+          if (
+            previousConversation?.lastMessageId &&
+            previousConversation.lastMessageId !== nextMessageId
+          ) {
+            handleIncomingRealtimeEvent(
+              {
+                type: "chat:message",
+                contact: conversation.contact,
+                message: conversation.lastMessage,
+                unread: Number(conversation?.unreadCount || 0) > 0,
+              },
+              {
+                adjustUnread: false,
+                scheduleRefreshState: false,
+              }
+            );
+          }
+        });
+
+        syncConversationSnapshot(conversations);
+      } catch {}
+    };
+
+    pollChats();
+    const intervalId = window.setInterval(pollChats, CHAT_POLL_INTERVAL_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [handleIncomingRealtimeEvent, syncConversationSnapshot, user]);
 
   useEffect(() => {
     if (!user?.id) {
