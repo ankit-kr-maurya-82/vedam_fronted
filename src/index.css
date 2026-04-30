@@ -71,6 +71,35 @@ html {
   min-height: 100vh;
 }
 
+.app-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px 18px;
+  background: linear-gradient(90deg, #111827, #1f2937);
+  color: #f8fafc;
+  font-size: 0.95rem;
+  position: sticky;
+  top: 0;
+  z-index: 35;
+}
+
+.app-status-banner.offline {
+  background: linear-gradient(90deg, #9a3412, #c2410c);
+}
+
+.app-status-banner button {
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: inherit;
+  padding: 9px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .app-main {
   min-height: 100vh;
 }
@@ -87,6 +116,11 @@ html {
 }
 
 @media (max-width: 768px) {
+  .app-status-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
   .app-main.with-sidebar {
     padding-left: 0;
   }

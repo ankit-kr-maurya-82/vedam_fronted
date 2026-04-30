@@ -1,6 +1,4 @@
-const PUSH_SW_PATH = "/push-sw.js";
-
-let registrationPromise = null;
+import { registerAppServiceWorker } from "./pwa";
 
 const urlBase64ToUint8Array = (base64String) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -21,22 +19,8 @@ export const isPushSupported = () =>
   "PushManager" in window &&
   "Notification" in window;
 
-export const registerPushServiceWorker = async () => {
-  if (!isPushSupported()) {
-    return null;
-  }
-
-  if (!registrationPromise) {
-    registrationPromise = navigator.serviceWorker
-      .register(PUSH_SW_PATH, { scope: "/" })
-      .catch((error) => {
-        registrationPromise = null;
-        throw error;
-      });
-  }
-
-  return registrationPromise;
-};
+export const registerPushServiceWorker = async () =>
+  isPushSupported() ? registerAppServiceWorker() : null;
 
 export const getPushPermissionState = () => {
   if (!isPushSupported()) {

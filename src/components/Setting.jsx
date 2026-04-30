@@ -4,6 +4,7 @@ import {
   FaArrowRight,
   FaBell,
   FaBookmark,
+  FaDownload,
   FaMoon,
   FaPalette,
   FaSave,
@@ -19,6 +20,7 @@ import {
   removePushSubscription,
   savePushSubscription,
 } from "../api/pushNotifications";
+import PWAContext from "../context/PWAContext";
 import UserContext from "../context/UserContext";
 import useTheme from "../context/theme";
 import {
@@ -60,6 +62,16 @@ const readStoredPreferences = () => {
 
 const Setting = () => {
   const { user, setUser, logout } = useContext(UserContext);
+  const {
+    isPwaSupported,
+    isInstalled,
+    isInstallAvailable,
+    isOfflineReady,
+    isUpdateAvailable,
+    promptInstall,
+    applyUpdate,
+    checkForUpdates,
+  } = useContext(PWAContext);
   const { themeMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const isDark = themeMode === "dark";
@@ -77,6 +89,8 @@ const Setting = () => {
   const [savingDevicePush, setSavingDevicePush] = useState(false);
   const [devicePushEnabled, setDevicePushEnabled] = useState(false);
   const [pushPermission, setPushPermission] = useState(getPushPermissionState);
+  const [installingPwa, setInstallingPwa] = useState(false);
+  const [checkingForUpdate, setCheckingForUpdate] = useState(false);
   const supportsDevicePush = useMemo(() => isPushSupported(), []);
 
   useEffect(() => {
@@ -318,6 +332,37 @@ const Setting = () => {
     navigate("/login");
   };
 
+  const handleInstallApp = async () => {
+    setInstallingPwa(true);
+
+    try {
+      const installed = await promptInstall();
+
+      if (!installed) {
+        toast.info("Install prompt was dismissed.");
+      }
+    } catch {
+      toast.error("Unable to open the install prompt right now.");
+    } finally {
+      setInstallingPwa(false);
+    }
+  };
+
+  const handleCheckForUpdates = async () => {
+    setCheckingForUpdate(true);
+
+    try {
+      await checkForUpdates();
+      toast.success(
+        "Checked for updates. If a new version is available, the update button will appear."
+      );
+    } catch {
+      toast.error("Unable to check for updates right now.");
+    } finally {
+      setCheckingForUpdate(false);
+    }
+  };
+
   if (!user) {
     return (
       <section className="settings-page">
@@ -468,6 +513,102 @@ const Setting = () => {
           </form>
 
           <div className="settings-column">
+            <section className="settings-card">
+              <div className="settings-card-head">
+                <div>
+                  <span className="settings-card-kicker">
+                    <FaDownload /> App install
+                  </span>
+                  <h2>PWA install, offline use, and updates</h2>
+                </div>
+                <p>
+                  Install Vedam like an app, keep core pages cached, and update
+                  quickly when a new version is ready.
+                </p>
+              </div>
+
+              <div className="settings-push-panel">
+                <div className="settings-push-status-row">
+                  <div>
+                    <strong>
+                      {!isPwaSupported
+                        ? "PWA not supported"
+                        : isInstalled
+                          ? "Installed on this device"
+                          : isInstallAvailable
+                            ? "Ready to install"
+                            : "Open in a supported browser"}
+                    </strong>
+                    <span>
+                      {isOfflineReady
+                        ? "Offline cache is ready for your main app shell."
+                        : "Preparing offline support for this browser."}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`settings-push-badge ${
+                      isInstalled || isOfflineReady ? "enabled" : ""
+                    }`}
+                  >
+                    {isInstalled ? "App" : isOfflineReady ? "Ready" : "Web"}
+                  </span>
+                </div>
+
+                <div className="settings-pwa-grid">
+                  <article className="settings-pwa-item">
+                    <strong>Install prompt</strong>
+                    <span>
+                      {isInstallAvailable
+                        ? "You can add Vedam to your home screen or desktop now."
+                        : "The browser will show install support when eligible."}
+                    </span>
+                  </article>
+                  <article className="settings-pwa-item">
+                    <strong>Cached pages</strong>
+                    <span>
+                      Home shell, manifest, and static assets stay available
+                      offline after first load.
+                    </span>
+                  </article>
+                  <article className="settings-pwa-item">
+                    <strong>Update prompt</strong>
+                    <span>
+                      {isUpdateAvailable
+                        ? "A newer version is waiting and can be applied now."
+                        : "The app will alert you when a fresh build is ready."}
+                    </span>
+                  </article>
+                </div>
+
+                <div className="settings-action-row">
+                  <button
+                    type="button"
+                    className="settings-primary-btn"
+                    onClick={handleInstallApp}
+                    disabled={
+                      installingPwa || !isPwaSupported || !isInstallAvailable
+                    }
+                  >
+                    <FaDownload />
+                    {installingPwa ? "Opening..." : "Install app"}
+                  </button>
+                  <button
+                    type="button"
+                    className="settings-secondary-btn"
+                    onClick={isUpdateAvailable ? applyUpdate : handleCheckForUpdates}
+                    disabled={checkingForUpdate || !isPwaSupported}
+                  >
+                    {isUpdateAvailable
+                      ? "Update app"
+                      : checkingForUpdate
+                        ? "Checking..."
+                        : "Check for updates"}
+                  </button>
+                </div>
+              </div>
+            </section>
+
             <section className="settings-card">
               <div className="settings-card-head">
                 <div>

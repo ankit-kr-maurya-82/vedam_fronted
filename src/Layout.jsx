@@ -4,6 +4,7 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Sidebar";
 import ChatContextProvider from "./context/ChatContextProvider";
+import PWAContext from "./context/PWAContext";
 import UserContext from "./context/UserContext";
 import UserContextProvider from "./context/UserContextProvider";
 import { ThemeProvider } from "./context/theme";
@@ -27,6 +28,7 @@ const getInitialTheme = () => {
 const LayoutContent = ({ showLayout, themeMode }) => {
   const location = useLocation();
   const { user } = useContext(UserContext);
+  const { isOnline, isUpdateAvailable, applyUpdate } = useContext(PWAContext);
   const isChatRoute = location.pathname === "/chat";
   const showSidebar = showLayout && Boolean(user) && !isChatRoute;
 
@@ -40,6 +42,21 @@ const LayoutContent = ({ showLayout, themeMode }) => {
     <div className={`app-shell ${showLayout ? "main-layout" : "auth-layout"}`}>
       {showLayout && <Header />}
       {showSidebar && <Sidebar />}
+
+      {!isOnline ? (
+        <div className="app-status-banner offline">
+          <span>Offline mode active. Cached pages and assets are being used.</span>
+        </div>
+      ) : null}
+
+      {isUpdateAvailable ? (
+        <div className="app-status-banner">
+          <span>A new app version is ready.</span>
+          <button type="button" onClick={applyUpdate}>
+            Update now
+          </button>
+        </div>
+      ) : null}
 
       <main className={showSidebar ? "app-main with-sidebar" : "app-main"}>
         <Outlet />
