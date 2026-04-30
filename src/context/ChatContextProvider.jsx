@@ -1,6 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import { toast } from "react-toastify";
-import { buildChatStreamUrl, fetchChatConversations } from "../api/chat";
+import {
+  buildChatSocketUrl,
+  fetchChatConversations,
+} from "../api/chat";
 import ChatContext from "./ChatContext";
 import UserContext from "./UserContext";
 
@@ -61,6 +65,7 @@ const ChatContextProvider = ({ children }) => {
       setUnreadCount(0);
       setLastEvent(null);
       setIsRealtimeConnected(false);
+      sourceRef.current?.disconnect?.();
       sourceRef.current?.close?.();
       sourceRef.current = null;
       return;
@@ -84,18 +89,21 @@ const ChatContextProvider = ({ children }) => {
       return undefined;
     }
 
-    const source = new EventSource(buildChatStreamUrl(), {
+    const token = window.localStorage.getItem("accessToken");
+    const socket = io(buildChatSocketUrl(), {
       withCredentials: true,
+      auth: {
+        token,
+      },
     });
 
-    sourceRef.current = source;
+    sourceRef.current = socket;
 
-    source.addEventListener("connected", () => {
+    socket.on("connect", () => {
       setIsRealtimeConnected(true);
     });
 
-    source.addEventListener("chat-message", async (event) => {
-      const payload = JSON.parse(event.data);
+    socket.on("chat-message", async (payload) => {
       setLastEvent({
         ...payload,
         receivedAt: Date.now(),
@@ -112,13 +120,17 @@ const ChatContextProvider = ({ children }) => {
       }
     });
 
-    source.onerror = () => {
+    socket.on("disconnect", () => {
       setIsRealtimeConnected(false);
-    };
+    });
+
+    socket.on("connect_error", () => {
+      setIsRealtimeConnected(false);
+    });
 
     return () => {
-      source.close();
-      if (sourceRef.current === source) {
+      socket.disconnect();
+      if (sourceRef.current === socket) {
         sourceRef.current = null;
       }
     };

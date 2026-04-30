@@ -95,3 +95,5 @@ export const buildChatStreamUrl = () => {
 
   return streamUrl.toString();
 };
+
+export const buildChatSocketUrl = () => new URL(apiBaseUrl).origin;
