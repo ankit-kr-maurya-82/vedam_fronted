@@ -69,7 +69,7 @@ const Sidebar = () => {
           </NavLink>
         )}
 
-        {user && (
+        {/* {user && (
           <NavLink to="/chat" className="sidebarItem">
             <FaComments />
             <span>Chat</span>
@@ -77,7 +77,7 @@ const Sidebar = () => {
               <span className="chat-badge">{unreadCount}</span>
             ) : null}
           </NavLink>
-        )}
+        )} */}
 
         {user && (
           <NavLink to="/create" className="sidebarItem">

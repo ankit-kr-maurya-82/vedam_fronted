@@ -184,14 +184,14 @@ const Header = () => {
         <nav className="navLinks hideOnSearch">
           <NavLink to={user ? "/home" : "/"}>Home</NavLink>
           <NavLink to="/explore">Explore</NavLink>
-          {user && (
+          {/* {user && (
             <NavLink to="/chat" className="chat-nav-link">
               Chat
               {unreadCount > 0 ? (
                 <span className="header-chat-badge">{unreadCount}</span>
               ) : null}
             </NavLink>
-          )}
+          )} */}
           {user && <NavLink to="/create">Create</NavLink>}
           <NavLink to="/about">About</NavLink>
           <NavLink to="/features">Features</NavLink>
@@ -225,14 +225,14 @@ const Header = () => {
       <div className={`mobileMenu ${menuOpen ? "open" : ""}`}>
         <NavLink to={user ? "/home" : "/"} onClick={() => setMenuOpen(false)}>Home</NavLink>
         <NavLink to="/explore" onClick={() => setMenuOpen(false)}>Explore</NavLink>
-        {user && (
+        {/* {user && (
           <NavLink to="/chat" onClick={() => setMenuOpen(false)}>
             Chat
             {unreadCount > 0 ? (
               <span className="header-chat-badge mobile">{unreadCount}</span>
             ) : null}
           </NavLink>
-        )}
+        )} */}
         {user && (
           <NavLink to="/create" onClick={() => setMenuOpen(false)}>
             Create
