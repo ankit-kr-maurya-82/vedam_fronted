@@ -142,3 +142,11 @@
   background: #eff6ff;
   color: #0f172a;
 }
+
+
+.empty-state {
+  color: #151514;
+}
+.dark .empty-state {
+  color: #151514;
+}

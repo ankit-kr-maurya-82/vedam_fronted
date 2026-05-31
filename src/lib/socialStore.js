@@ -22,7 +22,26 @@ const safeRead = (key, fallback) => {
 
 const safeWrite = (key, value) => {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    if (error.name === 'QuotaExceededError') {
+      console.warn(`[Storage Quota] Failed to save ${key}. Clearing old posts to free space...`);
+      if (key !== STORAGE_KEYS.posts) {
+        try {
+          window.localStorage.removeItem(STORAGE_KEYS.posts);
+          window.localStorage.removeItem(STORAGE_KEYS.comments);
+          window.localStorage.setItem(key, JSON.stringify(value));
+        } catch (retryError) {
+          console.error(`[Storage] Failed to save ${key} even after cleanup`, retryError);
+        }
+      } else {
+        console.error(`[Storage] Cannot save posts - localStorage is full`, error);
+      }
+    } else {
+      console.error(`[Storage] Error saving ${key}`, error);
+    }
+  }
 };
 
 const ensureSeed = () => {
@@ -219,8 +238,6 @@ export const syncUserToStore = (user) => {
   const normalizedFollowing = Array.isArray(user.following)
     ? user.following.length
     : user.following ?? 0;
-  const followerList = Array.isArray(user.followerList) ? user.followerList : [];
-  const followingList = Array.isArray(user.followingList) ? user.followingList : [];
 
   const normalizedUser = {
     bio: "",
@@ -228,24 +245,13 @@ export const syncUserToStore = (user) => {
     ...user,
     followers: normalizedFollowers,
     following: normalizedFollowing,
-    followerList,
-    followingList,
     id: user.id || user._id,
   };
 
-  const users = getUsers();
-  const exists = users.some((item) => item.id === normalizedUser.id);
-  const nextUsers = exists
-    ? users.map((item) =>
-        item.id === normalizedUser.id ? { ...item, ...normalizedUser } : item
-      )
-    : [...users, normalizedUser];
+  delete normalizedUser.followerList;
+  delete normalizedUser.followingList;
 
-  saveUsers(nextUsers);
-  const currentUser = getCurrentUser();
-  if (currentUser?.id === normalizedUser.id) {
-    saveCurrentUser({ ...currentUser, ...normalizedUser });
-  }
+  saveCurrentUser(normalizedUser);
   return normalizedUser;
 };
 
@@ -275,7 +281,11 @@ export const registerLocalUser = ({ fullName, username, email, password }) => {
     following: 0,
   };
 
-  saveUsers([...users, user]);
+  try {
+    saveUsers([...users, user]);
+  } catch (error) {
+    console.warn("[Storage] Could not save user list, but registration processed", error);
+  }
   return sanitizeUser(user);
 };
 
@@ -291,11 +301,15 @@ export const loginLocalUser = ({ email, password }) => {
   }
 
   const safeUser = sanitizeUser(user);
-  window.localStorage.setItem(STORAGE_KEYS.accessToken, `demo-token-${user.id}`);
-  window.localStorage.setItem(
-    STORAGE_KEYS.currentUser,
-    JSON.stringify(safeUser)
-  );
+  try {
+    window.localStorage.setItem(STORAGE_KEYS.accessToken, `demo-token-${user.id}`);
+    window.localStorage.setItem(
+      STORAGE_KEYS.currentUser,
+      JSON.stringify(safeUser)
+    );
+  } catch (error) {
+    console.warn("[Storage] Could not save login session", error);
+  }
   return safeUser;
 };
 
@@ -311,22 +325,16 @@ export const updateLocalUserProfile = (updates) => {
   const currentUser = getCurrentUser();
   if (!currentUser) return null;
 
-  const users = getUsers();
-  const hasCurrentUser = users.some((user) => user.id === currentUser.id);
-  const baseUsers = hasCurrentUser ? users : [...users, currentUser];
-  const nextUsers = baseUsers.map((user) =>
-    user.id === currentUser.id ? { ...user, ...updates } : user
-  );
-  saveUsers(nextUsers);
+  const nextCurrentUser = {
+    ...currentUser,
+    ...updates,
+  };
 
-  const nextCurrentUser = sanitizeUser(
-    nextUsers.find((user) => user.id === currentUser.id)
-  );
-  window.localStorage.setItem(
-    STORAGE_KEYS.currentUser,
-    JSON.stringify(nextCurrentUser)
-  );
-  return nextCurrentUser;
+  delete nextCurrentUser.followerList;
+  delete nextCurrentUser.followingList;
+
+  saveCurrentUser(sanitizeUser(nextCurrentUser));
+  return sanitizeUser(nextCurrentUser);
 };
 
 export const createLocalPost = ({ title, content, media }) => {
