@@ -435,6 +435,25 @@
   letter-spacing: 0.08em;
 }
 
+.pricing-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  color: #047857;
+  background: rgba(16, 185, 129, 0.14);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pricing-verified svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
 .pricing-price {
   font-size: 2.4rem;
   line-height: 1.05;

@@ -317,7 +317,12 @@ const Features = () => {
                 <div className="pricing-card-head">
                   <span className="pricing-badge">{plan.name}</span>
                   {plan.name === "Premium" && (
-                    <span className="pricing-tag">Most popular</span>
+                    <>
+                      <span className="pricing-tag">Most popular</span>
+                      <span className="pricing-verified">
+                        <FaCheckCircle /> Verified
+                      </span>
+                    </>
                   )}
                   <strong className="pricing-price">{plan.price}</strong>
                   <p>{plan.description}</p>

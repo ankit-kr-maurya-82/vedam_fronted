@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 import UserContext from "../context/UserContext";
 import Card from "../components/Card";
 import FollowBtn from "../components/FollowBtn";
@@ -141,6 +142,14 @@ const Profile = () => {
                 </div>
               )}
 
+              {profileUser.subscription?.plan === "premium" &&
+                profileUser.subscription?.isActive && (
+                  <>
+                    <span className="profile-status-indicator" />
+                    <span className="profile-story-ring" />
+                  </>
+                )}
+
               {isOwnProfile && (
                 <button
                   className="avatar-overlay edit-profile-btn"
@@ -163,6 +172,15 @@ const Profile = () => {
                 <div className="profile-heading-copy">
                   <div className="profile-badge-row">
                     <span className="profile-mini-badge">Featured voice</span>
+                    {profileUser.subscription?.plan === "premium" &&
+                      profileUser.subscription?.isActive && (
+                        <>
+                          <span className="profile-status-dot" />
+                          <span className="profile-mini-badge premium">
+                            <FaCheckCircle /> Premium member
+                          </span>
+                        </>
+                      )}
                     <span className="profile-mini-badge subtle">
                       {isOwnProfile ? "Your public page" : "Open profile"}
                     </span>

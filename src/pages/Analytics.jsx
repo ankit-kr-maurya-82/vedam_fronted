@@ -10,8 +10,18 @@ import {
   FaStar,
   FaLock,
 } from "react-icons/fa";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 import UserContext from "../context/UserContext";
-import { getUserAnalytics, upgradeToPremium } from "../api/profile";
+import { getUserAnalytics } from "../api/profile";
 import {
   getRazorpayKey,
   createPaymentOrder,
@@ -25,6 +35,16 @@ const Analytics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [upgrading, setUpgrading] = useState(false);
+
+  const chartData = analytics?.recentPosts?.map((post) => ({
+    title:
+      post.title?.length > 16
+        ? `${post.title.slice(0, 14)}...`
+        : post.title || "Untitled",
+    views: post.views || 0,
+    likes: post.likes?.length || 0,
+    comments: post.commentsCount || 0,
+  })) || [];
 
   useEffect(() => {
     const loadAnalytics = async () => {
@@ -201,6 +221,62 @@ const Analytics = () => {
               Track views, engagement, and growth across all your articles.
             </p>
           </div>
+        </div>
+
+        <div className="analytics-chart">
+          <div className="analytics-chart-head">
+            <span className="analytics-kicker">Engagement Trends</span>
+            <h2>Top posts by views, likes, and comments</h2>
+          </div>
+          {chartData.length > 0 ? (
+            <div className="analytics-chart-wrapper">
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart
+                  data={chartData}
+                  margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.35} />
+                  <XAxis
+                    dataKey="title"
+                    tick={{ fill: "#475569", fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis tick={{ fill: "#475569", fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 16,
+                      border: "none",
+                      boxShadow: "0 10px 30px rgba(15, 23, 42, 0.12)",
+                    }}
+                  />
+                  <Legend verticalAlign="top" height={36} />
+                  <Bar
+                    dataKey="views"
+                    name="Views"
+                    fill="#0f766e"
+                    radius={[10, 10, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="likes"
+                    name="Likes"
+                    fill="#be123c"
+                    radius={[10, 10, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="comments"
+                    name="Comments"
+                    fill="#2563eb"
+                    radius={[10, 10, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="analytics-empty">
+              <p>No chart data available yet.</p>
+            </div>
+          )}
         </div>
 
         <div className="analytics-grid">

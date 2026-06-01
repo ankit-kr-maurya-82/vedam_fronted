@@ -13,10 +13,20 @@ import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
 const THEME_STORAGE_KEY = "theme";
+const AVAILABLE_THEMES = [
+  "light",
+  "dark",
+  "ocean",
+  "sunrise",
+  "forest",
+  "midnight",
+  "rose",
+  "sand",
+];
 
 const getInitialTheme = () => {
   const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-  if (savedTheme === "dark" || savedTheme === "light") {
+  if (AVAILABLE_THEMES.includes(savedTheme)) {
     return savedTheme;
   }
 
@@ -91,7 +101,7 @@ const Layout = () => {
   };
 
   useEffect(() => {
-    document.documentElement.classList.remove("dark", "light");
+    document.documentElement.classList.remove(...AVAILABLE_THEMES);
     document.documentElement.classList.add(themeMode);
     localStorage.setItem(THEME_STORAGE_KEY, themeMode);
   }, [themeMode]);
@@ -102,7 +112,7 @@ const Layout = () => {
         return;
       }
 
-      if (event.newValue === "dark" || event.newValue === "light") {
+      if (AVAILABLE_THEMES.includes(event.newValue)) {
         setThemeMode(event.newValue);
       }
     };
@@ -112,7 +122,7 @@ const Layout = () => {
   }, []);
 
   return (
-    <ThemeProvider value={{ themeMode, toggleTheme }}>
+    <ThemeProvider value={{ themeMode, toggleTheme, setThemeMode }}>
       <UserContextProvider>
         <ChatContextProvider>
           <LayoutContent showLayout={showLayout} themeMode={themeMode} />

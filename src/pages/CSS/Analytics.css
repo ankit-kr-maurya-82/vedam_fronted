@@ -171,6 +171,40 @@
   line-height: 1.8;
 }
 
+.analytics-chart {
+  display: grid;
+  gap: 1rem;
+  padding: 1.6rem;
+  border-radius: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.analytics-chart-head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.analytics-chart-head h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.analytics-chart-wrapper {
+  width: 100%;
+  min-height: 320px;
+}
+
+.analytics-chart .recharts-legend {
+  font-size: 0.9rem;
+}
+
+.analytics-chart .recharts-tooltip-wrapper {
+  font-size: 0.9rem;
+}
+
 .analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

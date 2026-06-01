@@ -72,9 +72,70 @@ const Setting = () => {
     applyUpdate,
     checkForUpdates,
   } = useContext(PWAContext);
-  const { themeMode, toggleTheme } = useTheme();
+  const { themeMode, toggleTheme, setThemeMode } = useTheme();
   const navigate = useNavigate();
   const isDark = themeMode === "dark";
+  const isPremium =
+    user?.subscription?.plan === "premium" && user?.subscription?.isActive;
+  const currentThemeLabel =
+    themeMode === "dark"
+      ? "Dark mode"
+      : themeMode === "light"
+      ? "Light mode"
+      : themeMode === "ocean"
+      ? "Ocean theme"
+      : themeMode === "sunrise"
+      ? "Sunrise theme"
+      : themeMode === "forest"
+      ? "Forest theme"
+      : themeMode === "midnight"
+      ? "Midnight theme"
+      : themeMode === "rose"
+      ? "Rose theme"
+      : "Sand theme";
+
+  const themeOptions = [
+    {
+      key: "light",
+      label: "Light",
+      description: "Clean, classic workspace for everyday writing.",
+    },
+    {
+      key: "dark",
+      label: "Dark",
+      description: "Low-light reading mode for late-night browsing.",
+    },
+    {
+      key: "ocean",
+      label: "Ocean",
+      description: "Premium blue palette with calm coastal tones.",
+    },
+    {
+      key: "sunrise",
+      label: "Sunrise",
+      description: "Premium warm palette with bright, optimistic accents.",
+    },
+    {
+      key: "forest",
+      label: "Forest",
+      description: "Deep green palette inspired by quiet woods.",
+    },
+    {
+      key: "midnight",
+      label: "Midnight",
+      description: "Rich dark purple palette for a luxe night mode.",
+    },
+    {
+      key: "rose",
+      label: "Rose",
+      description: "Soft blush palette with elegant rosy tones.",
+    },
+    {
+      key: "sand",
+      label: "Sand",
+      description: "Warm neutral palette with sandy highlights.",
+    },
+  ];
 
   const [profileForm, setProfileForm] = useState({
     fullName: "",
@@ -699,13 +760,15 @@ const Setting = () => {
                   <h2>Theme and interface</h2>
                 </div>
                 <p>
-                  Switch between light and dark mode instantly from this panel.
+                  {isPremium
+                    ? "Premium members can choose from multiple website palettes."
+                    : "Switch between light and dark mode instantly from this panel."}
                 </p>
               </div>
 
               <div className="settings-theme-row">
                 <div>
-                  <strong>{isDark ? "Dark mode" : "Light mode"}</strong>
+                  <strong>{currentThemeLabel}</strong>
                   <span>
                     The whole application updates immediately when you switch.
                   </span>
@@ -719,6 +782,24 @@ const Setting = () => {
                   {isDark ? "Use light mode" : "Use dark mode"}
                 </button>
               </div>
+
+              {isPremium ? (
+                <div className="settings-theme-grid">
+                  {themeOptions.map((theme) => (
+                    <button
+                      key={theme.key}
+                      type="button"
+                      className={`settings-theme-pill ${
+                        themeMode === theme.key ? "active" : ""
+                      }`}
+                      onClick={() => setThemeMode(theme.key)}
+                    >
+                      <strong>{theme.label}</strong>
+                      <span>{theme.description}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
             </section>
 
             <section className="settings-card">

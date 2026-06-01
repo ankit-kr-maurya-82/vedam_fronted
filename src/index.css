@@ -31,6 +31,59 @@ html {
   color-scheme: light;
 }
 
+.ocean body {
+  background: radial-gradient(circle at top, #e8f7ff 0%, #effcff 35%, #f8fdff 100%);
+  color: #0f172a;
+}
+
+.ocean {
+  color-scheme: dark;
+}
+
+.sunrise body {
+  background: radial-gradient(circle at top left, #fff4e5 0%, #fffdf5 40%, #f8fafc 100%);
+  color: #111827;
+}
+
+.sunrise {
+  color-scheme: light;
+}
+
+.forest body {
+  background: radial-gradient(circle at top left, #eefcf0 0%, #ebf7ed 40%, #f7fcf8 100%);
+  color: #0f2f1b;
+}
+
+.forest {
+  color-scheme: dark;
+}
+
+.midnight body {
+  background: radial-gradient(circle at top, #0b1220 0%, #151b32 35%, #1f2a49 100%);
+  color: #f8fafc;
+}
+
+.midnight {
+  color-scheme: dark;
+}
+
+.rose body {
+  background: radial-gradient(circle at top left, #fff1f3 0%, #ffe4e8 40%, #fcf5f7 100%);
+  color: #3f1722;
+}
+
+.rose {
+  color-scheme: light;
+}
+
+.sand body {
+  background: radial-gradient(circle at top, #fff8ed 0%, #fff2de 40%, #fbf5e9 100%);
+  color: #4a3a24;
+}
+
+.sand {
+  color-scheme: light;
+}
 
 @layer base {
   :root {
@@ -64,6 +117,38 @@ html {
     --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
     --shadow-medium: 0 20px 44px rgba(0, 0, 0, 0.36);
     --shadow-strong: 0 28px 60px rgba(0, 0, 0, 0.42);
+  }
+
+  .ocean {
+    --sidebar: #d8efff;
+    --sidebar-foreground: #09304f;
+    --sidebar-primary: #1d4ed8;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #bae6fd;
+    --sidebar-accent-foreground: #0f172a;
+    --sidebar-border: rgba(59, 130, 246, 0.18);
+    --sidebar-ring: rgba(56, 189, 248, 0.45);
+    --surface-1: #f8fdff;
+    --surface-2: #eef8ff;
+    --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow-medium: 0 18px 40px rgba(15, 23, 42, 0.12);
+    --shadow-strong: 0 24px 50px rgba(15, 23, 42, 0.16);
+  }
+
+  .sunrise {
+    --sidebar: #fff4e7;
+    --sidebar-foreground: #42342b;
+    --sidebar-primary: #f97316;
+    --sidebar-primary-foreground: #111827;
+    --sidebar-accent: #fed7aa;
+    --sidebar-accent-foreground: #92400e;
+    --sidebar-border: rgba(245, 158, 11, 0.18);
+    --sidebar-ring: rgba(249, 115, 22, 0.3);
+    --surface-1: #fffaf2;
+    --surface-2: #fff3e0;
+    --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --shadow-medium: 0 18px 40px rgba(15, 23, 42, 0.12);
+    --shadow-strong: 0 24px 50px rgba(15, 23, 42, 0.16);
   }
 }
 

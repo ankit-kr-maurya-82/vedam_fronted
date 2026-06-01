@@ -226,6 +226,45 @@
   align-items: center;
 }
 
+.settings-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.settings-theme-pill {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  text-align: left;
+  color: #111827;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.settings-theme-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.settings-theme-pill.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.14);
+}
+
+.settings-theme-pill strong {
+  font-size: 0.95rem;
+}
+
+.settings-theme-pill span {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
 .settings-push-panel {
   display: grid;
   gap: 16px;
