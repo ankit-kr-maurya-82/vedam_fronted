@@ -142,6 +142,13 @@ const Setting = () => {
     username: "",
     bio: "",
   });
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [customization, setCustomization] = useState({
+    accentColor: "",
+    bannerUrl: "",
+    layout: "default",
+  });
   const [savedPreferences, setSavedPreferences] = useState(readStoredPreferences);
   const [preferences, setPreferences] = useState(readStoredPreferences);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -159,6 +166,13 @@ const Setting = () => {
       fullName: user?.fullName || "",
       username: user?.username || "",
       bio: user?.bio || "",
+    });
+    setAvatarPreview(user?.avatar || "");
+    setAvatarFile(null);
+    setCustomization({
+      accentColor: user?.customization?.accentColor || "#3b82f6",
+      bannerUrl: user?.customization?.bannerUrl || "",
+      layout: user?.customization?.layout || "default",
     });
   }, [user]);
 
@@ -233,6 +247,14 @@ const Setting = () => {
     }));
   };
 
+  const handleAvatarChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
   const handlePreferenceToggle = (field) => (event) => {
     const value = event.target.checked;
     setPreferences((current) => ({
@@ -256,6 +278,7 @@ const Setting = () => {
       fullName: profileForm.fullName.trim(),
       username: profileForm.username.trim().toLowerCase(),
       bio: profileForm.bio.trim(),
+      avatarFile,
     };
 
     if (!nextProfile.fullName || !nextProfile.username) {
@@ -519,6 +542,32 @@ const Setting = () => {
                 These fields shape how other readers see you across articles,
                 comments, and profile pages.
               </p>
+            </div>
+
+            <div className="settings-avatar-field">
+              <span>Profile picture</span>
+              <div className="settings-avatar-upload">
+                <label className="settings-avatar-picker">
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt="Avatar preview"
+                      className="settings-avatar"
+                    />
+                  ) : (
+                    <div className="settings-avatar fallback">
+                      {profileForm.username?.charAt(0)?.toUpperCase()}
+                    </div>
+                  )}
+                  <span className="settings-avatar-change">Change</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleAvatarChange}
+                  />
+                </label>
+              </div>
             </div>
 
             <label>
@@ -801,6 +850,84 @@ const Setting = () => {
                 </div>
               ) : null}
             </section>
+
+            {isPremium ? (
+              <section className="settings-card">
+                <div className="settings-card-head">
+                  <div>
+                    <span className="settings-card-kicker">
+                      <FaPalette /> Profile customization
+                    </span>
+                    <h2>Premium profile options</h2>
+                  </div>
+                  <p>Customize your public profile with a banner, accent color, and layout.</p>
+                </div>
+
+                <div className="settings-form-card">
+                  <label>
+                    Accent color
+                    <input
+                      type="color"
+                      value={customization.accentColor}
+                      onChange={(e) =>
+                        setCustomization((c) => ({ ...c, accentColor: e.target.value }))
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Banner image URL
+                    <input
+                      type="text"
+                      placeholder="https://.../banner.jpg"
+                      value={customization.bannerUrl}
+                      onChange={(e) =>
+                        setCustomization((c) => ({ ...c, bannerUrl: e.target.value }))
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Layout
+                    <select
+                      value={customization.layout}
+                      onChange={(e) =>
+                        setCustomization((c) => ({ ...c, layout: e.target.value }))
+                      }
+                    >
+                      <option value="default">Default</option>
+                      <option value="compact">Compact</option>
+                      <option value="editorial">Editorial</option>
+                    </select>
+                  </label>
+
+                  <div className="settings-action-row">
+                    <button
+                      type="button"
+                      className="settings-primary-btn"
+                      onClick={async () => {
+                        setSavingProfile(true);
+                        try {
+                          const payload = { customization };
+                          const updated = await updateProfile(payload);
+                          setUser((u) => ({ ...u, customization: customization }));
+                          toast.success("Profile customization saved");
+                        } catch (err) {
+                          toast.error(
+                            err?.response?.data?.message || "Unable to save customization"
+                          );
+                        } finally {
+                          setSavingProfile(false);
+                        }
+                      }}
+                      disabled={savingProfile}
+                    >
+                      {savingProfile ? "Saving..." : "Save customization"}
+                    </button>
+                  </div>
+                </div>
+              </section>
+            ) : null}
 
             <section className="settings-card">
               <div className="settings-card-head">

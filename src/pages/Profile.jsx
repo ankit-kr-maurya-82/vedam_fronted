@@ -111,10 +111,20 @@ const Profile = () => {
     return <div className="profile-login-warning">User profile not found</div>;
   }
 
+  const accent = profileUser?.customization?.accentColor || "#3b82f6";
+  const bannerUrl = profileUser?.customization?.bannerUrl || null;
+
   return (
     <div className="profile-page">
       <div className="profile-container">
         <section className="profile-hero-card">
+          {bannerUrl ? (
+            <div
+              className="profile-banner"
+              style={{ backgroundImage: `url(${bannerUrl})` }}
+              aria-hidden="true"
+            />
+          ) : null}
           <div className="profile-hero-backdrop" aria-hidden="true">
             <span className="profile-orb profile-orb-one" />
             <span className="profile-orb profile-orb-two" />
@@ -145,8 +155,18 @@ const Profile = () => {
               {profileUser.subscription?.plan === "premium" &&
                 profileUser.subscription?.isActive && (
                   <>
-                    <span className="profile-status-indicator" />
-                    <span className="profile-story-ring" />
+                    <span
+                      className="profile-status-indicator"
+                      style={{
+                        background: accent,
+                        boxShadow: `0 0 0 4px ${accent}33`,
+                        borderColor: "white",
+                      }}
+                    />
+                    <span
+                      className="profile-story-ring"
+                      style={{ boxShadow: `0 0 0 6px ${accent}22` }}
+                    />
                   </>
                 )}
 

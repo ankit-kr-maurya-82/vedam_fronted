@@ -47,7 +47,7 @@ export const toggleFollowProfile = async (username) => {
   };
 };
 
-export const updateProfile = async ({ fullName, username, bio, avatarFile }) => {
+export const updateProfile = async ({ fullName, username, bio, avatarFile, customization }) => {
   const formData = new FormData();
 
   if (typeof fullName === "string") {
@@ -66,11 +66,11 @@ export const updateProfile = async ({ fullName, username, bio, avatarFile }) => 
     formData.append("avatar", avatarFile);
   }
 
-  const response = await api.patch("/users/profile", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  if (typeof customization === "object" && customization !== null) {
+    formData.append("customization", JSON.stringify(customization));
+  }
+
+  const response = await api.patch("/users/profile", formData);
 
   return {
     user: syncUserToStore(response.data?.data),
