@@ -22,6 +22,11 @@ const Profile = () => {
   const [relationshipView, setRelationshipView] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
+  const totalViews = useMemo(
+    () => posts.reduce((sum, post) => sum + (post.views || 0), 0),
+    [posts]
+  );
+
   useEffect(() => {
     let cancelled = false;
 
@@ -58,10 +63,7 @@ const Profile = () => {
     const optimisticProfile = syncUserToStore({
       ...profileUser,
       isFollowing: !wasFollowing,
-      followers: Math.max(
-        0,
-        previousFollowers + (wasFollowing ? -1 : 1)
-      ),
+      followers: Math.max(0, previousFollowers + (wasFollowing ? -1 : 1)),
     });
 
     setProfileUser(optimisticProfile);
@@ -82,7 +84,9 @@ const Profile = () => {
         })
       );
       window.alert(
-        error.response?.data?.message || error.message || "Unable to update follow status"
+        error.response?.data?.message ||
+          error.message ||
+          "Unable to update follow status"
       );
     } finally {
       setFollowLoading(false);
@@ -118,7 +122,9 @@ const Profile = () => {
 
           <div className="profile-hero-topline">
             <span className="profile-kicker">Writer profile</span>
-            <span className="profile-issue-note">Personal essays, notes, and published articles</span>
+            <span className="profile-issue-note">
+              Personal essays, notes, and published articles
+            </span>
           </div>
 
           <div className="profile-top">
@@ -186,16 +192,31 @@ const Profile = () => {
                   <p>
                     {isOwnProfile
                       ? "This is your editorial home for essays, updates, and conversations with readers."
-                      : `${profileUser.fullName || profileUser.username} shares essays, observations, and thoughtful pieces with this audience.`}
+                      : `${
+                          profileUser.fullName || profileUser.username
+                        } shares essays, observations, and thoughtful pieces with this audience.`}
                   </p>
                 </article>
 
                 <article className="profile-highlight-card">
                   <span className="profile-note-label">At a glance</span>
                   <ul className="profile-highlight-list">
-                    <li>{posts.length} published article{posts.length === 1 ? "" : "s"}</li>
-                    <li>{profileUser.followers || 0} reader follower{profileUser.followers === 1 ? "" : "s"}</li>
-                    <li>{profileUser.following || 0} profile connection{profileUser.following === 1 ? "" : "s"}</li>
+                    <li>
+                      {posts.length} published article
+                      {posts.length === 1 ? "" : "s"}
+                    </li>
+                    <li>
+                      {profileUser.followers || 0} reader follower
+                      {profileUser.followers === 1 ? "" : "s"}
+                    </li>
+                    <li>
+                      {profileUser.following || 0} profile connection
+                      {profileUser.following === 1 ? "" : "s"}
+                    </li>
+                    <li>
+                      {totalViews} total article view
+                      {totalViews === 1 ? "" : "s"}
+                    </li>
                   </ul>
                 </article>
               </div>
@@ -203,7 +224,9 @@ const Profile = () => {
               <div className="profile-stats">
                 <button
                   type="button"
-                  className={`profile-stat-card ${relationshipView === "followers" ? "active" : ""}`}
+                  className={`profile-stat-card ${
+                    relationshipView === "followers" ? "active" : ""
+                  }`}
                   onClick={() =>
                     setRelationshipView((current) =>
                       current === "followers" ? null : "followers"
@@ -215,7 +238,9 @@ const Profile = () => {
                 </button>
                 <button
                   type="button"
-                  className={`profile-stat-card ${relationshipView === "following" ? "active" : ""}`}
+                  className={`profile-stat-card ${
+                    relationshipView === "following" ? "active" : ""
+                  }`}
                   onClick={() =>
                     setRelationshipView((current) =>
                       current === "following" ? null : "following"
@@ -229,6 +254,10 @@ const Profile = () => {
                   <b>{posts.length}</b>
                   <span>Articles</span>
                 </article>
+                <article className="profile-stat-card static">
+                  <b>{totalViews}</b>
+                  <span>Total views</span>
+                </article>
               </div>
 
               {relationshipView && (
@@ -236,7 +265,11 @@ const Profile = () => {
                   <section className="profile-relationship-card">
                     <div className="profile-relationship-toolbar">
                       <div className="profile-relationship-head">
-                        <h3>{relationshipView === "followers" ? "Followers" : "Following"}</h3>
+                        <h3>
+                          {relationshipView === "followers"
+                            ? "Followers"
+                            : "Following"}
+                        </h3>
                         <span>
                           {relationshipView === "followers"
                             ? profileUser.followers || 0
@@ -273,14 +306,18 @@ const Profile = () => {
                                 </div>
                               )}
                               <div>
-                                <strong>{person.fullName || person.username}</strong>
+                                <strong>
+                                  {person.fullName || person.username}
+                                </strong>
                                 <span>@{person.username}</span>
                               </div>
                             </Link>
                           ))}
                         </div>
                       ) : (
-                        <p className="profile-relationship-empty">Abhi tak koi follower nahi hai.</p>
+                        <p className="profile-relationship-empty">
+                          Abhi tak koi follower nahi hai.
+                        </p>
                       )
                     ) : profileUser.followingList?.length ? (
                       <div className="profile-relationship-list">
@@ -302,14 +339,18 @@ const Profile = () => {
                               </div>
                             )}
                             <div>
-                              <strong>{person.fullName || person.username}</strong>
+                              <strong>
+                                {person.fullName || person.username}
+                              </strong>
                               <span>@{person.username}</span>
                             </div>
                           </Link>
                         ))}
                       </div>
                     ) : (
-                      <p className="profile-relationship-empty">Ye user abhi kisi ko follow nahi karta.</p>
+                      <p className="profile-relationship-empty">
+                        Ye user abhi kisi ko follow nahi karta.
+                      </p>
                     )}
                   </section>
                 </div>
@@ -335,7 +376,9 @@ const Profile = () => {
             <div className="profile-section-head">
               <div>
                 <span className="profile-kicker">Published work</span>
-                <h2>Articles by {profileUser.fullName || profileUser.username}</h2>
+                <h2>
+                  Articles by {profileUser.fullName || profileUser.username}
+                </h2>
               </div>
               <p>
                 A curated archive of essays, observations, and ideas from this

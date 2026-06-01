@@ -112,6 +112,35 @@ const featureExtras = [
   },
 ];
 
+const pricingPlans = [
+  {
+    name: "Free",
+    price: "₹0",
+    description: "Start publishing with a lightweight creator experience.",
+    features: [
+      "5 articles per month",
+      "Basic profile",
+      "Standard visibility",
+      "Basic statistics (views only)",
+    ],
+    cta: "Start free",
+  },
+  {
+    name: "Premium",
+    price: "₹99/month",
+    description: "Grow reach, save time, and access better audience analytics.",
+    features: [
+      "Unlimited articles",
+      "Featured articles on homepage",
+      "Advanced profile customization",
+      "Detailed analytics (views, likes, engagement)",
+      "Priority in search results",
+      "Custom profile URL",
+    ],
+    cta: "Upgrade now",
+  },
+];
+
 const heroPoints = [
   "Designed for creators, readers, and returning communities.",
   "Balances discovery, content creation, and profile-driven interaction.",
@@ -269,6 +298,45 @@ const Features = () => {
             </div>
           </article>
         </div>
+
+        <section className="features-pricing">
+          <div className="features-section-head">
+            <span className="features-section-kicker">Subscription plans</span>
+            <h2>Free access today, premium tools for creators ready to grow.</h2>
+            <p>
+              The free plan helps new writers get started, while premium unlocks deeper reach, profile control, and analytics that support smarter publishing.
+            </p>
+          </div>
+
+          <div className="features-pricing-grid">
+            {pricingPlans.map((plan) => (
+              <article
+                className={`pricing-card ${plan.name === "Premium" ? "pricing-card--premium" : ""}`}
+                key={plan.name}
+              >
+                <div className="pricing-card-head">
+                  <span className="pricing-badge">{plan.name}</span>
+                  {plan.name === "Premium" && (
+                    <span className="pricing-tag">Most popular</span>
+                  )}
+                  <strong className="pricing-price">{plan.price}</strong>
+                  <p>{plan.description}</p>
+                </div>
+                <ul className="pricing-feature-list">
+                  {plan.features.map((item) => (
+                    <li key={item}>
+                      <FaCheckCircle />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link to={user ? "/home" : "/register"} className="pricing-cta">
+                  {plan.cta}
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <article className="features-cta-band">
           <div>

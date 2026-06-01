@@ -63,7 +63,7 @@ const About = () => {
         <div className="about-hero">
           <div className="about-hero-copy">
             <span className="about-kicker">About The Project</span>
-            <h1>A full-stack social media app built for publishing, discovery, and conversation.</h1>
+            <h1>Publishing, discovery, and conversation.</h1>
             <p className="about-lead">
               This project brings together content creation, user profiles,
               engagement tools, and community-focused navigation into one

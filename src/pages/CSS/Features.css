@@ -370,6 +370,127 @@
   gap: 1rem;
 }
 
+.features-pricing {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.features-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.pricing-card {
+  display: grid;
+  gap: 1.4rem;
+  padding: 1.7rem;
+  border-radius: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 28px 65px rgba(15, 23, 42, 0.12);
+}
+
+.pricing-card--premium {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(219, 234, 254, 0.6));
+}
+
+.pricing-card-head {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pricing-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.75rem;
+  color: #0f172a;
+  background: rgba(59, 130, 246, 0.12);
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pricing-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.7rem;
+  color: #1d4ed8;
+  background: rgba(59, 130, 246, 0.14);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pricing-price {
+  font-size: 2.4rem;
+  line-height: 1.05;
+  color: #0f172a;
+}
+
+.pricing-card-head p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.8;
+}
+
+.pricing-feature-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pricing-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  color: #334155;
+  line-height: 1.7;
+}
+
+.pricing-feature-list li svg {
+  min-width: 1.1rem;
+  margin-top: 0.15rem;
+  color: #2563eb;
+}
+
+.pricing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.1rem;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.pricing-card--premium .pricing-cta {
+  background: linear-gradient(135deg, #1d4ed8 0%, #0f172a 100%);
+}
+
+.pricing-cta:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
 .feature-card {
   display: grid;
   gap: 0.9rem;
