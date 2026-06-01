@@ -77,3 +77,13 @@ export const updateProfile = async ({ fullName, username, bio, avatarFile }) => 
     message: response.data?.message || "",
   };
 };
+
+export const getUserAnalytics = async () => {
+  const response = await api.get("/users/analytics");
+  return response.data?.data || null;
+};
+
+export const upgradeToPremium = async () => {
+  const response = await api.post("/users/upgrade-premium");
+  return response.data?.data || null;
+};

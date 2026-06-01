@@ -8,6 +8,7 @@ import {
   FaCompass,
   FaSignOutAlt,
   FaComments,
+  FaChartLine,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { Shield } from "lucide-react";
@@ -66,6 +67,13 @@ const Sidebar = () => {
           <NavLink to={`/profile/${user.username}`} className="sidebarItem">
             <FaUser />
             <span>Profile</span>
+          </NavLink>
+        )}
+
+        {user && (
+          <NavLink to="/analytics" className="sidebarItem">
+            <FaChartLine />
+            <span>Analytics</span>
           </NavLink>
         )}
 

@@ -18,6 +18,7 @@ import AdminRegister from "./pages/AdminRegister";
 import AdminLogin from "./pages/AdminLogin";
 import AdminUserDetail from "./pages/AdminUserDetail";
 import Setting from "./components/Setting";
+import Analytics from "./pages/Analytics";
 
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="post/:postId" element={<PostPage />} />
           <Route path="about" element={<About />} />
           <Route path="features" element={<Features />} />
+          <Route path="analytics" element={<Analytics />} />
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/user/:id" element={<AdminUserDetail />} />
           <Route path="setting" element={<Setting />} />
