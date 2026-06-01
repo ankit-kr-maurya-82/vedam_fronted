@@ -565,3 +565,7 @@
   }
 
 }
+
+.profile-status-indicator{
+  z-index: 100;
+}
