@@ -335,9 +335,16 @@ const Features = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to={user ? "/home" : "/register"} className="pricing-cta">
-                  {plan.cta}
-                </Link>
+                {/* Premium plan should point users to the premium feature (Analytics) when logged in */}
+                {plan.name === "Premium" ? (
+                  <Link to={user ? "/analytics" : "/register"} className="pricing-cta">
+                    {plan.cta}
+                  </Link>
+                ) : (
+                  <Link to={user ? "/home" : "/register"} className="pricing-cta">
+                    {plan.cta}
+                  </Link>
+                )}
               </article>
             ))}
           </div>

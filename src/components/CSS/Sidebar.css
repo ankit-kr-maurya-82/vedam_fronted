@@ -139,3 +139,38 @@
   background: rgba(59, 130, 246, 0.2);
   color: #f8fafc;
 }
+
+/* Premium Features */
+.sidebarItem.premium-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  position: relative;
+}
+
+.sidebarItem.premium-disabled:hover {
+  background: #fdfdff;
+  color: #0b0b0b;
+  opacity: 0.7;
+}
+
+.sidebarItem.premium-disabled .premium-badge {
+  margin-left: auto;
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.55rem;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .sidebarItem.premium-disabled .premium-badge {
+  display: none;
+}
+
+.dark .sidebarItem.premium-disabled:hover {
+  background: transparent;
+}

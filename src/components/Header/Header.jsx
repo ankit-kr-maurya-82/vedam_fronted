@@ -184,7 +184,9 @@ const Header = () => {
         <nav className="navLinks hideOnSearch">
           <NavLink to={user ? "/home" : "/"}>Home</NavLink>
           <NavLink to="/explore">Explore</NavLink>
-          {user && <NavLink to="/analytics">Analytics</NavLink>}
+          {user && user?.subscription?.plan === "premium" && user?.subscription?.isActive && (
+            <NavLink to="/analytics">Analytics</NavLink>
+          )}
           {/* {user && (
             <NavLink to="/chat" className="chat-nav-link">
               Chat
@@ -226,9 +228,11 @@ const Header = () => {
       <div className={`mobileMenu ${menuOpen ? "open" : ""}`}>
         <NavLink to={user ? "/home" : "/"} onClick={() => setMenuOpen(false)}>Home</NavLink>
         <NavLink to="/explore" onClick={() => setMenuOpen(false)}>Explore</NavLink>
-        <NavLink to="/analytics" onClick={() => setMenuOpen(false)}>
-          <FaChartLine /> Analytics
-        </NavLink>
+        {user && user?.subscription?.plan === "premium" && user?.subscription?.isActive && (
+          <NavLink to="/analytics" onClick={() => setMenuOpen(false)}>
+            <FaChartLine /> Analytics
+          </NavLink>
+        )}
         {/* {user && (
           <NavLink to="/chat" onClick={() => setMenuOpen(false)}>
             Chat

@@ -70,7 +70,7 @@ const Sidebar = () => {
           </NavLink>
         )}
 
-        {user && (
+        {user && user?.subscription?.plan === "premium" && user?.subscription?.isActive && (
           <NavLink to="/analytics" className="sidebarItem">
             <FaChartLine />
             <span>Analytics</span>

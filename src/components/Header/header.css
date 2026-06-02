@@ -473,3 +473,42 @@ body {
 .btn{
   border-radius: 0px;
 }
+
+/* Premium Feature Styles */
+.premium-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.premium-disabled:hover {
+  opacity: 0.8;
+}
+
+.premium-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.premium-badge-small {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.6rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
+
