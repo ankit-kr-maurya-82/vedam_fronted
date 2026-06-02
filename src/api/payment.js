@@ -12,11 +12,17 @@ export const getRazorpayKey = async () => {
 
 export const createPaymentOrder = async (userId) => {
   try {
-    const response = await axios.post("/payments/create-order", { userId });
+    const payload = userId ? { userId } : {};
+    const response = await axios.post("/payments/create-order", payload);
     return response.data?.data;
   } catch (error) {
-    console.error("Failed to create payment order:", error);
-    throw error;
+    console.error("Failed to create payment order:", error.response?.data || error);
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.message ||
+      "Failed to create payment order";
+    throw new Error(message);
   }
 };
 
