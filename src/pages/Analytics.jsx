@@ -73,6 +73,7 @@ const Analytics = () => {
       } catch (err) {
         setError(
           err.response?.data?.message ||
+            err.response?.data?.error ||
             err.message ||
             "Failed to load analytics"
         );
@@ -94,8 +95,9 @@ const Analytics = () => {
 
     setUpgrading(true);
     try {
+      const userId = user.id || user._id;
       const key = await getRazorpayKey();
-      const order = await createPaymentOrder(user.id);
+      const order = await createPaymentOrder(userId);
       await loadRazorpayScript();
 
       const options = {
@@ -110,7 +112,7 @@ const Analytics = () => {
           contact: user.phone || "",
         },
         notes: {
-          userId: user.id,
+          userId,
         },
         handler: async (response) => {
           try {
@@ -118,7 +120,7 @@ const Analytics = () => {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
-              userId: user.id,
+              userId,
             });
 
             // Update user context with premium subscription
@@ -136,7 +138,9 @@ const Analytics = () => {
             setAnalytics(refreshed);
           } catch (err) {
             toast.error(
-              err.response?.data?.message || err.message ||
+              err.response?.data?.message ||
+                err.response?.data?.error ||
+                err.message ||
                 "Payment verification failed"
             );
           } finally {
