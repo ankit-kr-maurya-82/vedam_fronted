@@ -29,8 +29,25 @@ import {
 } from "../api/payment.js";
 import "./CSS/Analytics.css";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve, reject) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () =>
+      reject(new Error("Failed to load Razorpay checkout script"));
+    document.body.appendChild(script);
+  });
+};
+
 const Analytics = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -77,81 +94,71 @@ const Analytics = () => {
 
     setUpgrading(true);
     try {
-      // Get Razorpay key
       const key = await getRazorpayKey();
+      const order = await createPaymentOrder(user.id);
+      await loadRazorpayScript();
 
-      // Create payment order
-      const order = await createPaymentOrder(user._id);
+      const options = {
+        key,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Premium Subscription",
+        description: "30-day Premium Plan - ₹99/month",
+        order_id: order.id,
+        prefill: {
+          email: user.email,
+          contact: user.phone || "",
+        },
+        notes: {
+          userId: user.id,
+        },
+        handler: async (response) => {
+          try {
+            const result = await verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              userId: user.id,
+            });
 
-      // Load Razorpay script
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      script.onload = () => {
-        const options = {
-          key: key,
-          amount: order.amount,
-          currency: order.currency,
-          name: "Premium Subscription",
-          description: "30-day Premium Plan - ₹99/month",
-          order_id: order.id,
-          prefill: {
-            email: user.email,
-            contact: user.phone || "",
-          },
-          handler: async (response) => {
-            try {
-              // Verify payment
-              const result = await verifyPayment({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                userId: user._id,
-              });
-
-              toast.success("✨ Upgrade successful! Welcome to Premium");
-
-              // Refresh analytics
-              setTimeout(() => {
-                const loadAnalytics = async () => {
-                  try {
-                    const data = await getUserAnalytics();
-                    setAnalytics(data);
-                  } catch (err) {
-                    console.error("Failed to reload analytics:", err);
-                  }
-                };
-                loadAnalytics();
-                setUpgrading(false);
-              }, 1500);
-            } catch (err) {
-              toast.error(
-                err.response?.data?.message ||
-                  err.message ||
-                  "Payment verification failed"
-              );
-              setUpgrading(false);
+            // Update user context with premium subscription
+            if (result?.user) {
+              const updatedUser = {
+                ...user,
+                subscription: result.user.subscription,
+              };
+              setUser(updatedUser);
+              window.localStorage.setItem("user", JSON.stringify(updatedUser));
             }
-          },
-          modal: {
-            ondismiss: () => {
-              toast.error("Payment cancelled");
-              setUpgrading(false);
-            },
-          },
-          theme: {
-            color: "#4f46e5",
-          },
-        };
 
-        const razorpay = new window.Razorpay(options);
-        razorpay.open();
+            toast.success("✨ Upgrade successful! Welcome to Premium");
+            const refreshed = await getUserAnalytics();
+            setAnalytics(refreshed);
+          } catch (err) {
+            toast.error(
+              err.response?.data?.message || err.message ||
+                "Payment verification failed"
+            );
+          } finally {
+            setUpgrading(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            toast.error("Payment cancelled");
+            setUpgrading(false);
+          },
+        },
+        theme: {
+          color: "#4f46e5",
+        },
       };
-      document.body.appendChild(script);
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     } catch (err) {
       toast.error(
-        err.response?.data?.message ||
-          err.message ||
+        err.response?.data?.message || err.message ||
           "Failed to initiate payment"
       );
       setUpgrading(false);
